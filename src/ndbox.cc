@@ -1,49 +1,38 @@
 #include <string>
 #include <iostream>
 #include <chrono>
-#include <cstdint>
 #include <thread>
-#include <typeinfo>
+#include <cstdint>
 #include <sstream>
 
-#include "connection.h"
+#include "ndbox.h"
+#include "drone.h"
 #include <mavsdk/mavsdk.h>
-#include <mavsdk/plugins/action/action.h>
-#include <mavsdk/plugins/telemetry/telemetry.h>
-
-using namespace mavsdk;
-using namespace std::chrono;
-using namespace std::this_thread;
 
 #define ERROR_CONSOLE_TEXT "\033[31m" // Turn text on console red
 #define TELEMETRY_CONSOLE_TEXT "\033[34m" // Turn text on console blue
 #define NORMAL_CONSOLE_TEXT "\033[0m" // Restore normal console colour
 
-Napi::FunctionReference Connection::constructor;
+Napi::FunctionReference Ndbox::constructor;
 
-Napi::Object Connection::Init(Napi::Env env, Napi::Object exports) {
+Napi::Object Ndbox::Init(Napi::Env env, Napi::Object exports) {
   Napi::HandleScope scope(env);
 
-  Napi::Function func = DefineClass(env, "Connection", {
-    InstanceAccessor("address", &Connection::GetAddress, nullptr),
-    InstanceMethod("isConnected", &Connection::IsConnected),
-    InstanceMethod("getUUIDs", &Connection::GetUUIDs)
+  Napi::Function func = DefineClass(env, "Ndbox", {
+    InstanceAccessor("connection_url", &Ndbox::get_connection_url, nullptr),
+    InstanceMethod("is_connected", &Ndbox::is_connected),
+    InstanceMethod("discover_uuids", &Ndbox::discover_uuids),
+    InstanceMethod("connect_to_drone", &Ndbox::connect_to_drone)
   });
 
   constructor = Napi::Persistent(func);
   constructor.SuppressDestruct();
 
-  exports.Set("Connection", func);
+  exports.Set("Ndbox", func);
   return exports;
 }
 
-void component_discovered(ComponentType component_type)
-{
-    std::cout << NORMAL_CONSOLE_TEXT << "Discovered a component with type "
-              << unsigned(component_type) << std::endl;
-}
-
-Connection::Connection(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Connection>(info)  {
+Ndbox::Ndbox(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Ndbox>(info)  {
   Napi::Env env = info.Env();
   Napi::HandleScope scope(env);
 
@@ -57,25 +46,24 @@ Connection::Connection(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Connec
     throw Napi::Error::New(env, "Connection failed: " + msg);
   }
 
-  this->_address = connection_url;
+  this->_connection_url = connection_url;
 
 }
 
-Napi::Value Connection::GetAddress(const Napi::CallbackInfo& info) {
-  std::string address = this->_address;
+Napi::Value Ndbox::get_connection_url(const Napi::CallbackInfo& info) {
+  std::string connection_url = this->_connection_url;
 
-  return Napi::String::New(info.Env(), address);
+  return Napi::String::New(info.Env(), connection_url);
 }
 
 
-Napi::Value Connection::IsConnected(const Napi::CallbackInfo& info) {
+Napi::Value Ndbox::is_connected(const Napi::CallbackInfo& info) {
   bool isConnected;
-  if (info.Length() > 0 && info[0].IsNumber()) {
+  if (info.Length() > 0 && info[0].IsString()) {
     std:: string uuid = info[0].As<Napi::String>().Utf8Value();
     uint64_t value;
-    std::istringstream iss("uuid");
+    std::istringstream iss(uuid);
     iss >> value;
-    std::cout << "isConn " << value << '\n';
     isConnected = this->_dc.is_connected(value);
   } else {
     isConnected = this->_dc.is_connected();
@@ -84,12 +72,12 @@ Napi::Value Connection::IsConnected(const Napi::CallbackInfo& info) {
   return Napi::Boolean::New(info.Env(), isConnected);
 }
 
-void Connection::GetUUIDs(const Napi::CallbackInfo& info) {
+void Ndbox::discover_uuids(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Napi::Function cb = info[0].As<Napi::Function>();
   // We usually receive heartbeats at 1Hz, therefore we should find a system after around 2
   // seconds.
-  sleep_for(seconds(2));
+  std::this_thread::sleep_for(std::chrono::seconds(2));
 
   std::vector<uint64_t> uuids = this->_dc.system_uuids();
 
@@ -99,4 +87,16 @@ void Connection::GetUUIDs(const Napi::CallbackInfo& info) {
 	}
 
   cb.Call(env.Global(), { arr });
+}
+
+Napi::Value Ndbox::connect_to_drone(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  std:: string uuid = info[0].As<Napi::String>().Utf8Value();
+  uint64_t value;
+  std::istringstream iss(uuid);
+  iss >> value;
+  auto sys = Napi::External<mavsdk::System>::New(env, &this->_dc.system(value));
+  auto drone = Drone::constructor.New({ sys });
+
+  return drone;
 }

@@ -36,38 +36,38 @@ class Camera : public Napi::ObjectWrap<Camera> {
   static Napi::FunctionReference constructor;
 
   std::string _name;
-  Napi::Value GetName(const Napi::CallbackInfo &info);
+  Napi::Value get_name(const Napi::CallbackInfo &info);
 
   double _resolution;
-  Napi::Value GetResolution(const Napi::CallbackInfo &info);
-  void SetResolution(const Napi::CallbackInfo &info, const Napi::Value &resolution);
+  Napi::Value get_resolution(const Napi::CallbackInfo &info);
+  void set_resolution(const Napi::CallbackInfo &info, const Napi::Value &resolution);
 
-  double _angleOfView;
-  Napi::Value GetAngleOfView(const Napi::CallbackInfo &info);
-  void SetAngleOfView(const Napi::CallbackInfo &info, const Napi::Value &aov);
+  double _angle_of_view;
+  Napi::Value get_angle_of_view(const Napi::CallbackInfo &info);
+  void set_angle_of_view(const Napi::CallbackInfo &info, const Napi::Value &aov);
 
-  objectXY _imageResolution;
-  Napi::Value GetImageResolution(const Napi::CallbackInfo &info);
-  void SetImageResolution(const Napi::CallbackInfo &info, const Napi::Value &ixy);
+  objectXY _img_resolution;
+  Napi::Value get_img_resolution(const Napi::CallbackInfo &info);
+  void set_img_resolution(const Napi::CallbackInfo &info, const Napi::Value &ixy);
 
   double _ts;
-  Napi::Value GetTS(const Napi::CallbackInfo &info);
-  void SetTS(const Napi::CallbackInfo &info, const Napi::Value &ts);
+  Napi::Value get_ts(const Napi::CallbackInfo &info);
+  void set_ts(const Napi::CallbackInfo &info, const Napi::Value &ts);
 
   double _te;
-  Napi::Value GetTE(const Napi::CallbackInfo &info);
-  void SetTE(const Napi::CallbackInfo &info, const Napi::Value &te);
+  Napi::Value get_te(const Napi::CallbackInfo &info);
+  void set_te(const Napi::CallbackInfo &info, const Napi::Value &te);
 
   objectXY _overlap;
-  Napi::Value GetOverlap(const Napi::CallbackInfo &info);
-  void SetOverlap(const Napi::CallbackInfo &info, const Napi::Value &ovxy);
+  Napi::Value get_overlap(const Napi::CallbackInfo &info);
+  void set_overlap(const Napi::CallbackInfo &info, const Napi::Value &ovxy);
 
   double _theta;
-  Napi::Value GetTheta(const Napi::CallbackInfo &info);
-  void SetTheta(const Napi::CallbackInfo &info, const Napi::Value &theta);
+  Napi::Value get_theta(const Napi::CallbackInfo &info);
+  void set_theta(const Napi::CallbackInfo &info, const Napi::Value &theta);
 
-  double _aspectRatio;
-  Napi::Value GetAspectRatio(const Napi::CallbackInfo &info);
+  double _aspect_ratio;
+  Napi::Value get_aspect_ratio(const Napi::CallbackInfo &info);
 
   /*
   FromJson static method
@@ -75,14 +75,14 @@ class Camera : public Napi::ObjectWrap<Camera> {
   @param json_file_path: string
   @return Camera Object
   */
-  static Napi::Value FromJson(const Napi::CallbackInfo& info);
+  static Napi::Value from_json(const Napi::CallbackInfo& info);
 
   /*
   save method
   save the current Camera class instance to a json file
   @param json_file_path: string
   */
-  void Save(const Napi::CallbackInfo& info);
+  void save(const Napi::CallbackInfo& info);
 
 };
 

@@ -1,10 +1,12 @@
 #include <napi.h>
 #include "camera.h"
-#include "connection.h"
+#include "ndbox.h"
+#include "drone.h"
 
 Napi::Object InitAll(Napi::Env env, Napi::Object exports) {
   Camera::Init(env, exports);
-  Connection::Init(env, exports);
+  Ndbox::Init(env, exports);
+  Drone::Init(env, exports);
   return exports;
 }
 

@@ -1,47 +1,46 @@
-#ifndef CONNECTION_H
-#define CONNECTION_H
+#ifndef NDBOX_H
+#define NDBOX_H
 
 #include <string>
 
 #include <napi.h>
 #include <mavsdk/mavsdk.h>
 
-using namespace mavsdk;
-
-
 /**
-  # Class Connection
+  # Class System
   # connection with one or more drones.
   # discover available drones.
   # each drone is identified by a UUID.
   @params address: string -> UDP path for the connection
   */
-class Connection : public Napi::ObjectWrap<Connection> {
+class Ndbox : public Napi::ObjectWrap<Ndbox> {
 public:
  static Napi::Object Init(Napi::Env env, Napi::Object exports);
- Connection(const Napi::CallbackInfo &info);
+ Ndbox(const Napi::CallbackInfo &info);
 
 private:
  static Napi::FunctionReference constructor;
 
- Mavsdk _dc;
+ mavsdk::Mavsdk _dc;
 
- std::string _address;
- Napi::Value GetAddress(const Napi::CallbackInfo &info);
+ std::string _connection_url;
+ Napi::Value get_connection_url(const Napi::CallbackInfo &info);
 
  /*
- # IsConnected method
+ # is_connected method
  # Returns true if exactly one system is currently connected.
  # Connected means we are receiving heartbeats from this system
  # If multiple systems have connected, this will return false
  @param uuid: string
  @return Boolean
  */
- Napi::Value IsConnected(const Napi::CallbackInfo& info);
+ Napi::Value is_connected(const Napi::CallbackInfo& info);
 
  /*
  */
- void GetUUIDs(const Napi::CallbackInfo& info);
+ void discover_uuids(const Napi::CallbackInfo& info);
+
+ Napi::Value connect_to_drone(const Napi::CallbackInfo& info);
 
 };
 

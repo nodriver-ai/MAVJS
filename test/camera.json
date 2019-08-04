@@ -1,6 +1,6 @@
 {
-    "angleOfView": 1.6476,
-    "imageResolution": {
+    "angle_of_view": 1.6476,
+    "img_resolution": {
         "x": 1080.0,
         "y": 1024.0
     },
