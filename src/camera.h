@@ -19,13 +19,13 @@ struct objectXY {
   # Class Camera
   @param name: string -> camera name
   @param resolution: double -> spatial resolution in `pixels/cm`
-  @param aov: double -> Angle of View in `radians`
-  @param ixy: objectXY -> image resolution in `pixels`
+  @param angle_of_view: double -> Angle of View in `radians`
+  @param img_resolution: objectXY -> image resolution in `pixels`
   @param ts: double -> camera sampling period in `seconds`
   @param te: double -> camera exposure time in `seconds`
-  @param ovxy: objectXY -> overlap in `meters`
+  @param overlap: objectXY -> overlap in `meters`
   @param theta: double -> maximum allowed amount of blur in `pixels`
-  @param aspectRatio: double -> imageResolution.x / imageResolution.y
+  @param aspect_ratio: double -> imageResolution.x / imageResolution.y
   */
 class Camera : public Napi::ObjectWrap<Camera> {
  public:
@@ -70,7 +70,7 @@ class Camera : public Napi::ObjectWrap<Camera> {
   Napi::Value get_aspect_ratio(const Napi::CallbackInfo &info);
 
   /*
-  FromJson static method
+  from_json static method
   initialize a Camera class from a json file
   @param json_file_path: string
   @return Camera Object

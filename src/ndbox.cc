@@ -4,6 +4,7 @@
 #include <thread>
 #include <cstdint>
 #include <sstream>
+#include <algorithm>
 
 #include "ndbox.h"
 #include "drone.h"
@@ -22,7 +23,7 @@ Napi::Object Ndbox::Init(Napi::Env env, Napi::Object exports) {
     InstanceAccessor("connection_url", &Ndbox::get_connection_url, nullptr),
     InstanceMethod("is_connected", &Ndbox::is_connected),
     InstanceMethod("discover_uuids", &Ndbox::discover_uuids),
-    InstanceMethod("connect_to_drone", &Ndbox::connect_to_drone)
+    InstanceMethod("connect_to_drone", &Ndbox::connect_to_drone),
   });
 
   constructor = Napi::Persistent(func);
@@ -48,6 +49,26 @@ Ndbox::Ndbox(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Ndbox>(info)  {
 
   this->_connection_url = connection_url;
 
+  auto _on_discover = [this](uint64_t uuid) -> void {
+    this->uuids_mutex.lock();
+    if (std::find(this->uuids.begin(), this->uuids.end(), uuid) == this->uuids.end()) {
+      this->uuids.push_back(uuid);
+    }
+    this->uuids_mutex.unlock();
+  };
+
+  this->_dc.register_on_discover(_on_discover);
+
+  auto _on_timeout = [this](uint64_t uuid) -> void {
+    this->uuids_mutex.lock();
+    if (std::find(this->uuids.begin(), this->uuids.end(), uuid) != this->uuids.end()) {
+      this->uuids.erase(std::remove(this->uuids.begin(), this->uuids.end(), uuid), this->uuids.end());
+    }
+    this->uuids_mutex.unlock();
+  };
+
+  this->_dc.register_on_timeout(_on_timeout);
+
 }
 
 Napi::Value Ndbox::get_connection_url(const Napi::CallbackInfo& info) {
@@ -59,34 +80,25 @@ Napi::Value Ndbox::get_connection_url(const Napi::CallbackInfo& info) {
 
 Napi::Value Ndbox::is_connected(const Napi::CallbackInfo& info) {
   bool isConnected;
-  if (info.Length() > 0 && info[0].IsString()) {
-    std:: string uuid = info[0].As<Napi::String>().Utf8Value();
-    uint64_t value;
-    std::istringstream iss(uuid);
-    iss >> value;
-    isConnected = this->_dc.is_connected(value);
-  } else {
-    isConnected = this->_dc.is_connected();
-  }
+  std:: string uuid = info[0].As<Napi::String>().Utf8Value();
+  uint64_t value;
+  std::istringstream iss(uuid);
+  iss >> value;
+  isConnected = this->_dc.is_connected(value);
 
   return Napi::Boolean::New(info.Env(), isConnected);
 }
 
-void Ndbox::discover_uuids(const Napi::CallbackInfo& info) {
+Napi::Value Ndbox::discover_uuids(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  Napi::Function cb = info[0].As<Napi::Function>();
-  // We usually receive heartbeats at 1Hz, therefore we should find a system after around 2
-  // seconds.
-  std::this_thread::sleep_for(std::chrono::seconds(2));
-
-  std::vector<uint64_t> uuids = this->_dc.system_uuids();
-
-  Napi::Array arr = Napi::Array::New(info.Env(), uuids.size());
-  for (int i = 0; i < uuids.size(); i++) {
-    arr[i] = std::to_string(uuids.at(i));
+  this->uuids_mutex.lock();
+  Napi::Array arr = Napi::Array::New(info.Env(), this->uuids.size());
+  for (int i = 0; i < this->uuids.size(); i++) {
+    arr[i] = std::to_string(this->uuids.at(i));
 	}
+  this->uuids_mutex.unlock();
 
-  cb.Call(env.Global(), { arr });
+  return arr;
 }
 
 Napi::Value Ndbox::connect_to_drone(const Napi::CallbackInfo& info) {
