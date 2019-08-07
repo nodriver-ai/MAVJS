@@ -37,12 +37,12 @@ Ndbox::Ndbox(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Ndbox>(info)  {
   Napi::Env env = info.Env();
   Napi::HandleScope scope(env);
 
-  ConnectionResult connection_result;
+  mavsdk::ConnectionResult connection_result;
 
   std::string connection_url = info[0].As<Napi::String>().Utf8Value();
   connection_result = this->_dc.add_any_connection(connection_url);
 
-  if (connection_result != ConnectionResult::SUCCESS) {
+  if (connection_result != mavsdk::ConnectionResult::SUCCESS) {
     std::string msg = connection_result_str(connection_result);
     throw Napi::Error::New(env, "Connection failed: " + msg);
   }

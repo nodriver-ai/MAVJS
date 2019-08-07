@@ -45,8 +45,6 @@ private:
  */
  Napi::Value connect_to_drone(const Napi::CallbackInfo& info);
 
- //void register_on_timeout(const Napi::CallbackInfo& info);
-
 };
 
 #endif

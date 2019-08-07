@@ -5,8 +5,7 @@
 
 #include <napi.h>
 #include <mavsdk/mavsdk.h>
-
-using namespace mavsdk;
+#include <mavsdk/plugins/telemetry/telemetry.h>
 
 class Drone : public Napi::ObjectWrap<Drone> {
 public:
@@ -15,19 +14,41 @@ public:
  static Napi::FunctionReference constructor;
 
  private:
-   System * _system;
+   mavsdk::System * _system;
+   std::shared_ptr<mavsdk::Telemetry> _telemetry;
 
    std::string _uuid;
    Napi::Value get_uuid(const Napi::CallbackInfo &info);
 
    Napi::Value is_connected(const Napi::CallbackInfo &info);
-
    Napi::Value has_autopilot(const Napi::CallbackInfo &info);
-
    Napi::Value has_camera(const Napi::CallbackInfo &info);
-
    Napi::Value has_gimbal(const Napi::CallbackInfo &info);
 
+   void set_rate_position(const Napi::CallbackInfo &info);
+   void set_rate_home_position(const Napi::CallbackInfo &info);
+   void set_rate_attitude(const Napi::CallbackInfo &info);
+   void set_rate_battery(const Napi::CallbackInfo &info);
+   void set_rate_position_velocity_ned(const Napi::CallbackInfo &info);
+   void set_rate_in_air(const Napi::CallbackInfo &info);
+   void set_rate_camera_attitude(const Napi::CallbackInfo &info);
+   void set_rate_ground_speed_ned(const Napi::CallbackInfo &info);
+   void set_rate_gps_info(const Napi::CallbackInfo &info);
+   void set_rate_rc_status(const Napi::CallbackInfo &info);
+
+   Napi::Value position(const Napi::CallbackInfo &info);
+   Napi::Value health_all_ok(const Napi::CallbackInfo &info);
+   Napi::Value home_position(const Napi::CallbackInfo &info);
+   Napi::Value battery(const Napi::CallbackInfo &info);
+   Napi::Value in_air(const Napi::CallbackInfo &info);
+   Napi::Value armed(const Napi::CallbackInfo &info);
+   Napi::Value attitude_quaternion(const Napi::CallbackInfo &info);
+   Napi::Value attitude_euler_angle(const Napi::CallbackInfo &info);
+   Napi::Value ground_speed_ned(const Napi::CallbackInfo &info);
+   Napi::Value gps_info(const Napi::CallbackInfo &info);
+   Napi::Value flight_mode(const Napi::CallbackInfo &info);
+   Napi::Value health(const Napi::CallbackInfo &info);
+   Napi::Value rc_status(const Napi::CallbackInfo &info);
 };
 
 #endif
