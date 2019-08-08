@@ -4,12 +4,14 @@
   "description": "ndbox software to manage one or more ndone",
   "main": "lib/addon.js",
   "scripts": {
-    "start": "node lib/addon.js",
+    "build": "tsc",
+    "start": "tsc && node lib/addon.js",
     "test": "mocha --timeout 15000"
   },
   "author": "andrea pomente",
   "license": "ISC",
   "devDependencies": {
+    "@types/node": "^12.7.1",
     "bindings": "~1.2.1",
     "chai": "^4.2.0",
     "mocha": "^6.2.0",

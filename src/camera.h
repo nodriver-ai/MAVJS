@@ -5,28 +5,11 @@
 
 #include <napi.h>
 
-/**
-  # Struct objectXY
-  @param x: double
-  @param y: double
-  */
 struct objectXY {
   double x;
   double y;
 };
 
-/**
-  # Class Camera
-  @param name: string -> camera name
-  @param resolution: double -> spatial resolution in `pixels/cm`
-  @param angle_of_view: double -> Angle of View in `radians`
-  @param img_resolution: objectXY -> image resolution in `pixels`
-  @param ts: double -> camera sampling period in `seconds`
-  @param te: double -> camera exposure time in `seconds`
-  @param overlap: objectXY -> overlap in `meters`
-  @param theta: double -> maximum allowed amount of blur in `pixels`
-  @param aspect_ratio: double -> imageResolution.x / imageResolution.y
-  */
 class Camera : public Napi::ObjectWrap<Camera> {
  public:
   static Napi::Object Init(Napi::Env env, Napi::Object exports);
@@ -69,19 +52,7 @@ class Camera : public Napi::ObjectWrap<Camera> {
   double _aspect_ratio;
   Napi::Value get_aspect_ratio(const Napi::CallbackInfo &info);
 
-  /*
-  from_json static method
-  initialize a Camera class from a json file
-  @param json_file_path: string
-  @return Camera Object
-  */
   static Napi::Value from_json(const Napi::CallbackInfo& info);
-
-  /*
-  save method
-  save the current Camera class instance to a json file
-  @param json_file_path: string
-  */
   void save(const Napi::CallbackInfo& info);
 
 };

@@ -6,7 +6,6 @@
 #include "camera.h"
 #include "json.h"
 
-// for convenience
 using json = nlohmann::json;
 
 Napi::FunctionReference Camera::constructor;
