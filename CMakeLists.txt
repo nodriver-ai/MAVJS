@@ -41,6 +41,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${NODE_ADDON_API_DIR}) #per b
 # target_include_directories(${PROJECT_NAME} PUBLIC mavsdk)
 target_link_libraries(${PROJECT_NAME}
     MAVSDK::mavsdk_telemetry
+    MAVSDK::mavsdk_info
     MAVSDK::mavsdk_action
     MAVSDK::mavsdk
 )

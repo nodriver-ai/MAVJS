@@ -14,6 +14,12 @@
 #define TELEMETRY_CONSOLE_TEXT "\033[34m" // Turn text on console blue
 #define NORMAL_CONSOLE_TEXT "\033[0m" // Restore normal console colour
 
+Napi::Value ThrowErrorMessage(Napi::Env env, std::string msg)
+{
+  Napi::TypeError::New(env, msg).ThrowAsJavaScriptException();
+  return env.Null();
+}
+
 Napi::FunctionReference Ndbox::constructor;
 
 Napi::Object Ndbox::Init(Napi::Env env, Napi::Object exports) {
@@ -107,8 +113,12 @@ Napi::Value Ndbox::connect_to_drone(const Napi::CallbackInfo& info) {
   uint64_t value;
   std::istringstream iss(uuid);
   iss >> value;
+
+  if (!this->_dc.is_connected(value)) {
+    return env.Undefined();
+  }
+
   auto sys = Napi::External<mavsdk::System>::New(env, &this->_dc.system(value));
   auto drone = Drone::constructor.New({ sys });
-
   return drone;
 }

@@ -6,6 +6,7 @@
 #include <napi.h>
 #include <mavsdk/mavsdk.h>
 #include <mavsdk/plugins/telemetry/telemetry.h>
+#include <mavsdk/plugins/info/info.h>
 
 class Drone : public Napi::ObjectWrap<Drone> {
 public:
@@ -16,10 +17,13 @@ public:
  private:
    mavsdk::System * _system;
    std::shared_ptr<mavsdk::Telemetry> _telemetry;
+   std::shared_ptr<mavsdk::Info> _info;
 
    std::string _uuid;
    Napi::Value get_uuid(const Napi::CallbackInfo &info);
 
+   Napi::Value get_identification(const Napi::CallbackInfo &info);
+   Napi::Value get_product(const Napi::CallbackInfo &info);
    Napi::Value is_connected(const Napi::CallbackInfo &info);
    Napi::Value has_autopilot(const Napi::CallbackInfo &info);
    Napi::Value has_camera(const Napi::CallbackInfo &info);

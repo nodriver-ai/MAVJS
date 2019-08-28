@@ -51,8 +51,17 @@ export interface RCStatus {
   signal_strength_percent: number;
 }
 
+export interface Product {
+  vendor_id: number;
+  vendor_name: string;
+  product_id: number;
+  product_name: string;
+}
+
 export interface Drone {
   uuid: string;
+  get_identification(): number[];
+  get_product(): Product;
   is_connected(): boolean;
   has_autopilot(): boolean;
   has_camera(): boolean;
@@ -86,7 +95,7 @@ export interface Ndbox {
   connection_url: string;
   is_connected(uuid: string | null): boolean;
   discover_uuids(): string[];
-  connect_to_drone(uuid: string): Drone;
+  connect_to_drone(uuid: string): Drone | null;
 }
 
 export var Ndbox: {

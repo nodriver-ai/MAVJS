@@ -1,18 +1,19 @@
 #include <string>
 #include <iostream>
-#include <chrono>
+//#include <chrono>
 #include <cstdint>
-#include <thread>
+//#include <thread>
 #include <typeinfo>
 #include <sstream>
 
 #include "drone.h"
-#include <mavsdk/mavsdk.h>
-#include <mavsdk/plugins/telemetry/telemetry.h>
+//#include <mavsdk/mavsdk.h>
+//#include <mavsdk/plugins/telemetry/telemetry.h>
+//#include <mavsdk/plugins/info/info.h>
 
-using namespace mavsdk;
-using namespace std::chrono;
-using namespace std::this_thread;
+//using namespace mavsdk;
+//using namespace std::chrono;
+//using namespace std::this_thread;
 
 #define ERROR_CONSOLE_TEXT "\033[31m" // Turn text on console red
 #define TELEMETRY_CONSOLE_TEXT "\033[34m" // Turn text on console blue
@@ -25,6 +26,8 @@ Napi::Object Drone::Init(Napi::Env env, Napi::Object exports) {
 
   Napi::Function func = DefineClass(env, "Drone", {
     InstanceAccessor("uuid", &Drone::get_uuid, nullptr),
+    InstanceMethod("get_identification", &Drone::get_identification),
+    InstanceMethod("get_product", &Drone::get_product),
     InstanceMethod("is_connected", &Drone::is_connected),
     InstanceMethod("has_autopilot", &Drone::has_autopilot),
     InstanceMethod("has_camera", &Drone::has_camera),
@@ -69,12 +72,44 @@ Drone::Drone(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Drone>(info)  {
   this->_system = info[0].As<Napi::External<mavsdk::System>>().Data();
 
   this->_telemetry = std::make_shared<mavsdk::Telemetry>(*this->_system);
+  this->_info = std::make_shared<mavsdk::Info>(*this->_system);
 }
 
 Napi::Value Drone::get_uuid(const Napi::CallbackInfo& info) {
   uint64_t uuid = this->_system->get_uuid();
 
   return Napi::String::New(info.Env(), std::to_string(uuid));
+}
+
+Napi::Value Drone::get_identification(const Napi::CallbackInfo& info) {
+  const std::pair<mavsdk::Info::Result, mavsdk::Info::Identification> result = this->_info->get_identification();
+
+  Napi::Array hardware_uid = Napi::Array::New(info.Env(), 18);
+  for (int i = 0; i < 18; i++) {
+    hardware_uid[i] = result.second.hardware_uid[i];
+	}
+
+  return hardware_uid;
+}
+
+Napi::Value Drone::get_product(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+
+  const std::pair<mavsdk::Info::Result, mavsdk::Info::Product> result = this->_info->get_product();
+
+  Napi::Object obj = Napi::Object::New(env);
+
+  obj.Set(Napi::String::New(env, "vendor_id"), result.second.vendor_id);
+
+  std::string vendor_name = result.second.vendor_name;
+  obj.Set(Napi::String::New(env, "vendor_name"), vendor_name);
+
+  obj.Set(Napi::String::New(env, "product_id"), result.second.product_id);
+
+  std::string product_name = result.second.product_name;
+  obj.Set(Napi::String::New(env, "product_name"), product_name);
+
+  return obj;
 }
 
 Napi::Value Drone::is_connected(const Napi::CallbackInfo& info) {
