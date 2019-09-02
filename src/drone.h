@@ -22,8 +22,7 @@ public:
    std::string _uuid;
    Napi::Value get_uuid(const Napi::CallbackInfo &info);
 
-   Napi::Value get_identification(const Napi::CallbackInfo &info);
-   Napi::Value get_product(const Napi::CallbackInfo &info);
+   Napi::Value get_product_info(const Napi::CallbackInfo &info);
    Napi::Value is_connected(const Napi::CallbackInfo &info);
    Napi::Value has_autopilot(const Napi::CallbackInfo &info);
    Napi::Value has_camera(const Napi::CallbackInfo &info);
@@ -53,6 +52,8 @@ public:
    Napi::Value flight_mode(const Napi::CallbackInfo &info);
    Napi::Value health(const Napi::CallbackInfo &info);
    Napi::Value rc_status(const Napi::CallbackInfo &info);
+
+   Napi::Value telemetry(const Napi::CallbackInfo &info);
 };
 
 #endif

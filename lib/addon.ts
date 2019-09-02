@@ -51,17 +51,31 @@ export interface RCStatus {
   signal_strength_percent: number;
 }
 
-export interface Product {
+export interface ProductInfo {
+  hardware_uid: number[];
   vendor_id: number;
   vendor_name: string;
   product_id: number;
   product_name: string;
 }
 
+export interface Telemetry {
+  flight_mode: string,
+  battery: Battery,
+  gps_info: GPSInfo,
+  has_autopilot: boolean;
+  has_camera: boolean;
+  has_gimbal: boolean;
+  in_air: boolean;
+  armed: boolean;
+  ground_speed_ned : GroundSpeedNED;
+  attitude_quaternion: Quaternion;
+  attitude_euler_angle: EulerAngle;
+}
+
 export interface Drone {
   uuid: string;
-  get_identification(): number[];
-  get_product(): Product;
+  get_product_info(): ProductInfo;
   is_connected(): boolean;
   has_autopilot(): boolean;
   has_camera(): boolean;
@@ -89,6 +103,7 @@ export interface Drone {
   flight_mode(): string;
   health(): Health;
   rc_status(): RCStatus;
+  telemetry(): Telemetry;
 }
 
 export interface Ndbox {

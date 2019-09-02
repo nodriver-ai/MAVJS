@@ -26,8 +26,7 @@ Napi::Object Drone::Init(Napi::Env env, Napi::Object exports) {
 
   Napi::Function func = DefineClass(env, "Drone", {
     InstanceAccessor("uuid", &Drone::get_uuid, nullptr),
-    InstanceMethod("get_identification", &Drone::get_identification),
-    InstanceMethod("get_product", &Drone::get_product),
+    InstanceMethod("get_product_info", &Drone::get_product_info),
     InstanceMethod("is_connected", &Drone::is_connected),
     InstanceMethod("has_autopilot", &Drone::has_autopilot),
     InstanceMethod("has_camera", &Drone::has_camera),
@@ -54,7 +53,8 @@ Napi::Object Drone::Init(Napi::Env env, Napi::Object exports) {
     InstanceMethod("gps_info", &Drone::gps_info),
     InstanceMethod("flight_mode", &Drone::flight_mode),
     InstanceMethod("health", &Drone::health),
-    InstanceMethod("rc_status", &Drone::rc_status)
+    InstanceMethod("rc_status", &Drone::rc_status),
+    InstanceMethod("telemetry", &Drone::telemetry),
   });
 
   constructor = Napi::Persistent(func);
@@ -81,23 +81,20 @@ Napi::Value Drone::get_uuid(const Napi::CallbackInfo& info) {
   return Napi::String::New(info.Env(), std::to_string(uuid));
 }
 
-Napi::Value Drone::get_identification(const Napi::CallbackInfo& info) {
-  const std::pair<mavsdk::Info::Result, mavsdk::Info::Identification> result = this->_info->get_identification();
-
-  Napi::Array hardware_uid = Napi::Array::New(info.Env(), 18);
-  for (int i = 0; i < 18; i++) {
-    hardware_uid[i] = result.second.hardware_uid[i];
-	}
-
-  return hardware_uid;
-}
-
-Napi::Value Drone::get_product(const Napi::CallbackInfo& info) {
+Napi::Value Drone::get_product_info(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
 
   const std::pair<mavsdk::Info::Result, mavsdk::Info::Product> result = this->_info->get_product();
 
   Napi::Object obj = Napi::Object::New(env);
+
+  const std::pair<mavsdk::Info::Result, mavsdk::Info::Identification> result_hardware_uid = this->_info->get_identification();
+
+  Napi::Array hardware_uid = Napi::Array::New(info.Env(), 18);
+  for (int i = 0; i < 18; i++) {
+    hardware_uid[i] = result_hardware_uid.second.hardware_uid[i];
+	}
+  obj.Set(Napi::String::New(env, "hardware_uid"), hardware_uid);
 
   obj.Set(Napi::String::New(env, "vendor_id"), result.second.vendor_id);
 
@@ -351,6 +348,25 @@ Napi::Value Drone::rc_status(const Napi::CallbackInfo& info) {
   obj.Set(Napi::String::New(env, "available_once"), rc_status.available_once);
   obj.Set(Napi::String::New(env, "available"), rc_status.available);
   obj.Set(Napi::String::New(env, "signal_strength_percent"), rc_status.signal_strength_percent);
+
+  return obj;
+}
+
+Napi::Value Drone::telemetry(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+
+  Napi::Object obj = Napi::Object::New(env);
+  obj.Set(Napi::String::New(env, "flight_mode"), this->flight_mode(info));
+  obj.Set(Napi::String::New(env, "battery"), this->battery(info));
+  obj.Set(Napi::String::New(env, "gps_info"), this->gps_info(info));
+  obj.Set(Napi::String::New(env, "has_autopilot"), this->has_autopilot(info));
+  obj.Set(Napi::String::New(env, "has_camera"), this->has_camera(info));
+  obj.Set(Napi::String::New(env, "has_gimbal"), this->has_gimbal(info));
+  obj.Set(Napi::String::New(env, "in_air"), this->in_air(info));
+  obj.Set(Napi::String::New(env, "armed"), this->armed(info));
+  obj.Set(Napi::String::New(env, "ground_speed_ned"), this->ground_speed_ned(info));
+  obj.Set(Napi::String::New(env, "attitude_quaternion"), this->attitude_quaternion(info));
+  obj.Set(Napi::String::New(env, "attitude_euler_angle"), this->attitude_euler_angle(info));
 
   return obj;
 }
