@@ -123,6 +123,7 @@ export interface ObjectXY {
 }
 
 export interface Camera {
+  id: number,
   name: string,
   resolution: number,
   angle_of_view: number,

@@ -18,6 +18,9 @@ class Camera : public Napi::ObjectWrap<Camera> {
  private:
   static Napi::FunctionReference constructor;
 
+  double _id;
+  Napi::Value get_id(const Napi::CallbackInfo &info);
+
   std::string _name;
   Napi::Value get_name(const Napi::CallbackInfo &info);
 

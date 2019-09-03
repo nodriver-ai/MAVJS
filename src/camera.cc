@@ -16,6 +16,7 @@ Napi::Object Camera::Init(Napi::Env env, Napi::Object exports) {
   Napi::HandleScope scope(env);
 
   Napi::Function func = DefineClass(env, "Camera", {
+    InstanceAccessor("id", &Camera::get_id, nullptr),
     InstanceAccessor("name", &Camera::get_name, nullptr),
     InstanceAccessor("resolution", &Camera::get_resolution, &Camera::set_resolution),
     InstanceAccessor("angle_of_view", &Camera::get_angle_of_view, &Camera::set_angle_of_view),
@@ -41,43 +42,48 @@ Camera::Camera(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Camera>(info) 
   Napi::Env env = info.Env();
   Napi::HandleScope scope(env);
 
-  Napi::String name = info[0].As<Napi::String>();
+  Napi::Number id = info[0].As<Napi::Number>();
+  this->_id = id.DoubleValue();
+
+  Napi::String name = info[1].As<Napi::String>();
   this->_name = name.Utf8Value();
 
-  Napi::Number resolution = info[1].As<Napi::Number>();
+  Napi::Number resolution = info[2].As<Napi::Number>();
   this->_resolution = resolution.DoubleValue();
 
-  Napi::Number angle_of_view = info[2].As<Napi::Number>();
+  Napi::Number angle_of_view = info[3].As<Napi::Number>();
   this->_angle_of_view = angle_of_view.DoubleValue();
 
-  Napi::Object img_resolution = info[3].As<Napi::Object>();
+  Napi::Object img_resolution = info[4].As<Napi::Object>();
   this->_img_resolution.x = img_resolution.Get("x").ToNumber().DoubleValue();
   this->_img_resolution.y = img_resolution.Get("y").ToNumber().DoubleValue();
 
-  Napi::Number ts = info[4].As<Napi::Number>();
+  Napi::Number ts = info[5].As<Napi::Number>();
   this->_ts = ts.DoubleValue();
 
-  Napi::Number te = info[5].As<Napi::Number>();
+  Napi::Number te = info[6].As<Napi::Number>();
   this->_te = te.DoubleValue();
 
-  Napi::Object overlap = info[6].As<Napi::Object>();
+  Napi::Object overlap = info[7].As<Napi::Object>();
   this->_overlap.x = overlap.Get("x").ToNumber().DoubleValue();
   this->_overlap.y = overlap.Get("y").ToNumber().DoubleValue();
 
-  Napi::Number theta = info[7].As<Napi::Number>();
+  Napi::Number theta = info[8].As<Napi::Number>();
   this->_theta = theta.DoubleValue();
 
-  Napi::Number altitude = info[8].As<Napi::Number>();
+  Napi::Number altitude = info[9].As<Napi::Number>();
   this->_altitude = altitude.DoubleValue();
 
   this->_aspect_ratio = this->_img_resolution.x / this->_img_resolution.y;
 
 }
 
-Napi::Value Camera::get_name(const Napi::CallbackInfo& info) {
-  std::string name = this->_name;
+Napi::Value Camera::get_id(const Napi::CallbackInfo& info) {
+  return Napi::Number::New(info.Env(), this->_id);
+}
 
-  return Napi::String::New(info.Env(), name);
+Napi::Value Camera::get_name(const Napi::CallbackInfo& info) {
+  return Napi::String::New(info.Env(), this->_name);
 }
 
 Napi::Value Camera::get_resolution(const Napi::CallbackInfo &info) {
@@ -186,6 +192,7 @@ Napi::Value Camera::from_json(const Napi::CallbackInfo& info) {
   json j;
   i >> j;
 
+  Napi::Number id = Napi::Number::New(env, j["id"].get<double>());
   Napi::String name = Napi::String::New(env, j["name"].get<std::string>());
   Napi::Number resolution = Napi::Number::New(env, j["resolution"].get<double>());
   Napi::Number angle_of_view = Napi::Number::New(env, j["angle_of_view"].get<double>());
@@ -204,7 +211,7 @@ Napi::Value Camera::from_json(const Napi::CallbackInfo& info) {
   Napi::Number theta = Napi::Number::New(env, j["theta"].get<double>());
   Napi::Number altitude = Napi::Number::New(env, j["altitude"].get<double>());
 
-  Napi::Object obj = constructor.New({ name, resolution, angle_of_view, img_resolution, ts, te, overlap, theta, altitude });
+  Napi::Object obj = constructor.New({ id, name, resolution, angle_of_view, img_resolution, ts, te, overlap, theta, altitude });
 
   return obj;
 }
@@ -218,6 +225,7 @@ void Camera::save(const Napi::CallbackInfo& info) {
 
   json j;
 
+  j["id"] = this->_id;
   j["name"] = this->_name;
   j["resolution"] = this->_resolution;
   j["angle_of_view"] = this->_angle_of_view;
