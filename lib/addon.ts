@@ -138,8 +138,7 @@ export interface Camera {
 
 export const Camera: {
   new(camera: Camera): Camera
-  from_json(path: string): Camera
-  get_default_cameras(): Camera[]
+  from_json(pathOrDir: string): Camera | Camera[]
 } = addon.Camera
 
 /*const UDP_PATH = "udp://:14540";

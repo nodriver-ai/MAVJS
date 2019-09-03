@@ -60,8 +60,6 @@ class Camera : public Napi::ObjectWrap<Camera> {
   static Napi::Value from_json(const Napi::CallbackInfo& info);
   void save(const Napi::CallbackInfo& info);
 
-  static Napi::Value get_default_cameras(const Napi::CallbackInfo& info);
-
 };
 
 #endif
