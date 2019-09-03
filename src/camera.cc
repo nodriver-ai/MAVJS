@@ -1,12 +1,14 @@
 #include <string>
 #include <fstream>
 #include <iostream>
+#include <boost/filesystem.hpp>
 #include <iomanip>
 
 #include "camera.h"
 #include "json.h"
 
 using json = nlohmann::json;
+namespace fs = boost::filesystem;
 
 Napi::FunctionReference Camera::constructor;
 
@@ -22,9 +24,11 @@ Napi::Object Camera::Init(Napi::Env env, Napi::Object exports) {
     InstanceAccessor("te", &Camera::get_te, &Camera::set_te),
     InstanceAccessor("overlap", &Camera::get_overlap, &Camera::set_overlap),
     InstanceAccessor("theta", &Camera::get_theta, &Camera::set_theta),
+    InstanceAccessor("altitude", &Camera::get_altitude, &Camera::set_altitude),
     InstanceAccessor("aspect_ratio", &Camera::get_aspect_ratio, nullptr),
     StaticMethod("from_json", &Camera::from_json),
-    InstanceMethod("save", &Camera::save)
+    InstanceMethod("save", &Camera::save),
+    StaticMethod("get_default_cameras", &Camera::get_default_cameras)
   });
 
   constructor = Napi::Persistent(func);
@@ -63,6 +67,9 @@ Camera::Camera(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Camera>(info) 
 
   Napi::Number theta = info[7].As<Napi::Number>();
   this->_theta = theta.DoubleValue();
+
+  Napi::Number altitude = info[8].As<Napi::Number>();
+  this->_altitude = altitude.DoubleValue();
 
   this->_aspect_ratio = this->_img_resolution.x / this->_img_resolution.y;
 
@@ -152,45 +159,60 @@ void Camera::set_theta(const Napi::CallbackInfo &info, const Napi::Value &theta)
     this->_theta = arg.DoubleValue();
 }
 
+Napi::Value Camera::get_altitude(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+    return Napi::Number::New(env, this->_altitude);
+}
+
+void Camera::set_altitude(const Napi::CallbackInfo &info, const Napi::Value &altitude) {
+    Napi::Number arg = altitude.As<Napi::Number>();
+    this->_altitude = arg.DoubleValue();
+}
 
 Napi::Value Camera::get_aspect_ratio(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
   return Napi::Number::New(env, this->_aspect_ratio);
 }
 
-Napi::Value Camera::from_json(const Napi::CallbackInfo& info) {
-  Napi::Env env = info.Env();
-
-  if (info.Length() != 1 || !info[0].IsString()) {
-    throw Napi::TypeError::New(env, "Camera.fromJson static method require one argument(`json file path`) as `String`");
-  }
-
-  Napi::String json_path = info[0].As<Napi::String>();
+Napi::Object Camera::read_from_json(Napi::Env env, Napi::Value path) {
+  Napi::String json_path = path.As<Napi::String>();
 
   std::ifstream i(json_path.Utf8Value());
   json j;
   i >> j;
 
-  Napi::String name = Napi::String::New(info.Env(), j["name"].get<std::string>());
-  Napi::Number resolution = Napi::Number::New(info.Env(), j["resolution"].get<double>());
-  Napi::Number angle_of_view = Napi::Number::New(info.Env(), j["angle_of_view"].get<double>());
+  Napi::String name = Napi::String::New(env, j["name"].get<std::string>());
+  Napi::Number resolution = Napi::Number::New(env, j["resolution"].get<double>());
+  Napi::Number angle_of_view = Napi::Number::New(env, j["angle_of_view"].get<double>());
 
   Napi::Object img_resolution = Napi::Object::New(env);
   img_resolution.Set(Napi::String::New(env, "x"), j["img_resolution"]["x"].get<double>());
   img_resolution.Set(Napi::String::New(env, "y"), j["img_resolution"]["y"].get<double>());
 
-  Napi::Number ts = Napi::Number::New(info.Env(), j["ts"].get<double>());
-  Napi::Number te = Napi::Number::New(info.Env(), j["te"].get<double>());
+  Napi::Number ts = Napi::Number::New(env, j["ts"].get<double>());
+  Napi::Number te = Napi::Number::New(env, j["te"].get<double>());
 
   Napi::Object overlap = Napi::Object::New(env);
   overlap.Set(Napi::String::New(env, "x"), j["overlap"]["x"].get<double>());
   overlap.Set(Napi::String::New(env, "y"), j["overlap"]["y"].get<double>());
 
-  Napi::Number theta = Napi::Number::New(info.Env(), j["theta"].get<double>());
+  Napi::Number theta = Napi::Number::New(env, j["theta"].get<double>());
+  Napi::Number altitude = Napi::Number::New(env, j["altitude"].get<double>());
 
-  Napi::Object obj = constructor.New({ name, resolution, angle_of_view, img_resolution, ts, te, overlap, theta });
+  Napi::Object obj = constructor.New({ name, resolution, angle_of_view, img_resolution, ts, te, overlap, theta, altitude });
 
   return obj;
+}
+
+
+Napi::Value Camera::from_json(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+
+  if (info.Length() != 1 || !info[0].IsString()) {
+    throw Napi::TypeError::New(env, "Camera.from_json static method require one argument(`json file path`) as `String`");
+  }
+
+  return Camera::read_from_json(env, info[0]);
 }
 
 void Camera::save(const Napi::CallbackInfo& info) {
@@ -210,8 +232,27 @@ void Camera::save(const Napi::CallbackInfo& info) {
   j["te"] = this->_te;
   j["overlap"] = { {"x", this->_overlap.x}, {"y", this->_overlap.y} };
   j["theta"] = this->_theta;
+  j["altitude"] = this->_altitude;
 
   Napi::String json_path = info[0].As<Napi::String>();
   std::ofstream o(json_path);
   o << std::setw(4) << j << std::endl;
+}
+
+Napi::Value Camera::get_default_cameras(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+
+  Napi::Array cameras = Napi::Array::New(env);
+
+  std::string path = "./cameras";
+  fs::directory_iterator end_iter;
+  int index = 0;
+
+  for (fs::directory_iterator dir_itr(path); dir_itr != end_iter; ++dir_itr) {
+    if (dir_itr->path().extension() == ".json") {
+      cameras[index] = Camera::read_from_json(env, Napi::String::New(env, dir_itr->path().string()));
+    }
+  }
+
+  return cameras;
 }

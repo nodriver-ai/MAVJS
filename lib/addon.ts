@@ -113,9 +113,35 @@ export interface Ndbox {
   connect_to_drone(uuid: string): Drone | null;
 }
 
-export var Ndbox: {
+export const Ndbox: {
     new(url: string): Ndbox
 } = addon.Ndbox
+
+export interface ObjectXY {
+  x: number,
+  y: number
+}
+
+export interface Camera {
+  name: string,
+  resolution: number,
+  angle_of_view: number,
+  img_resolution: ObjectXY,
+  ts: number,
+  te: number,
+  overlap: ObjectXY,
+  theta: number,
+  altitude: number,
+  aspect_ratio: number,
+  save(path: string): void
+}
+
+export const Camera: {
+  new(camera: Camera): Camera
+  from_json(path: string): Camera
+  get_default_cameras(): Camera[]
+} = addon.Camera
+
 /*const UDP_PATH = "udp://:14540";
 
 ndbox = new addon.Ndbox(UDP_PATH)

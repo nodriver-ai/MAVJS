@@ -17,6 +17,7 @@ class Camera : public Napi::ObjectWrap<Camera> {
 
  private:
   static Napi::FunctionReference constructor;
+  static Napi::Object read_from_json(Napi::Env env, Napi::Value path);
 
   std::string _name;
   Napi::Value get_name(const Napi::CallbackInfo &info);
@@ -49,11 +50,17 @@ class Camera : public Napi::ObjectWrap<Camera> {
   Napi::Value get_theta(const Napi::CallbackInfo &info);
   void set_theta(const Napi::CallbackInfo &info, const Napi::Value &theta);
 
+  double _altitude;
+  Napi::Value get_altitude(const Napi::CallbackInfo &info);
+  void set_altitude(const Napi::CallbackInfo &info, const Napi::Value &altitude);
+
   double _aspect_ratio;
   Napi::Value get_aspect_ratio(const Napi::CallbackInfo &info);
 
   static Napi::Value from_json(const Napi::CallbackInfo& info);
   void save(const Napi::CallbackInfo& info);
+
+  static Napi::Value get_default_cameras(const Napi::CallbackInfo& info);
 
 };
 

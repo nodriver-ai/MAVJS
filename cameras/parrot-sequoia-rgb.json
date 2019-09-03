@@ -1,0 +1,17 @@
+{
+  "name": "parrot sequoia RGB",
+  "angle_of_view": 1.6476,
+  "img_resolution": {
+      "x": 1080.0,
+      "y": 1024.0
+  },
+  "overlap": {
+      "x": 70.0,
+      "y": 70.0
+  },
+  "resolution": 270.27,
+  "te": 0.001724138,
+  "theta": 4.2844,
+  "ts": 1.0,
+  "altitude": 30
+}
