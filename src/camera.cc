@@ -173,8 +173,14 @@ Napi::Value Camera::get_aspect_ratio(const Napi::CallbackInfo &info) {
   return Napi::Number::New(env, this->_aspect_ratio);
 }
 
-Napi::Object Camera::read_from_json(Napi::Env env, Napi::Value path) {
-  Napi::String json_path = path.As<Napi::String>();
+Napi::Value Camera::from_json(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+
+  if (info.Length() != 1 || !info[0].IsString()) {
+    throw Napi::TypeError::New(env, "Camera.from_json static method require one argument(`json file path`) as `String`");
+  }
+
+  Napi::String json_path = info[0].As<Napi::String>();
 
   std::ifstream i(json_path.Utf8Value());
   json j;
@@ -201,33 +207,6 @@ Napi::Object Camera::read_from_json(Napi::Env env, Napi::Value path) {
   Napi::Object obj = constructor.New({ name, resolution, angle_of_view, img_resolution, ts, te, overlap, theta, altitude });
 
   return obj;
-}
-
-Napi::Value Camera::from_json(const Napi::CallbackInfo& info) {
-  Napi::Env env = info.Env();
-
-  if (info.Length() != 1 || !info[0].IsString()) {
-    throw Napi::TypeError::New(env, "Camera.from_json static method require one argument(`json file path`) as `String`");
-  }
-
-  fs::path path_name(info[0].As<Napi::String>().Utf8Value());
-
-  if (fs::is_directory(path_name)) {
-    Napi::Array cameras = Napi::Array::New(env);
-
-    fs::directory_iterator end_iter;
-    int index = 0;
-
-    for (fs::directory_iterator dir_itr(path_name); dir_itr != end_iter; ++dir_itr) {
-      if (dir_itr->path().extension() == ".json") {
-        cameras[index] = Camera::read_from_json(env, Napi::String::New(env, dir_itr->path().string()));
-      }
-    }
-
-    return cameras;
-  }
-
-  return Camera::read_from_json(env, info[0]);
 }
 
 void Camera::save(const Napi::CallbackInfo& info) {

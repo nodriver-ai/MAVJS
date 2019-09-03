@@ -17,7 +17,6 @@ class Camera : public Napi::ObjectWrap<Camera> {
 
  private:
   static Napi::FunctionReference constructor;
-  static Napi::Object read_from_json(Napi::Env env, Napi::Value path);
 
   std::string _name;
   Napi::Value get_name(const Napi::CallbackInfo &info);
