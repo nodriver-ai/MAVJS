@@ -1,4 +1,7 @@
-const addon = require('bindings')('ndbox');
+import * as bindings from 'bindings';
+import * as turf from '@turf/turf';
+
+const addon = bindings('ndbox');
 
 export interface Position {
   latitude: number,
@@ -117,9 +120,9 @@ export const Ndbox: {
     new(url: string): Ndbox
 } = addon.Ndbox
 
-export interface ObjectXY {
-  x: number,
-  y: number
+export interface ImgResolution {
+  x?: number,
+  y?: number
 }
 
 export interface Camera {
@@ -127,41 +130,157 @@ export interface Camera {
   name: string,
   resolution: number,
   angle_of_view: number,
-  img_resolution: ObjectXY,
+  img_resolution: ImgResolution,
   ts: number,
   te: number,
-  overlap: ObjectXY,
+  overlap: number,
   theta: number,
-  altitude: number,
-  aspect_ratio: number,
-  save(path: string): void
+  altitude: number
 }
 
-export const Camera: {
-  new(camera: Camera): Camera
-  from_json(path: string): Camera
-} = addon.Camera
+export interface MissionOptions {
+  home_position: turf.Feature<turf.Point>,
+  area_of_interest: turf.Feature<turf.Polygon>,
+  camera: Camera;
+}
 
-/*const UDP_PATH = "udp://:14540";
 
-ndbox = new addon.Ndbox(UDP_PATH)
+function compute_vstart(home_position:turf.Feature<turf.Point>, polygon: turf.Feature<turf.Polygon>): number {
+  return turf.nearestPoint(home_position, turf.explode(polygon)).properties.featureIndex;
+}
 
-let uuids = []
+function get_segment(index: number, polygon: turf.Feature<turf.Polygon>): turf.Feature<turf.LineString> {
+  const segments = turf.lineSegment(polygon);
+  return segments.features[index];
+}
 
-const uuidsInterval = setInterval(() => {
-  uuids = ndbox.discover_uuids()
-  console.log(uuids)
-}, 1000);
+function get_point(index: number, polygon: turf.Feature<turf.Polygon>): turf.Feature<turf.Point> {
+  const points = turf.coordAll(turf.polygonToLine(polygon))
+  return turf.point(points[index]);
+}
 
-setTimeout(() => {
-  if (uuids.length > 0) {
-    drone = ndbox.connect_to_drone(uuids[0])
-    drone.set_rate_battery(0.2)
-    const positionInterval = setInterval(() => {
-      //battery = drone.battery()
-      //console.log(battery)
-      console.log(drone.flight_mode())
-    }, 1000)
+function compute_escan(polygon: turf.Feature<turf.Polygon>): number {
+  let segmentLenght = []
+  turf.segmentEach(polygon, function (segment) {
+    segmentLenght.push(turf.length(segment))
+  });
+
+  const maxLenght = Math.max(...segmentLenght);
+  const segmentMaxLenghtIndex = segmentLenght.indexOf(maxLenght);
+  return segmentMaxLenghtIndex;
+}
+
+function compute_vfar(segment: turf.Feature<turf.LineString>, polygon: turf.Feature<turf.Polygon>): number {
+  let vertexDistance = [];
+  turf.coordEach(polygon, function(vertex) {
+    vertexDistance.push(turf.pointToLineDistance(vertex, segment))
+  })
+
+  const minDistance = Math.max(...vertexDistance);
+  const vertexMinDistanceIndex = vertexDistance.indexOf(minDistance);
+
+  return vertexMinDistanceIndex;
+}
+
+export function mission_plan_generate(options: MissionOptions) {
+
+  const camera: Camera = options.camera;
+  const home_position: turf.Feature<turf.Point> = options.home_position;
+  const area_of_interest: turf.Feature<turf.Polygon> = options.area_of_interest;
+
+  // Aspect ration
+  const rho: number = camera.img_resolution.x / camera.img_resolution.y
+
+  // h max
+  const hmax: number = camera.img_resolution.x / (2 * camera.resolution * Math.tan(camera.angle_of_view / 2))
+  const altitude = Math.min(camera.altitude, hmax)
+
+  // Size of the projection area (Lx, Ly)
+  let projectionArea: ImgResolution = {};
+  projectionArea.x = 2 * altitude * Math.tan(camera.angle_of_view / 2);
+  projectionArea.y = projectionArea.x / rho
+
+  // Resolution
+  const resolution: number = camera.img_resolution.x / projectionArea.x
+
+  const overlap: ImgResolution = {
+    x: projectionArea.x * (camera.overlap / 100),
+    y: projectionArea.y * (camera.overlap / 100),
   }
+  // Distance between the centers of two adjacent area along the wired direction
+  const ds: number = projectionArea.x - overlap.x
 
-}, 2000)*/
+  // Distance between the centers of two adjacent area along the path direction
+  const dw: number = projectionArea.y - overlap.y
+
+  // Maximum velocity of the drone
+  const vmax = Math.min((projectionArea.y - overlap.y) / camera.ts, camera.theta / (resolution * camera.te))
+
+  // vstart, escan, vscan, vfar
+  const vstart = compute_vstart(options.home_position, options.area_of_interest);
+
+  const escan = compute_escan(options.area_of_interest);
+
+  const vscan = escan + 1
+
+  const vfar = compute_vfar(get_segment(escan, options.area_of_interest), options.area_of_interest);
+
+
+  /*for (let i = vstart; i < vscan + 1; i++) {
+    console.log(i)
+    console.log(get_point(i, options.area_of_interest))
+  }*/
+  /*console.log("vstart", vstart)
+  console.log(turf.coordAll(turf.polygonToLine(options.area_of_interest))[vstart.properties.featureIndex])
+  console.log("vscan", vscan)
+  console.log("escan", escan)*/
+
+}
+
+const area_of_interest = turf.polygon([[
+  [
+              12.777786254882812,
+              41.66521798508633
+            ],
+            [
+              12.735214233398438,
+              41.57847058443442
+            ],
+            [
+              12.9913330078125,
+              41.58360681482734
+            ],
+            [
+              12.913742065429688,
+              41.66521798508633
+            ],
+            [
+              12.777786254882812,
+              41.66521798508633
+            ]
+]]);
+
+const home_position = turf.point([13.00575256347656,
+          41.5419916023209])
+
+const camera = {
+  "id": 0,
+  "name": "parrot sequoia RGB",
+  "angle_of_view": 1.6476,
+  "img_resolution": {
+      "x": 1080.0,
+      "y": 1024.0
+  },
+  "overlap": 70.0,
+  "resolution": 2.70,
+  "te": 0.001724138,
+  "theta": 4.2844,
+  "ts": 1.0,
+  "altitude": 5
+};
+
+mission_plan_generate({
+  camera: camera,
+  area_of_interest: area_of_interest,
+  home_position: home_position
+})
