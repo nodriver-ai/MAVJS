@@ -159,6 +159,11 @@ function get_point(index: number, polygon: turf.Feature<turf.Polygon>): turf.Fea
   return turf.point(points[index]);
 }
 
+function move_point(point: turf.Feature<turf.Point>, distance: ImgResolution, bearing: ImgResolution) {
+  const point_x_moved = turf.destination(point, distance.x, bearing.x);
+  return turf.destination(point_x_moved, distance.y, bearing.y);
+}
+
 function compute_escan(polygon: turf.Feature<turf.Polygon>): number {
   let segmentLenght = []
   turf.segmentEach(polygon, function (segment) {
@@ -225,43 +230,53 @@ export function mission_plan_generate(options: MissionOptions) {
 
   const vfar = compute_vfar(get_segment(escan, options.area_of_interest), options.area_of_interest);
 
+  console.log(vstart, vscan, vfar)
+  let waypoints = [];
 
-  /*for (let i = vstart; i < vscan + 1; i++) {
-    console.log(i)
-    console.log(get_point(i, options.area_of_interest))
-  }*/
-  /*console.log("vstart", vstart)
-  console.log(turf.coordAll(turf.polygonToLine(options.area_of_interest))[vstart.properties.featureIndex])
-  console.log("vscan", vscan)
-  console.log("escan", escan)*/
+  for (let i = vstart; i < vscan; i++) {
+    const point_i = get_point(i, options.area_of_interest);
+    const point_next_i = get_point(i + 1, options.area_of_interest)
+    const d = turf.distance(point_i, point_next_i) * 1000
+    const nw = Math.ceil((d - overlap.y) / dw)
+    const ovy_ = ((nw * projectionArea.y) - d) / (nw - 1)
+    const dw_ = (d - (dw + projectionArea.y)) / (nw - 1)
+
+    waypoints.push(move_point(point_i, {x: projectionArea.y / (2*1000), y: projectionArea.x / (2*1000)}, {x: turf.bearing(point_i, point_next_i), y: 0}));
+
+    for(let j = 1; j < nw; j++) {
+      waypoints.push(move_point(point_i, {x: (projectionArea.y / (2*1000)) + ((j*dw_)/1000), y: projectionArea.x / (2*1000)}, {x: turf.bearing(point_i, point_next_i), y: 0}));
+    }
+  }
+
+  console.log(JSON.stringify(turf.featureCollection(waypoints)))
 
 }
 
 const area_of_interest = turf.polygon([[
   [
-              12.777786254882812,
-              41.66521798508633
+              12.662944793701172,
+              41.734621540876404
             ],
             [
-              12.735214233398438,
-              41.57847058443442
+              12.662301063537598,
+              41.73311634927409
             ],
             [
-              12.9913330078125,
-              41.58360681482734
+              12.666077613830566,
+              41.732988246232416
             ],
             [
-              12.913742065429688,
-              41.66521798508633
+              12.665305137634277,
+              41.73446141578682
             ],
             [
-              12.777786254882812,
-              41.66521798508633
+              12.662944793701172,
+              41.734621540876404
             ]
 ]]);
 
-const home_position = turf.point([13.00575256347656,
-          41.5419916023209])
+const home_position = turf.point([ 12.661314010620117,
+          41.73212354401866])
 
 const camera = {
   "id": 0,
