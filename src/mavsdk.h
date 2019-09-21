@@ -1,15 +1,15 @@
-#ifndef NDBOX_H
-#define NDBOX_H
+#ifndef MAVSDK_H
+#define MAVSDK_H
 
 #include <string>
 #include <mutex>
 #include <napi.h>
 #include <mavsdk/mavsdk.h>
 
-class Ndbox : public Napi::ObjectWrap<Ndbox> {
+class MavSDK : public Napi::ObjectWrap<MavSDK> {
 public:
  static Napi::Object Init(Napi::Env env, Napi::Object exports);
- Ndbox(const Napi::CallbackInfo &info);
+ MavSDK(const Napi::CallbackInfo &info);
 
 private:
  static Napi::FunctionReference constructor;

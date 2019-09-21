@@ -6,7 +6,7 @@
 #include <sstream>
 #include <algorithm>
 
-#include "ndbox.h"
+#include "mavsdk.h"
 #include "drone.h"
 #include <mavsdk/mavsdk.h>
 
@@ -20,26 +20,26 @@ Napi::Value ThrowErrorMessage(Napi::Env env, std::string msg)
   return env.Null();
 }
 
-Napi::FunctionReference Ndbox::constructor;
+Napi::FunctionReference MavSDK::constructor;
 
-Napi::Object Ndbox::Init(Napi::Env env, Napi::Object exports) {
+Napi::Object MavSDK::Init(Napi::Env env, Napi::Object exports) {
   Napi::HandleScope scope(env);
 
-  Napi::Function func = DefineClass(env, "Ndbox", {
-    InstanceAccessor("connection_url", &Ndbox::get_connection_url, nullptr),
-    InstanceMethod("is_connected", &Ndbox::is_connected),
-    InstanceMethod("discover_uuids", &Ndbox::discover_uuids),
-    InstanceMethod("connect_to_drone", &Ndbox::connect_to_drone),
+  Napi::Function func = DefineClass(env, "MavSDK", {
+    InstanceAccessor("connection_url", &MavSDK::get_connection_url, nullptr),
+    InstanceMethod("is_connected", &MavSDK::is_connected),
+    InstanceMethod("discover_uuids", &MavSDK::discover_uuids),
+    InstanceMethod("connect_to_drone", &MavSDK::connect_to_drone),
   });
 
   constructor = Napi::Persistent(func);
   constructor.SuppressDestruct();
 
-  exports.Set("Ndbox", func);
+  exports.Set("MavSDK", func);
   return exports;
 }
 
-Ndbox::Ndbox(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Ndbox>(info)  {
+MavSDK::MavSDK(const Napi::CallbackInfo& info) : Napi::ObjectWrap<MavSDK>(info)  {
   Napi::Env env = info.Env();
   Napi::HandleScope scope(env);
 
@@ -77,14 +77,14 @@ Ndbox::Ndbox(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Ndbox>(info)  {
 
 }
 
-Napi::Value Ndbox::get_connection_url(const Napi::CallbackInfo& info) {
+Napi::Value MavSDK::get_connection_url(const Napi::CallbackInfo& info) {
   std::string connection_url = this->_connection_url;
 
   return Napi::String::New(info.Env(), connection_url);
 }
 
 
-Napi::Value Ndbox::is_connected(const Napi::CallbackInfo& info) {
+Napi::Value MavSDK::is_connected(const Napi::CallbackInfo& info) {
   bool isConnected;
   std:: string uuid = info[0].As<Napi::String>().Utf8Value();
   uint64_t value;
@@ -95,7 +95,7 @@ Napi::Value Ndbox::is_connected(const Napi::CallbackInfo& info) {
   return Napi::Boolean::New(info.Env(), isConnected);
 }
 
-Napi::Value Ndbox::discover_uuids(const Napi::CallbackInfo& info) {
+Napi::Value MavSDK::discover_uuids(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   this->uuids_mutex.lock();
   Napi::Array arr = Napi::Array::New(info.Env(), this->uuids.size());
@@ -107,7 +107,7 @@ Napi::Value Ndbox::discover_uuids(const Napi::CallbackInfo& info) {
   return arr;
 }
 
-Napi::Value Ndbox::connect_to_drone(const Napi::CallbackInfo& info) {
+Napi::Value MavSDK::connect_to_drone(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   std:: string uuid = info[0].As<Napi::String>().Utf8Value();
   uint64_t value;

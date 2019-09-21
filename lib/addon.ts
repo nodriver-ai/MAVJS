@@ -1,8 +1,8 @@
-import { Mission, MissionOptions, Camera } from './mission';
+import * as bindings from 'bindings';
 
-const addon = require('bindings')('ndbox');
+const addon = bindings('MAVJS');
 
-export {Mission, MissionOptions, Camera};
+import * as turf from "@turf/turf";
 
 export interface Position {
   latitude: number,
@@ -108,15 +108,71 @@ export interface Drone {
   health(): Health;
   rc_status(): RCStatus;
   telemetry(): Telemetry;
+  arm(): Promise<string>;
+  disarm(): Promise<string>;
+  takeoff(): Promise<string>;
+  land(): Promise<string>;
 }
 
-export interface Ndbox {
+interface ObjectXY {
+  x: number,
+  y: number
+}
+
+export enum CameraAction {
+  TAKE_PHOTO = 0,
+  START_PHOTO_INTERVAL = 1,
+  STOP_PHOTO_INTERVAL = 2,
+  START_VIDEO = 3,
+  STOP_VIDEO = 4,
+  NONE = 5,
+}
+
+export interface Camera {
+  id: number,
+  name: string,
+  resolution: number,
+  angle_of_view: number,
+  img_resolution: ObjectXY,
+  ts: number,
+  te: number,
+  overlap: number,
+  theta: number,
+  altitude: number
+}
+
+export interface MissionItem {
+  latitude_deg: number,
+  longitude_deg: number,
+  relative_altitude_m: number,
+  speed_m_s: number,
+  is_fly_through: boolean,
+  gimbal_pitch_deg: number,
+  gimbal_yaw_deg: number,
+  camera_action: CameraAction
+}
+
+export interface MissionOptions {
+  home: turf.Feature<turf.Point>,
+  area: turf.Feature<turf.Polygon>,
+  camera: Camera;
+}
+
+export interface MissionStatistics {
+  area: number,
+  photo_count: number,
+  distance: number,
+  time: number,
+  max_telemetry_distance: number
+}
+
+export interface MavSDK {
   connection_url: string;
   is_connected(uuid: string | null): boolean;
   discover_uuids(): string[];
   connect_to_drone(uuid: string): Drone | null;
 }
 
-export const Ndbox: {
-  new(url: string): Ndbox
-} = addon.Ndbox
+export const MavSDK: {
+  new(url: string): MavSDK
+} = addon.MavSDK

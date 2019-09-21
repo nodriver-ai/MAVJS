@@ -1,19 +1,10 @@
 #include <string>
 #include <iostream>
-//#include <chrono>
 #include <cstdint>
-//#include <thread>
 #include <typeinfo>
 #include <sstream>
 
 #include "drone.h"
-//#include <mavsdk/mavsdk.h>
-//#include <mavsdk/plugins/telemetry/telemetry.h>
-//#include <mavsdk/plugins/info/info.h>
-
-//using namespace mavsdk;
-//using namespace std::chrono;
-//using namespace std::this_thread;
 
 #define ERROR_CONSOLE_TEXT "\033[31m" // Turn text on console red
 #define TELEMETRY_CONSOLE_TEXT "\033[34m" // Turn text on console blue
@@ -55,6 +46,10 @@ Napi::Object Drone::Init(Napi::Env env, Napi::Object exports) {
     InstanceMethod("health", &Drone::health),
     InstanceMethod("rc_status", &Drone::rc_status),
     InstanceMethod("telemetry", &Drone::telemetry),
+    InstanceMethod("arm", &Drone::arm),
+    InstanceMethod("disarm", &Drone::disarm),
+    InstanceMethod("takeoff", &Drone::takeoff),
+    InstanceMethod("land", &Drone::land)
   });
 
   constructor = Napi::Persistent(func);
@@ -72,6 +67,7 @@ Drone::Drone(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Drone>(info)  {
   this->_system = info[0].As<Napi::External<mavsdk::System>>().Data();
 
   this->_telemetry = std::make_shared<mavsdk::Telemetry>(*this->_system);
+  this->_action = std::make_shared<mavsdk::Action>(*this->_system);
   this->_info = std::make_shared<mavsdk::Info>(*this->_system);
 }
 
@@ -369,4 +365,80 @@ Napi::Value Drone::telemetry(const Napi::CallbackInfo& info) {
   obj.Set(Napi::String::New(env, "attitude_euler_angle"), this->attitude_euler_angle(info));
 
   return obj;
+}
+
+Napi::Value Drone::arm(const Napi::CallbackInfo& info) {
+  Napi::Promise::Deferred deferred = Napi::Promise::Deferred::New(info.Env());
+
+  if (this->_telemetry->health_all_ok()) {
+    const mavsdk::Action::Result arm_result = this->_action->arm();
+    if (arm_result != mavsdk::Action::Result::SUCCESS) {
+      deferred.Reject(Napi::String::New(info.Env(), mavsdk::Action::result_str(arm_result)));
+    }
+    else {
+      deferred.Resolve(Napi::String::New(info.Env(), mavsdk::Action::result_str(arm_result)));
+    }
+  }
+  else {
+    deferred.Reject(Napi::String::New(info.Env(), "Health check seems to fail. Please check drone's sensors."));
+  }
+
+  return deferred.Promise();
+}
+
+Napi::Value Drone::disarm(const Napi::CallbackInfo& info) {
+  Napi::Promise::Deferred deferred = Napi::Promise::Deferred::New(info.Env());
+
+  if (!this->_telemetry->in_air()) {
+    const mavsdk::Action::Result disarm_result = this->_action->disarm();
+    if (disarm_result != mavsdk::Action::Result::SUCCESS) {
+      deferred.Reject(Napi::String::New(info.Env(), mavsdk::Action::result_str(disarm_result)));
+    }
+    else {
+      deferred.Resolve(Napi::String::New(info.Env(), mavsdk::Action::result_str(disarm_result)));
+    }
+  }
+  else {
+    deferred.Reject(Napi::String::New(info.Env(), "Disarm action can be made only after landing."));
+  }
+
+  return deferred.Promise();
+}
+
+Napi::Value Drone::takeoff(const Napi::CallbackInfo& info) {
+  Napi::Promise::Deferred deferred = Napi::Promise::Deferred::New(info.Env());
+
+  if (this->_telemetry->armed()) {
+    const mavsdk::Action::Result takeoff_result = this->_action->takeoff();
+    if (takeoff_result != mavsdk::Action::Result::SUCCESS) {
+      deferred.Reject(Napi::String::New(info.Env(), mavsdk::Action::result_str(takeoff_result)));
+    }
+    else {
+      deferred.Resolve(Napi::String::New(info.Env(), mavsdk::Action::result_str(takeoff_result)));
+    }
+  }
+  else {
+    deferred.Reject(Napi::String::New(info.Env(), "takeoff action can be made only with the drone armed."));
+  }
+
+  return deferred.Promise();
+}
+
+Napi::Value Drone::land(const Napi::CallbackInfo& info) {
+  Napi::Promise::Deferred deferred = Napi::Promise::Deferred::New(info.Env());
+
+  if (this->_telemetry->in_air()) {
+    const mavsdk::Action::Result land_result = this->_action->land();
+    if (land_result != mavsdk::Action::Result::SUCCESS) {
+      deferred.Reject(Napi::String::New(info.Env(), mavsdk::Action::result_str(land_result)));
+    }
+    else {
+      deferred.Resolve(Napi::String::New(info.Env(), mavsdk::Action::result_str(land_result)));
+    }
+  }
+  else {
+    deferred.Reject(Napi::String::New(info.Env(), "Landing action can be made only with the drone in air."));
+  }
+
+  return deferred.Promise();
 }

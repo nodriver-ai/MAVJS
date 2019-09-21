@@ -1,7 +1,7 @@
 {
-  "name": "ndbox",
+  "name": "MAVJS",
   "version": "1.0.0",
-  "description": "ndbox software to manage one or more ndone",
+  "description": "MAVJS software to manage one or more ndone",
   "main": "lib/addon.js",
   "scripts": {
     "build": "tsc",
