@@ -16,9 +16,7 @@ add_definitions("-Wall -Wextra")
 # link_directories(/usr/local/lib)
 
 find_package(MAVSDK REQUIRED)
-find_package(Boost COMPONENTS system filesystem REQUIRED)
 
-# creare variabili d'ambiente per liberie esterne es: BOOST_ROOT_DIR
 file(GLOB SOURCE_FILES
     "src/*.h"
     "src/*.cc")
@@ -27,7 +25,6 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
     PREFIX ""
     SUFFIX ".node")
 target_include_directories(${PROJECT_NAME} PRIVATE
-    ${Boost_INCLUDE_DIRS}
     ${CMAKE_SOURCE_DIR}/node_modules/node-addon-api
     ${CMAKE_SOURCE_DIR}/node_modules/node-addon-api/src
     ${CMAKE_JS_INC})
@@ -38,12 +35,10 @@ execute_process(COMMAND node -p "require('node-addon-api').include"
         )
 string(REPLACE "\n" "" NODE_ADDON_API_DIR ${NODE_ADDON_API_DIR})
 string(REPLACE "\"" "" NODE_ADDON_API_DIR ${NODE_ADDON_API_DIR})
-target_include_directories(${PROJECT_NAME} PRIVATE ${NODE_ADDON_API_DIR}) #per boost BOOST_INCLUDE_DIRS
+target_include_directories(${PROJECT_NAME} PRIVATE ${NODE_ADDON_API_DIR})
 
 # target_include_directories(${PROJECT_NAME} PUBLIC mavsdk)
 target_link_libraries(${PROJECT_NAME}
-    ${Boost_FILESYSTEM_LIBRARY}
-    ${Boost_SYSTEM_LIBRARY}
     MAVSDK::mavsdk_mission
     MAVSDK::mavsdk_telemetry
     MAVSDK::mavsdk_info
