@@ -912,3 +912,4 @@ _deps
 *.app
 
 package-lock.json
+*.js
