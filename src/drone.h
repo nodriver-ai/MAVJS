@@ -8,6 +8,7 @@
 #include <mavsdk/plugins/telemetry/telemetry.h>
 #include <mavsdk/plugins/action/action.h>
 #include <mavsdk/plugins/info/info.h>
+#include <mavsdk/plugins/mission/mission.h>
 
 class Drone : public Napi::ObjectWrap<Drone> {
 public:
@@ -20,6 +21,7 @@ public:
    std::shared_ptr<mavsdk::Telemetry> _telemetry;
    std::shared_ptr<mavsdk::Action> _action;
    std::shared_ptr<mavsdk::Info> _info;
+   std::shared_ptr<mavsdk::Mission> _mission;
 
    std::string _uuid;
    Napi::Value get_uuid(const Napi::CallbackInfo &info);
@@ -61,6 +63,21 @@ public:
    Napi::Value disarm(const Napi::CallbackInfo &info);
    Napi::Value takeoff(const Napi::CallbackInfo &info);
    Napi::Value land(const Napi::CallbackInfo &info);
+   Napi::Value upload_mission(const Napi::CallbackInfo &info);
+   Napi::Value clear_mission(const Napi::CallbackInfo &info);
+   Napi::Value start_mission(const Napi::CallbackInfo &info);
+   Napi::Value pause_mission(const Napi::CallbackInfo &info);
+   Napi::Value stop_mission(const Napi::CallbackInfo &info);
+   Napi::Value total_mission_items(const Napi::CallbackInfo &info);
+
+   static std::shared_ptr<mavsdk::MissionItem> make_mission_item(
+      double latitude_deg,
+      double longitude_deg,
+      float relative_altitude_m,
+      float speed_m_s,
+      float gimbal_pitch_deg,
+      float gimbal_yaw_deg,
+      mavsdk::MissionItem::CameraAction camera_action);
 };
 
 #endif

@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <typeinfo>
 #include <sstream>
+#include <future>
 
 #include "drone.h"
 
@@ -49,7 +50,13 @@ Napi::Object Drone::Init(Napi::Env env, Napi::Object exports) {
     InstanceMethod("arm", &Drone::arm),
     InstanceMethod("disarm", &Drone::disarm),
     InstanceMethod("takeoff", &Drone::takeoff),
-    InstanceMethod("land", &Drone::land)
+    InstanceMethod("land", &Drone::land),
+    InstanceMethod("upload_mission", &Drone::upload_mission),
+    InstanceMethod("clear_mission", &Drone::clear_mission),
+    InstanceMethod("start_mission", &Drone::start_mission),
+    InstanceMethod("pause_mission", &Drone::pause_mission),
+    InstanceMethod("stop_mission", &Drone::stop_mission),
+    InstanceMethod("total_mission_items", &Drone::total_mission_items)
   });
 
   constructor = Napi::Persistent(func);
@@ -58,7 +65,6 @@ Napi::Object Drone::Init(Napi::Env env, Napi::Object exports) {
   exports.Set("Drone", func);
   return exports;
 }
-
 
 Drone::Drone(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Drone>(info)  {
   Napi::Env env = info.Env();
@@ -69,6 +75,7 @@ Drone::Drone(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Drone>(info)  {
   this->_telemetry = std::make_shared<mavsdk::Telemetry>(*this->_system);
   this->_action = std::make_shared<mavsdk::Action>(*this->_system);
   this->_info = std::make_shared<mavsdk::Info>(*this->_system);
+  this->_mission = std::make_shared<mavsdk::Mission>(*this->_system);
 }
 
 Napi::Value Drone::get_uuid(const Napi::CallbackInfo& info) {
@@ -441,4 +448,152 @@ Napi::Value Drone::land(const Napi::CallbackInfo& info) {
   }
 
   return deferred.Promise();
+}
+
+Napi::Value Drone::upload_mission(const Napi::CallbackInfo& info) {
+  Napi::Promise::Deferred deferred = Napi::Promise::Deferred::New(info.Env());
+
+  this->_mission->set_return_to_launch_after_mission(true);
+
+  std::vector<std::shared_ptr<mavsdk::MissionItem>> _mission_items;
+  mavsdk::MissionItem::CameraAction camera_actions[6] = {
+    mavsdk::MissionItem::CameraAction::TAKE_PHOTO,
+    mavsdk::MissionItem::CameraAction::START_PHOTO_INTERVAL,
+    mavsdk::MissionItem::CameraAction::STOP_PHOTO_INTERVAL,
+    mavsdk::MissionItem::CameraAction::START_VIDEO,
+    mavsdk::MissionItem::CameraAction::STOP_VIDEO,
+    mavsdk::MissionItem::CameraAction::NONE
+  };
+
+  Napi::Array mission_items = info[0].As<Napi::Array>();
+  for(uint i = 0; i < mission_items.Length(); ++i) {
+    auto item = mission_items.Get(i).As<Napi::Object>();
+    _mission_items.push_back(this->make_mission_item(
+      item.Get("longitude_deg").As<Napi::Number>().DoubleValue(),
+      item.Get("latitude_deg").As<Napi::Number>().DoubleValue(),
+      item.Get("relative_altitude_m").As<Napi::Number>().DoubleValue(),
+      item.Get("speed_m_s").As<Napi::Number>().DoubleValue(),
+      item.Get("gimbal_pitch_deg").As<Napi::Number>().DoubleValue(),
+      item.Get("gimbal_yaw_deg").As<Napi::Number>().DoubleValue(),
+      camera_actions[item.Get("camera_action").As<Napi::Number>().Uint32Value()]
+    ));
+  }
+
+  auto prom = std::make_shared<std::promise<mavsdk::Mission::Result>>();
+  auto future_result = prom->get_future();
+  this->_mission->upload_mission_async(
+        _mission_items, [prom](mavsdk::Mission::Result result) { prom->set_value(result); });
+
+  const mavsdk::Mission::Result result = future_result.get();
+  if (result != mavsdk::Mission::Result::SUCCESS) {
+    deferred.Reject(Napi::String::New(info.Env(), mavsdk::Mission::result_str(result)));
+  }
+  deferred.Resolve(Napi::String::New(info.Env(), mavsdk::Mission::result_str(result)));
+
+  return deferred.Promise();
+}
+
+Napi::Value Drone::clear_mission(const Napi::CallbackInfo& info) {
+  Napi::Promise::Deferred deferred = Napi::Promise::Deferred::New(info.Env());
+
+  std::vector<std::shared_ptr<mavsdk::MissionItem>> _mission_items = {};
+
+  auto prom = std::make_shared<std::promise<mavsdk::Mission::Result>>();
+  auto future_result = prom->get_future();
+  this->_mission->upload_mission_async(
+        _mission_items, [prom](mavsdk::Mission::Result result) { prom->set_value(result); });
+
+  const mavsdk::Mission::Result result = future_result.get();
+  if (result != mavsdk::Mission::Result::SUCCESS) {
+    deferred.Reject(Napi::String::New(info.Env(), mavsdk::Mission::result_str(result)));
+  }
+  deferred.Resolve(Napi::String::New(info.Env(), mavsdk::Mission::result_str(result)));
+
+  return deferred.Promise();
+}
+
+Napi::Value Drone::start_mission(const Napi::CallbackInfo& info) {
+  Napi::Promise::Deferred deferred = Napi::Promise::Deferred::New(info.Env());
+
+  const mavsdk::Action::Result arm_result = this->_action->arm();
+  if (arm_result != mavsdk::Action::Result::SUCCESS) {
+    deferred.Reject(Napi::String::New(info.Env(), mavsdk::Action::result_str(arm_result)));
+  }
+
+  auto prom = std::make_shared<std::promise<mavsdk::Mission::Result>>();
+  auto future_result = prom->get_future();
+  this->_mission->start_mission_async(
+        [prom](mavsdk::Mission::Result result) { prom->set_value(result); });
+
+  const mavsdk::Mission::Result result = future_result.get();
+  if (result != mavsdk::Mission::Result::SUCCESS) {
+    deferred.Reject(Napi::String::New(info.Env(), mavsdk::Mission::result_str(result)));
+  }
+  deferred.Resolve(Napi::String::New(info.Env(), mavsdk::Mission::result_str(result)));
+
+  return deferred.Promise();
+}
+
+Napi::Value Drone::pause_mission(const Napi::CallbackInfo& info) {
+  Napi::Promise::Deferred deferred = Napi::Promise::Deferred::New(info.Env());
+
+  auto prom = std::make_shared<std::promise<mavsdk::Mission::Result>>();
+  auto future_result = prom->get_future();
+  this->_mission->pause_mission_async(
+        [prom](mavsdk::Mission::Result result) { prom->set_value(result); });
+
+  const mavsdk::Mission::Result result = future_result.get();
+  if (result != mavsdk::Mission::Result::SUCCESS) {
+    deferred.Reject(Napi::String::New(info.Env(), mavsdk::Mission::result_str(result)));
+  }
+  deferred.Resolve(Napi::String::New(info.Env(), mavsdk::Mission::result_str(result)));
+
+  return deferred.Promise();
+}
+
+Napi::Value Drone::stop_mission(const Napi::CallbackInfo& info) {
+  Napi::Promise::Deferred deferred = Napi::Promise::Deferred::New(info.Env());
+
+  const mavsdk::Action::Result return_to_launch_result = this->_action->return_to_launch();
+  if (return_to_launch_result != mavsdk::Action::Result::SUCCESS) {
+    deferred.Reject(Napi::String::New(info.Env(), mavsdk::Action::result_str(return_to_launch_result)));
+  }
+
+  std::vector<std::shared_ptr<mavsdk::MissionItem>> _mission_items = {};
+
+  auto prom = std::make_shared<std::promise<mavsdk::Mission::Result>>();
+  auto future_result = prom->get_future();
+  this->_mission->upload_mission_async(
+        _mission_items, [prom](mavsdk::Mission::Result result) { prom->set_value(result); });
+
+  const mavsdk::Mission::Result result = future_result.get();
+  if (result != mavsdk::Mission::Result::SUCCESS) {
+    deferred.Reject(Napi::String::New(info.Env(), mavsdk::Mission::result_str(result)));
+  }
+
+  deferred.Resolve(Napi::String::New(info.Env(), "SUCCESS"));
+  return deferred.Promise();
+}
+
+Napi::Value Drone::total_mission_items(const Napi::CallbackInfo& info) {
+  return Napi::Number::New(info.Env(), this->_mission->total_mission_items());
+}
+
+std::shared_ptr<mavsdk::MissionItem> Drone::make_mission_item(
+    double longitude_deg,
+    double latitude_deg,
+    float relative_altitude_m,
+    float speed_m_s,
+    float gimbal_pitch_deg,
+    float gimbal_yaw_deg,
+    mavsdk::MissionItem::CameraAction camera_action)
+{
+    std::shared_ptr<mavsdk::MissionItem> new_item(new mavsdk::MissionItem());
+    new_item->set_position(latitude_deg, longitude_deg);
+    new_item->set_relative_altitude(relative_altitude_m);
+    new_item->set_speed(speed_m_s);
+    new_item->set_fly_through(true);
+    new_item->set_gimbal_pitch_and_yaw(gimbal_pitch_deg, gimbal_yaw_deg);
+    new_item->set_camera_action(camera_action);
+    return new_item;
 }

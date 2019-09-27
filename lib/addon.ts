@@ -1,8 +1,5 @@
 import * as bindings from 'bindings';
-
 const addon = bindings('MAVJS');
-
-import * as turf from "@turf/turf";
 
 export interface Position {
   latitude: number,
@@ -77,6 +74,25 @@ export interface Telemetry {
   attitude_euler_angle: EulerAngle;
 }
 
+export enum CameraAction {
+  TAKE_PHOTO = 0,
+  START_PHOTO_INTERVAL = 1,
+  STOP_PHOTO_INTERVAL = 2,
+  START_VIDEO = 3,
+  STOP_VIDEO = 4,
+  NONE = 5
+}
+
+export interface MissionItem {
+  latitude_deg: number,
+  longitude_deg: number,
+  relative_altitude_m: number,
+  speed_m_s: number,
+  gimbal_pitch_deg: number,
+  gimbal_yaw_deg: number,
+  camera_action: CameraAction
+}
+
 export interface Drone {
   uuid: string;
   get_product_info(): ProductInfo;
@@ -112,58 +128,12 @@ export interface Drone {
   disarm(): Promise<string>;
   takeoff(): Promise<string>;
   land(): Promise<string>;
-}
-
-interface ObjectXY {
-  x: number,
-  y: number
-}
-
-export enum CameraAction {
-  TAKE_PHOTO = 0,
-  START_PHOTO_INTERVAL = 1,
-  STOP_PHOTO_INTERVAL = 2,
-  START_VIDEO = 3,
-  STOP_VIDEO = 4,
-  NONE = 5,
-}
-
-export interface Camera {
-  id: number,
-  name: string,
-  resolution: number,
-  angle_of_view: number,
-  img_resolution: ObjectXY,
-  ts: number,
-  te: number,
-  overlap: number,
-  theta: number,
-  altitude: number
-}
-
-export interface MissionItem {
-  latitude_deg: number,
-  longitude_deg: number,
-  relative_altitude_m: number,
-  speed_m_s: number,
-  is_fly_through: boolean,
-  gimbal_pitch_deg: number,
-  gimbal_yaw_deg: number,
-  camera_action: CameraAction
-}
-
-export interface MissionOptions {
-  home: turf.Feature<turf.Point>,
-  area: turf.Feature<turf.Polygon>,
-  camera: Camera;
-}
-
-export interface MissionStatistics {
-  area: number,
-  photo_count: number,
-  distance: number,
-  time: number,
-  max_telemetry_distance: number
+  upload_mission(mission_items: MissionItem[]): Promise<string>;
+  clear_mission(): Promise<string>;
+  start_mission(): Promise<string>;
+  stop_mission(): Promise<string>;
+  pause_mission(): Promise<string>;
+  total_mission_items(): number;
 }
 
 export interface MavSDK {
