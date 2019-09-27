@@ -11,6 +11,7 @@
   "author": "andrea pomente",
   "license": "ISC",
   "devDependencies": {
+    "typescript": "^3.6.3",
     "@types/node": "^12.7.1",
     "bindings": "~1.2.1",
     "cmake-js": "~5.3.2",
