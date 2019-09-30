@@ -64,11 +64,11 @@ public:
    Napi::Value takeoff(const Napi::CallbackInfo &info);
    Napi::Value land(const Napi::CallbackInfo &info);
    Napi::Value upload_mission(const Napi::CallbackInfo &info);
-   Napi::Value clear_mission(const Napi::CallbackInfo &info);
    Napi::Value start_mission(const Napi::CallbackInfo &info);
    Napi::Value pause_mission(const Napi::CallbackInfo &info);
+   Napi::Value restart_mission(const Napi::CallbackInfo &info);
    Napi::Value stop_mission(const Napi::CallbackInfo &info);
-   Napi::Value total_mission_items(const Napi::CallbackInfo &info);
+   Napi::Value mission_finished(const Napi::CallbackInfo &info);
 
    static std::shared_ptr<mavsdk::MissionItem> make_mission_item(
       double latitude_deg,

@@ -129,11 +129,10 @@ export interface Drone {
   takeoff(): Promise<string>;
   land(): Promise<string>;
   upload_mission(mission_items: MissionItem[]): Promise<string>;
-  clear_mission(): Promise<string>;
   start_mission(): Promise<string>;
   stop_mission(): Promise<string>;
   pause_mission(): Promise<string>;
-  total_mission_items(): number;
+  mission_finished(): boolean;
 }
 
 export interface MavSDK {
