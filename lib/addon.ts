@@ -74,13 +74,19 @@ export interface Telemetry {
   attitude_euler_angle: EulerAngle;
 }
 
-export enum CameraAction {
-  TAKE_PHOTO = 0,
-  START_PHOTO_INTERVAL = 1,
-  STOP_PHOTO_INTERVAL = 2,
-  START_VIDEO = 3,
-  STOP_VIDEO = 4,
-  NONE = 5
+export interface CameraInformation {
+  vendor_name: string,
+  model_name: string,
+  resolution_h: number,
+  resolution_v: number,
+  angle_of_view: number,
+  spatial_resolution: number,
+  te: number,
+  ts: number,
+  theta: number,
+  overlap_high: number,
+  overlap_medium: number,
+  overlap_low: number
 }
 
 export interface MissionItem {
@@ -90,7 +96,7 @@ export interface MissionItem {
   speed_m_s: number,
   gimbal_pitch_deg: number,
   gimbal_yaw_deg: number,
-  camera_action: CameraAction
+  camera_action: number
 }
 
 export interface Drone {
@@ -135,11 +141,19 @@ export interface Drone {
   mission_finished(): boolean;
 }
 
+export interface Camera {
+  uuid: string;
+  is_connected(): boolean;
+  information(): CameraInformation
+}
+
 export interface MavSDK {
   connection_url: string;
   is_connected(uuid: string | null): boolean;
-  discover_uuids(): string[];
+  discover_drones(): string[];
+  discover_cameras(): string[];
   connect_to_drone(uuid: string): Drone | null;
+  connect_to_camera(uuid: string): Camera | null;
 }
 
 export const MavSDK: {

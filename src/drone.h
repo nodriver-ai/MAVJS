@@ -9,6 +9,7 @@
 #include <mavsdk/plugins/action/action.h>
 #include <mavsdk/plugins/info/info.h>
 #include <mavsdk/plugins/mission/mission.h>
+#include <mavsdk/plugins/camera/camera.h>
 
 class Drone : public Napi::ObjectWrap<Drone> {
 public:
@@ -22,6 +23,7 @@ public:
    std::shared_ptr<mavsdk::Action> _action;
    std::shared_ptr<mavsdk::Info> _info;
    std::shared_ptr<mavsdk::Mission> _mission;
+   std::shared_ptr<mavsdk::Camera> _camera;
 
    std::string _uuid;
    Napi::Value get_uuid(const Napi::CallbackInfo &info);

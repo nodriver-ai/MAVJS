@@ -8,6 +8,7 @@
 
 #include "mavsdk.h"
 #include "drone.h"
+#include "camera.h"
 #include <mavsdk/mavsdk.h>
 
 #define ERROR_CONSOLE_TEXT "\033[31m" // Turn text on console red
@@ -28,8 +29,10 @@ Napi::Object MavSDK::Init(Napi::Env env, Napi::Object exports) {
   Napi::Function func = DefineClass(env, "MavSDK", {
     InstanceAccessor("connection_url", &MavSDK::get_connection_url, nullptr),
     InstanceMethod("is_connected", &MavSDK::is_connected),
-    InstanceMethod("discover_uuids", &MavSDK::discover_uuids),
+    InstanceMethod("discover_drones", &MavSDK::discover_drones),
+    InstanceMethod("discover_cameras", &MavSDK::discover_cameras),
     InstanceMethod("connect_to_drone", &MavSDK::connect_to_drone),
+    InstanceMethod("connect_to_camera", &MavSDK::connect_to_camera)
   });
 
   constructor = Napi::Persistent(func);
@@ -56,25 +59,42 @@ MavSDK::MavSDK(const Napi::CallbackInfo& info) : Napi::ObjectWrap<MavSDK>(info) 
   this->_connection_url = connection_url;
 
   auto _on_discover = [this](uint64_t uuid) -> void {
-    this->uuids_mutex.lock();
-    if (std::find(this->uuids.begin(), this->uuids.end(), uuid) == this->uuids.end()) {
-      this->uuids.push_back(uuid);
+    if (uuid >= 200 && uuid <= 205) {
+      this->uuid_cameras_mutex.lock();
+      if (std::find(this->uuid_cameras.begin(), this->uuid_cameras.end(), uuid) == this->uuid_cameras.end()) {
+        this->uuid_cameras.push_back(uuid);
+      }
+      this->uuid_cameras_mutex.unlock();
     }
-    this->uuids_mutex.unlock();
+    else {
+      this->uuid_drones_mutex.lock();
+      if (std::find(this->uuid_drones.begin(), this->uuid_drones.end(), uuid) == this->uuid_drones.end()) {
+        this->uuid_drones.push_back(uuid);
+      }
+      this->uuid_drones_mutex.unlock();
+    }
   };
 
   this->_dc.register_on_discover(_on_discover);
 
   auto _on_timeout = [this](uint64_t uuid) -> void {
-    this->uuids_mutex.lock();
-    if (std::find(this->uuids.begin(), this->uuids.end(), uuid) != this->uuids.end()) {
-      this->uuids.erase(std::remove(this->uuids.begin(), this->uuids.end(), uuid), this->uuids.end());
+    if (uuid >= 200 && uuid <= 205) {
+      this->uuid_cameras_mutex.lock();
+      if (std::find(this->uuid_cameras.begin(), this->uuid_cameras.end(), uuid) != this->uuid_cameras.end()) {
+        this->uuid_cameras.erase(std::remove(this->uuid_cameras.begin(), this->uuid_cameras.end(), uuid), this->uuid_cameras.end());
+      }
+      this->uuid_cameras_mutex.unlock();
     }
-    this->uuids_mutex.unlock();
+    else {
+      this->uuid_drones_mutex.lock();
+      if (std::find(this->uuid_drones.begin(), this->uuid_drones.end(), uuid) != this->uuid_drones.end()) {
+        this->uuid_drones.erase(std::remove(this->uuid_drones.begin(), this->uuid_drones.end(), uuid), this->uuid_drones.end());
+      }
+      this->uuid_drones_mutex.unlock();
+    }
   };
 
   this->_dc.register_on_timeout(_on_timeout);
-
 }
 
 Napi::Value MavSDK::get_connection_url(const Napi::CallbackInfo& info) {
@@ -95,14 +115,26 @@ Napi::Value MavSDK::is_connected(const Napi::CallbackInfo& info) {
   return Napi::Boolean::New(info.Env(), isConnected);
 }
 
-Napi::Value MavSDK::discover_uuids(const Napi::CallbackInfo& info) {
+Napi::Value MavSDK::discover_drones(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  this->uuids_mutex.lock();
-  Napi::Array arr = Napi::Array::New(info.Env(), this->uuids.size());
-  for (int i = 0; i < this->uuids.size(); i++) {
-    arr[i] = std::to_string(this->uuids.at(i));
+  this->uuid_drones_mutex.lock();
+  Napi::Array arr = Napi::Array::New(info.Env(), this->uuid_drones.size());
+  for (int i = 0; i < this->uuid_drones.size(); i++) {
+    arr[i] = std::to_string(this->uuid_drones.at(i));
 	}
-  this->uuids_mutex.unlock();
+  this->uuid_drones_mutex.unlock();
+
+  return arr;
+}
+
+Napi::Value MavSDK::discover_cameras(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  this->uuid_cameras_mutex.lock();
+  Napi::Array arr = Napi::Array::New(info.Env(), this->uuid_cameras.size());
+  for (int i = 0; i < this->uuid_cameras.size(); i++) {
+    arr[i] = std::to_string(this->uuid_cameras.at(i));
+	}
+  this->uuid_cameras_mutex.unlock();
 
   return arr;
 }
@@ -121,4 +153,22 @@ Napi::Value MavSDK::connect_to_drone(const Napi::CallbackInfo& info) {
   auto sys = Napi::External<mavsdk::System>::New(env, &this->_dc.system(value));
   auto drone = Drone::constructor.New({ sys });
   return drone;
+}
+
+Napi::Value MavSDK::connect_to_camera(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  std:: string uuid = info[0].As<Napi::String>().Utf8Value();
+  uint64_t value;
+  std::istringstream iss(uuid);
+  iss >> value;
+
+  if (!this->_dc.is_connected(value)) {
+    return env.Undefined();
+  }
+
+  auto id = Napi::Number::New(env, value - 200);
+  auto sys = Napi::External<mavsdk::System>::New(env, &this->_dc.system(value));
+
+  auto camera = Camera::constructor.New({ sys, id });
+  return camera;
 }

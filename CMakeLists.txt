@@ -43,6 +43,7 @@ target_link_libraries(${PROJECT_NAME}
     MAVSDK::mavsdk_telemetry
     MAVSDK::mavsdk_info
     MAVSDK::mavsdk_action
+    MAVSDK::mavsdk_ndcamera
     MAVSDK::mavsdk
 )
 

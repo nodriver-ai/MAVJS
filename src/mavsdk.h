@@ -15,16 +15,21 @@ private:
  static Napi::FunctionReference constructor;
 
  mavsdk::Mavsdk _dc;
- std::vector<uint64_t> uuids;
- std::mutex uuids_mutex;
+
+ std::vector<uint64_t> uuid_drones;
+ std::mutex uuid_drones_mutex;
+
+ std::vector<uint64_t> uuid_cameras;
+ std::mutex uuid_cameras_mutex;
 
  std::string _connection_url;
  Napi::Value get_connection_url(const Napi::CallbackInfo &info);
 
  Napi::Value is_connected(const Napi::CallbackInfo& info);
- Napi::Value discover_uuids(const Napi::CallbackInfo& info);
+ Napi::Value discover_drones(const Napi::CallbackInfo& info);
+ Napi::Value discover_cameras(const Napi::CallbackInfo& info);
  Napi::Value connect_to_drone(const Napi::CallbackInfo& info);
-
+ Napi::Value connect_to_camera(const Napi::CallbackInfo& info);
 };
 
 #endif

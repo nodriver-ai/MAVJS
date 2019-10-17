@@ -55,7 +55,7 @@ Napi::Object Drone::Init(Napi::Env env, Napi::Object exports) {
     InstanceMethod("start_mission", &Drone::start_mission),
     InstanceMethod("pause_mission", &Drone::pause_mission),
     InstanceMethod("stop_mission", &Drone::stop_mission),
-    InstanceMethod("mission_finished", &Drone::mission_finished),
+    InstanceMethod("mission_finished", &Drone::mission_finished)
   });
 
   constructor = Napi::Persistent(func);
