@@ -1,12 +1,12 @@
 {
-  "name": "MAVJS",
+  "name": "mavjs",
   "version": "1.0.0",
   "description": "MAVJS software to manage one or more ndone",
   "main": "lib/addon.js",
   "scripts": {
     "build": "tsc",
     "start": "tsc && node lib/addon.js",
-    "test": "mocha"
+    "test": "mocha -r ts-node/register tests/*.spec.ts"
   },
   "author": "andrea pomente",
   "license": "ISC",
@@ -18,7 +18,8 @@
     "chai": "^4.2.0",
     "cmake-js": "~5.3.2",
     "mocha": "^6.2.0",
-    "node-addon-api": "^1.7.1",
-    "typescript": "^3.6.3"
+    "node-addon-api": "^2.0.0",
+    "ts-node": "^8.5.4",
+    "typescript": "^3.7.3"
   }
 }

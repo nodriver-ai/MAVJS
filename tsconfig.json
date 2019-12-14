@@ -18,7 +18,7 @@
     ]
   },
   "include": [
-    "lib/addon.ts",
+    "lib/*.ts", "lib/plugins/*.ts"
   ],
   "exclude": [
     "node_modules"
