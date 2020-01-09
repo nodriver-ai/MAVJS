@@ -15,36 +15,40 @@ export namespace Action {
       PARAMETER_ERROR = "Parameter error"
     }
   
-    export interface result_callback_t{ (result: Result): void };
+    export interface result_callback_t { 
+      (result: Result): void 
+    };
+    
     export interface pair_result{
       result: string,
       value: number | string
     }
-  
-    export interface Action {
-      arm(): Result,
-      disarm(): Result,
-      kill(): Result,
-      reboot(): Result,
-      takeoff(): Result,
-      land(): Result,
-      return_to_launch(): Result,
-      goto_location(latitude_deg: number, longitude_deg: number, altitude_amsl_m: number, yaw_deg: number): Result,
-      transition_to_fixedwing(): Result,
-      transition_to_multicopter(): Result,
-      arm_async(result_callback_t): void,
-      disarm_async(result_callback_t): void,
-      kill_async(result_callback_t): void,
-      takeoff_async(result_callback_t): void,
-      land_async(result_callback_t): void,
-      return_to_launch_async(result_callback_t): void,
-      transition_to_fixedwing_async(result_callback_t): void,
-      transition_to_multicopter_async(result_callback_t): void,
-      set_takeoff_altitude(relative_altitude_m: number): Result 
-      get_takeoff_altitude(): pair_result,
-      set_max_speed(speed_m_s: number): Result
-      get_max_speed(): pair_result,
-      set_return_to_launch_return_altitude(relative_altitude_m: number): Result,
-      get_return_to_launch_return_altitude(): pair_result
-    }
-  }
+}
+
+export interface Action {
+    arm(): Action.Result,
+    disarm(): Action.Result,
+    kill(): Action.Result,
+    reboot(): Action.Result,
+    takeoff(): Action.Result,
+    land(): Action.Result,
+    return_to_launch(): Action.Result,
+    goto_location(latitude_deg: number, longitude_deg: number, altitude_amsl_m: number, yaw_deg: number): Action.Result,
+    transition_to_fixedwing(): Action.Result,
+    transition_to_multicopter(): Action.Result,
+    arm_async(callback: Action.result_callback_t): void,
+    disarm_async(callback: Action.result_callback_t): void,
+    kill_async(callback: Action.result_callback_t): void,
+    takeoff_async(callback: Action.result_callback_t): void,
+    land_async(callback: Action.result_callback_t): void,
+    return_to_launch_async(callback: Action.result_callback_t): void,
+    transition_to_fixedwing_async(callback: Action.result_callback_t): void,
+    transition_to_multicopter_async(callback: Action.result_callback_t): void,
+    set_takeoff_altitude(relative_altitude_m: number): Action.Result 
+    get_takeoff_altitude(): Action.pair_result,
+    set_max_speed(speed_m_s: number): Action.Result
+    get_max_speed(): Action.pair_result,
+    set_return_to_launch_return_altitude(relative_altitude_m: number): Action.Result,
+    get_return_to_launch_return_altitude(): Action.pair_result
+}
+

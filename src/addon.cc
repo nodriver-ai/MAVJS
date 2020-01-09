@@ -4,6 +4,8 @@
 #include "telemetry.h"
 #include "action.h"
 #include "info.h"
+#include "missionItem.h"
+#include "mission.h"
 
 using namespace mavjs;
 
@@ -13,6 +15,8 @@ Napi::Object InitAll(Napi::Env env, Napi::Object exports) {
   Telemetry::Init(env, exports);
   Action::Init(env, exports);
   Info::Init(env, exports);
+  MissionItem::Init(env, exports);
+  Mission::Init(env, exports);
   return exports;
 }
 

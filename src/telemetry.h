@@ -15,18 +15,18 @@ namespace mavjs {
         private:
             std::shared_ptr<mavsdk::Telemetry> _telemetry;
                         
-            void set_rate_position_velocity_ned(const Napi::CallbackInfo& info);
-            void set_rate_position(const Napi::CallbackInfo& info);
-            void set_rate_home_position(const Napi::CallbackInfo& info);
-            void set_rate_in_air(const Napi::CallbackInfo& info);
-            void set_rate_attitude(const Napi::CallbackInfo& info);
-            void set_rate_ground_speed_ned(const Napi::CallbackInfo& info);
-            void set_rate_imu_reading_ned(const Napi::CallbackInfo& info);
-            void set_rate_gps_info(const Napi::CallbackInfo& info);
-            void set_rate_battery(const Napi::CallbackInfo& info);
-            void set_rate_rc_status(const Napi::CallbackInfo& info);
-            void set_rate_actuator_control_target(const Napi::CallbackInfo& info);
-            void set_rate_actuator_output_status(const Napi::CallbackInfo& info);
+            Napi::Value set_rate_position_velocity_ned(const Napi::CallbackInfo& info);
+            Napi::Value set_rate_position(const Napi::CallbackInfo& info);
+            Napi::Value set_rate_home_position(const Napi::CallbackInfo& info);
+            Napi::Value set_rate_in_air(const Napi::CallbackInfo& info);
+            Napi::Value set_rate_attitude(const Napi::CallbackInfo& info);
+            Napi::Value set_rate_ground_speed_ned(const Napi::CallbackInfo& info);
+            Napi::Value set_rate_imu_reading_ned(const Napi::CallbackInfo& info);
+            Napi::Value set_rate_gps_info(const Napi::CallbackInfo& info);
+            Napi::Value set_rate_battery(const Napi::CallbackInfo& info);
+            Napi::Value set_rate_rc_status(const Napi::CallbackInfo& info);
+            Napi::Value set_rate_actuator_control_target(const Napi::CallbackInfo& info);
+            Napi::Value set_rate_actuator_output_status(const Napi::CallbackInfo& info);
 
             Napi::Value position_velocity_ned(const Napi::CallbackInfo& info);
             Napi::Value position(const Napi::CallbackInfo& info);

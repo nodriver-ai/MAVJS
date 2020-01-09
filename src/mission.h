@@ -15,20 +15,12 @@ namespace mavjs {
         private:
             std::shared_ptr<mavsdk::Mission> _mission;
 
-            static std::shared_ptr<mavsdk::MissionItem> make_mission_item(
-            double latitude_deg,
-            double longitude_deg,
-            float relative_altitude_m,
-            bool fly_through,
-            float acceptance_radius_m,
-            float speed_m_s,
-            float gimbal_pitch_deg,
-            float gimbal_yaw_deg,
-            float loiter_time_s,
-            double camera_photo_interval_s,
-            mavsdk::MissionItem::CameraAction camera_action);
-
-            Napi::Value upload_mission(const Napi::CallbackInfo &info);
+            Napi::Value upload_mission_async(const Napi::CallbackInfo &info);
+            void upload_mission_cancel(const Napi::CallbackInfo &info);
+            Napi::Value download_mission_async(const Napi::CallbackInfo &info);
+            void download_mission_cancel(const Napi::CallbackInfo &info);
+            void set_return_to_launch_after_mission(const Napi::CallbackInfo &info);
+            Napi::Value get_return_to_launch_after_mission(const Napi::CallbackInfo &info);
     };
 };
 

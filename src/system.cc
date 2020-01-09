@@ -4,6 +4,7 @@
 #include "telemetry.h"
 #include "action.h"
 #include "info.h"
+#include "mission.h"
 
 using namespace mavjs;
 
@@ -22,6 +23,7 @@ Napi::Object System::Init(Napi::Env env, Napi::Object exports) {
       InstanceMethod("telemetry", &System::telemetry),
       InstanceMethod("action", &System::action),
       InstanceMethod("info", &System::info),
+      InstanceMethod("mission", &System::mission),
       InstanceMethod("register_component_discovered_callback", &System::register_component_discovered_callback),
       InstanceMethod("unregister_component_discovered_callback", &System::unregister_component_discovered_callback)
   });
@@ -90,6 +92,13 @@ Napi::Value System::info(const Napi::CallbackInfo& info) {
   auto _info = Info::constructor.New({ arg });
         
   return _info;
+}
+
+Napi::Value System::mission(const Napi::CallbackInfo& info) {
+  auto arg = Napi::External<mavsdk::System>::New(info.Env(), this->_system);
+  auto _mission = Mission::constructor.New({ arg });
+        
+  return _mission;
 }
 
 void System::register_component_discovered_callback(const Napi::CallbackInfo& info) {

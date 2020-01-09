@@ -1,6 +1,6 @@
-import { Mavsdk, System, Telemetry, Action } from "./addon";
+import { Mavsdk, System, Telemetry, MissionItem, Info, Action } from "./addon";
 
-let mavsdk = new Mavsdk.Mavsdk();
+let mavsdk = new Mavsdk.Init();
 
 mavsdk.add_udp_connection();
 
@@ -27,8 +27,9 @@ mavsdk.register_on_discover((uuid) => {
     console.log("Ok")
 })
 
-let system: System.System;
-let telemetry: Telemetry.Telemetry;
+let system: System;
+let telemetry: Telemetry;
+let action: Action
 
 setTimeout(() => {
     system = mavsdk.system(uuids[0])
@@ -40,9 +41,10 @@ setTimeout(() => {
 
 
 setTimeout(() => {
-    let info = system.info();
-    console.log(info.get_identification().result)
-    console.log(info.get_identification().value.hardware_uid)
+    action = system.action();
+    action.kill_async((arg) => {
+
+    })
 }, 8000);
 
 setTimeout(() => {

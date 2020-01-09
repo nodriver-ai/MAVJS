@@ -59,107 +59,74 @@ Telemetry::Telemetry(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Telemetr
   this->_telemetry = std::make_shared<mavsdk::Telemetry>(*system);
 }
 
-void Telemetry::set_rate_position_velocity_ned(const Napi::CallbackInfo& info) {
+Napi::Value Telemetry::set_rate_position_velocity_ned(const Napi::CallbackInfo& info) {
   double rate = info[0].As<Napi::Number>().DoubleValue();
   const mavsdk::Telemetry::Result set_rate_result = this->_telemetry->set_rate_position_velocity_ned(rate);
-  if (set_rate_result != mavsdk::Telemetry::Result::SUCCESS) {
-    std::string msg = mavsdk::Telemetry::result_str(set_rate_result);
-    throw Napi::TypeError::New(info.Env(), "Setting rate position_velocity_ned failed: " + msg);
-  }
+  return Napi::String::New(info.Env(), mavsdk::Telemetry::result_str(set_rate_result));
 }
 
-void Telemetry::set_rate_position(const Napi::CallbackInfo& info) {
+Napi::Value Telemetry::set_rate_position(const Napi::CallbackInfo& info) {
   double rate = info[0].As<Napi::Number>().DoubleValue();
   const mavsdk::Telemetry::Result set_rate_result = this->_telemetry->set_rate_position(rate);
-  if (set_rate_result != mavsdk::Telemetry::Result::SUCCESS) {
-    std::string msg = mavsdk::Telemetry::result_str(set_rate_result);
-    throw Napi::TypeError::New(info.Env(), "Setting rate position failed: " + msg);
-  }
+  return Napi::String::New(info.Env(), mavsdk::Telemetry::result_str(set_rate_result));
 }
 
-void Telemetry::set_rate_home_position(const Napi::CallbackInfo& info) {
+Napi::Value Telemetry::set_rate_home_position(const Napi::CallbackInfo& info) {
   double rate = info[0].As<Napi::Number>().DoubleValue();
   const mavsdk::Telemetry::Result set_rate_result = this->_telemetry->set_rate_home_position(rate);
-  if (set_rate_result != mavsdk::Telemetry::Result::SUCCESS) {
-    std::string msg = mavsdk::Telemetry::result_str(set_rate_result);
-    throw Napi::TypeError::New(info.Env(), "Setting rate home_position failed: " + msg);
-  }
+  return Napi::String::New(info.Env(), mavsdk::Telemetry::result_str(set_rate_result));
 }
 
-void Telemetry::set_rate_in_air(const Napi::CallbackInfo& info) {
+Napi::Value Telemetry::set_rate_in_air(const Napi::CallbackInfo& info) {
   double rate = info[0].As<Napi::Number>().DoubleValue();
   const mavsdk::Telemetry::Result set_rate_result = this->_telemetry->set_rate_in_air(rate);
-  if (set_rate_result != mavsdk::Telemetry::Result::SUCCESS) {
-    std::string msg = mavsdk::Telemetry::result_str(set_rate_result);
-    throw Napi::TypeError::New(info.Env(), "Setting rate in_air failed: " + msg);
-  }
+  return Napi::String::New(info.Env(), mavsdk::Telemetry::result_str(set_rate_result));
 }
 
-void Telemetry::set_rate_ground_speed_ned(const Napi::CallbackInfo& info) {
+Napi::Value Telemetry::set_rate_ground_speed_ned(const Napi::CallbackInfo& info) {
   double rate = info[0].As<Napi::Number>().DoubleValue();
   const mavsdk::Telemetry::Result set_rate_result = this->_telemetry->set_rate_ground_speed_ned(rate);
-  if (set_rate_result != mavsdk::Telemetry::Result::SUCCESS) {
-    std::string msg = mavsdk::Telemetry::result_str(set_rate_result);
-    throw Napi::TypeError::New(info.Env(), "Setting rate ground_speed_ned failed: " + msg);
-  }
+  return Napi::String::New(info.Env(), mavsdk::Telemetry::result_str(set_rate_result));
 }
 
-void Telemetry::set_rate_imu_reading_ned(const Napi::CallbackInfo& info) {
+Napi::Value Telemetry::set_rate_imu_reading_ned(const Napi::CallbackInfo& info) {
   double rate = info[0].As<Napi::Number>().DoubleValue();
   const mavsdk::Telemetry::Result set_rate_result = this->_telemetry->set_rate_imu_reading_ned(rate);
-  if (set_rate_result != mavsdk::Telemetry::Result::SUCCESS) {
-    std::string msg = mavsdk::Telemetry::result_str(set_rate_result);
-    throw Napi::TypeError::New(info.Env(), "Setting rate imu_reading_ned failed: " + msg);
-  }
+  return Napi::String::New(info.Env(), mavsdk::Telemetry::result_str(set_rate_result));
 }
 
-void Telemetry::set_rate_gps_info(const Napi::CallbackInfo& info) {
+Napi::Value Telemetry::set_rate_gps_info(const Napi::CallbackInfo& info) {
   double rate = info[0].As<Napi::Number>().DoubleValue();
   const mavsdk::Telemetry::Result set_rate_result = this->_telemetry->set_rate_gps_info(rate);
-  if (set_rate_result != mavsdk::Telemetry::Result::SUCCESS) {
-    std::string msg = mavsdk::Telemetry::result_str(set_rate_result);
-    throw Napi::TypeError::New(info.Env(), "Setting rate gps_info failed: " + msg);
-  }
+  return Napi::String::New(info.Env(), mavsdk::Telemetry::result_str(set_rate_result));
 }
 
-void Telemetry::set_rate_battery(const Napi::CallbackInfo& info) {
+Napi::Value Telemetry::set_rate_battery(const Napi::CallbackInfo& info) {
   double rate = info[0].As<Napi::Number>().DoubleValue();
   const mavsdk::Telemetry::Result set_rate_result = this->_telemetry->set_rate_battery(rate);
-  if (set_rate_result != mavsdk::Telemetry::Result::SUCCESS) {
-    std::string msg = mavsdk::Telemetry::result_str(set_rate_result);
-    throw Napi::TypeError::New(info.Env(), "Setting rate battery failed: " + msg);
-  }
+  return Napi::String::New(info.Env(), mavsdk::Telemetry::result_str(set_rate_result));
 }
 
-void Telemetry::set_rate_rc_status(const Napi::CallbackInfo& info) {
+Napi::Value Telemetry::set_rate_rc_status(const Napi::CallbackInfo& info) {
   double rate = info[0].As<Napi::Number>().DoubleValue();
   const mavsdk::Telemetry::Result set_rate_result = this->_telemetry->set_rate_rc_status(rate);
-  if (set_rate_result != mavsdk::Telemetry::Result::SUCCESS) {
-    std::string msg = mavsdk::Telemetry::result_str(set_rate_result);
-    throw Napi::TypeError::New(info.Env(), "Setting rate rc_status failed: " + msg);
-  }
+  return Napi::String::New(info.Env(), mavsdk::Telemetry::result_str(set_rate_result));
 }
 
-void Telemetry::set_rate_actuator_control_target(const Napi::CallbackInfo& info) {
+Napi::Value Telemetry::set_rate_actuator_control_target(const Napi::CallbackInfo& info) {
   double rate = info[0].As<Napi::Number>().DoubleValue();
   const mavsdk::Telemetry::Result set_rate_result = this->_telemetry->set_rate_actuator_control_target(rate);
-  if (set_rate_result != mavsdk::Telemetry::Result::SUCCESS) {
-    std::string msg = mavsdk::Telemetry::result_str(set_rate_result);
-    throw Napi::TypeError::New(info.Env(), "Setting rate actuator_control_target failed: " + msg);
-  }
+  return Napi::String::New(info.Env(), mavsdk::Telemetry::result_str(set_rate_result));  return Napi::String::New(info.Env(), mavsdk::Telemetry::result_str(set_rate_result));
 }
 
-void Telemetry::set_rate_actuator_output_status(const Napi::CallbackInfo& info) {
+Napi::Value Telemetry::set_rate_actuator_output_status(const Napi::CallbackInfo& info) {
   double rate = info[0].As<Napi::Number>().DoubleValue();
   const mavsdk::Telemetry::Result set_rate_result = this->_telemetry->set_rate_actuator_output_status(rate);
-  if (set_rate_result != mavsdk::Telemetry::Result::SUCCESS) {
-    std::string msg = mavsdk::Telemetry::result_str(set_rate_result);
-    throw Napi::TypeError::New(info.Env(), "Setting rate actuator_output_status failed: " + msg);
-  }
+  return Napi::String::New(info.Env(), mavsdk::Telemetry::result_str(set_rate_result));
 }
 
 Napi::Value Telemetry::position_velocity_ned(const Napi::CallbackInfo& info) {
-   Napi::Env env = info.Env();
+  Napi::Env env = info.Env();
 
   mavsdk::Telemetry::PositionVelocityNED position_velocity_ned = this->_telemetry->position_velocity_ned();
 

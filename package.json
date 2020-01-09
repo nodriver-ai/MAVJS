@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "start": "tsc && node lib/addon.js",
-    "test": "mocha -r ts-node/register tests/*.spec.ts"
+    "test": "mocha --timeout 20000 -r ts-node/register tests/*.spec.ts"
   },
   "author": "andrea pomente",
   "license": "ISC",
@@ -17,7 +17,7 @@
     "bindings": "~1.2.1",
     "chai": "^4.2.0",
     "cmake-js": "~5.3.2",
-    "mocha": "^6.2.0",
+    "mocha": "^6.2.2",
     "node-addon-api": "^2.0.0",
     "ts-node": "^8.5.4",
     "typescript": "^3.7.3"

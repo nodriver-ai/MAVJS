@@ -26,6 +26,7 @@ namespace mavjs {
             Napi::Value telemetry(const Napi::CallbackInfo &info);
             Napi::Value action(const Napi::CallbackInfo &info);
             Napi::Value info(const Napi::CallbackInfo &info);
+            Napi::Value mission(const Napi::CallbackInfo &info);
             void register_component_discovered_callback(const Napi::CallbackInfo &info);
             void unregister_component_discovered_callback(const Napi::CallbackInfo &info);
     };

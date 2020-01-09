@@ -36,10 +36,10 @@ export namespace Info {
       value: T
     }
   
-    export interface Info {
-      get_identification(): pair_result<Identification>,
-      get_version(): pair_result<Version>,
-      get_product(): pair_result<Product>
-    }
-  
+  }
+
+  export interface Info {
+    get_identification(): Info.pair_result<Info.Identification>,
+    get_version(): Info.pair_result<Info.Version>,
+    get_product(): Info.pair_result<Info.Product>
   }
