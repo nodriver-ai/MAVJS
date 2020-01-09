@@ -21,6 +21,8 @@ namespace mavjs {
             void download_mission_cancel(const Napi::CallbackInfo &info);
             void set_return_to_launch_after_mission(const Napi::CallbackInfo &info);
             Napi::Value get_return_to_launch_after_mission(const Napi::CallbackInfo &info);
+            Napi::Value start_mission_async(const Napi::CallbackInfo &info);
+            Napi::Value pause_mission_async(const Napi::CallbackInfo &info);
     };
 };
 

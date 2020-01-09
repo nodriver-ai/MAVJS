@@ -30,5 +30,7 @@ export interface Mission {
     download_mission_async(): Promise<Mission.MissionItems_and_Result>,
     download_mission_cancel(): void,
     set_return_to_launch_after_mission(enable: boolean): void,
-    get_return_to_launch_after_mission(): boolean
+    get_return_to_launch_after_mission(): boolean,
+    start_mission_async(): Promise<Mission.Result>,
+    pause_mission_async(): Promise<Mission.Result>
 }

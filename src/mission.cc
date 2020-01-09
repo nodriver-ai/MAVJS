@@ -106,6 +106,60 @@ class DownloadMissionWorker : public Napi::AsyncWorker {
         std::vector<std::shared_ptr<mavsdk::MissionItem>> mission_items;
 };
 
+class StartMissionWorker : public Napi::AsyncWorker {
+    public:
+        StartMissionWorker(Napi::Env &env, std::shared_ptr<mavsdk::Mission>& mission, Napi::Promise::Deferred& deferred)
+        : Napi::AsyncWorker(env), mission(mission), deferred(deferred) {}
+
+        ~StartMissionWorker() {}
+    
+    void Execute() {
+        auto prom = std::make_shared<std::promise<mavsdk::Mission::Result>>();
+        auto future_result = prom->get_future();
+        mission->start_mission_async(
+              [prom](mavsdk::Mission::Result result) { prom->set_value(result); });
+
+        result = future_result.get();
+    }
+
+    void OnOK() {
+        deferred.Resolve(Napi::String::New(Env(), mavsdk::Mission::result_str(result)));
+    }
+
+    private:
+        std::shared_ptr<mavsdk::Mission> mission;
+        Napi::Promise::Deferred deferred;
+        
+        mavsdk::Mission::Result result;
+};
+
+class PauseMissionWorker : public Napi::AsyncWorker {
+    public:
+        PauseMissionWorker(Napi::Env &env, std::shared_ptr<mavsdk::Mission>& mission, Napi::Promise::Deferred& deferred)
+        : Napi::AsyncWorker(env), mission(mission), deferred(deferred) {}
+
+        ~PauseMissionWorker() {}
+    
+    void Execute() {
+        auto prom = std::make_shared<std::promise<mavsdk::Mission::Result>>();
+        auto future_result = prom->get_future();
+        mission->pause_mission_async(
+              [prom](mavsdk::Mission::Result result) { prom->set_value(result); });
+
+        result = future_result.get();
+    }
+
+    void OnOK() {
+        deferred.Resolve(Napi::String::New(Env(), mavsdk::Mission::result_str(result)));
+    }
+
+    private:
+        std::shared_ptr<mavsdk::Mission> mission;
+        Napi::Promise::Deferred deferred;
+        
+        mavsdk::Mission::Result result;
+};
+
 Napi::FunctionReference Mission::constructor;
 
 Napi::Object Mission::Init(Napi::Env env, Napi::Object exports) {
@@ -117,7 +171,9 @@ Napi::Object Mission::Init(Napi::Env env, Napi::Object exports) {
     InstanceMethod("download_mission_async", &Mission::download_mission_async),
     InstanceMethod("download_mission_cancel", &Mission::download_mission_cancel),
     InstanceMethod("set_return_to_launch_after_mission", &Mission::set_return_to_launch_after_mission),
-    InstanceMethod("get_return_to_launch_after_mission", &Mission::get_return_to_launch_after_mission)
+    InstanceMethod("get_return_to_launch_after_mission", &Mission::get_return_to_launch_after_mission),
+    InstanceMethod("start_mission_async", &Mission::start_mission_async),
+    InstanceMethod("pause_mission_async", &Mission::pause_mission_async)
   });
 
   constructor = Napi::Persistent(func);
@@ -190,4 +246,24 @@ void Mission::set_return_to_launch_after_mission(const Napi::CallbackInfo& info)
 
 Napi::Value Mission::get_return_to_launch_after_mission(const Napi::CallbackInfo& info) {
   return Napi::Boolean::New(info.Env(), this->_mission->get_return_to_launch_after_mission());
+}
+
+Napi::Value Mission::start_mission_async(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+
+  Napi::Promise::Deferred deferred = Napi::Promise::Deferred::New(env);
+
+  StartMissionWorker* wk = new StartMissionWorker(env, this->_mission, deferred);
+  wk->Queue();
+  return deferred.Promise();
+}
+
+Napi::Value Mission::pause_mission_async(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+
+  Napi::Promise::Deferred deferred = Napi::Promise::Deferred::New(env);
+
+  PauseMissionWorker* wk = new PauseMissionWorker(env, this->_mission, deferred);
+  wk->Queue();
+  return deferred.Promise();
 }

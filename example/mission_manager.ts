@@ -163,25 +163,24 @@ let main = async () => {
     //console.log("Uploading mission...");
     //await mission.upload_mission_async(mission_items);
 
-    /*mission.download_mission_async().then((result) => {
-        console.log(result.mission_items.length)
-        if (result.result != Mission.Result.SUCCESS) {
-            console.log(`Mission download failed ${result.result}, exiting.`)
-            process.exit();
-        }
+    mission.start_mission_async().then((result) => {
+        sleep(10000);
+        //if (result.result != Mission.Result.SUCCESS) {
+        console.log(`Mission start result ${result}`)
+            //process.exit();
+        //}
+        console.log("ok2")
     })
    
-    await sleep(200);
+    //await sleep(200);
     
-    console.log("Cancelling mission...");
+    /*console.log("Cancelling mission...");
     mission.download_mission_cancel();
     console.log("ok");*/
    
     //console.log("Mission uploaded.");
-    console.log(mission.get_return_to_launch_after_mission());
-    console.log(mission.set_return_to_launch_after_mission(true));
-    console.log(mission.get_return_to_launch_after_mission());
-    process.exit();
+    console.log("ok1");
+    //process.exit();
 }
 
 main();
