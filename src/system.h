@@ -15,8 +15,6 @@ namespace mavjs {
 
         private:
 
-            Napi::ThreadSafeFunction ts_register_component_discovered_callback;
-
             Napi::Value has_autopilot(const Napi::CallbackInfo &info);
             Napi::Value is_standalone(const Napi::CallbackInfo &info);
             Napi::Value has_camera(const Napi::CallbackInfo &info);
@@ -28,7 +26,6 @@ namespace mavjs {
             Napi::Value info(const Napi::CallbackInfo &info);
             Napi::Value mission(const Napi::CallbackInfo &info);
             void register_component_discovered_callback(const Napi::CallbackInfo &info);
-            void unregister_component_discovered_callback(const Napi::CallbackInfo &info);
     };
 };
 

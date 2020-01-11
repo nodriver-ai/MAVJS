@@ -24,7 +24,7 @@ function make_mission_item(
     gimbal_yaw_deg: number,
     camera_action: MissionItem.CameraAction)
 {
-    let new_item = new MissionItem.Init();
+    let new_item = new MissionItem();
     new_item.set_position(latitude_deg, longitude_deg);
     new_item.set_relative_altitude(relative_altitude_m);
     new_item.set_speed(speed_m_s);
@@ -39,7 +39,7 @@ let main = async () => {
     
     const argc = process.argv.length - 2;
 
-    let mavsdk = new Mavsdk.Init();
+    let mavsdk = new Mavsdk();
 
     let discovered_system: boolean = false;
 

@@ -24,8 +24,7 @@ Napi::Object System::Init(Napi::Env env, Napi::Object exports) {
       InstanceMethod("action", &System::action),
       InstanceMethod("info", &System::info),
       InstanceMethod("mission", &System::mission),
-      InstanceMethod("register_component_discovered_callback", &System::register_component_discovered_callback),
-      InstanceMethod("unregister_component_discovered_callback", &System::unregister_component_discovered_callback)
+      InstanceMethod("register_component_discovered_callback", &System::register_component_discovered_callback)
   });
 
   constructor = Napi::Persistent(func);
@@ -103,7 +102,7 @@ Napi::Value System::mission(const Napi::CallbackInfo& info) {
 
 void System::register_component_discovered_callback(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  this->ts_register_component_discovered_callback = Napi::ThreadSafeFunction::New(
+  auto ts_register_component_discovered_callback = Napi::ThreadSafeFunction::New(
       env,
       info[0].As<Napi::Function>(),  // JavaScript function called asynchronously
       "register_component_discovered_callback",        // Name
@@ -113,7 +112,7 @@ void System::register_component_discovered_callback(const Napi::CallbackInfo& in
               // Finalizer used to clean threads up
       });
   
-  auto _on_component_discovered = [this](mavsdk::ComponentType type) -> void {
+  auto _on_component_discovered = [ts_register_component_discovered_callback](mavsdk::ComponentType type) -> void {
     auto callback = []( Napi::Env env, Napi::Function jsCallback, mavsdk::ComponentType * value ) {
       // Transform native data into JS data, passing it to the provided 
       // `jsCallback` -- the TSFN's JavaScript function.
@@ -125,15 +124,9 @@ void System::register_component_discovered_callback(const Napi::CallbackInfo& in
 
     mavsdk::ComponentType * value = new mavsdk::ComponentType(type);
     
-    napi_status status = this->ts_register_component_discovered_callback.BlockingCall(value, callback);
+    napi_status status = ts_register_component_discovered_callback.BlockingCall(value, callback);
   };
 
   this->_system->register_component_discovered_callback(_on_component_discovered);
-}
-
-void System::unregister_component_discovered_callback(const Napi::CallbackInfo& info) {
-  if (this->ts_register_component_discovered_callback) {
-    this->ts_register_component_discovered_callback.Release();
-  }
 }
 

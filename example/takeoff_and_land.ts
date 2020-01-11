@@ -22,7 +22,7 @@ let main = async () => {
     
     const argc = process.argv.length - 2;
 
-    let mavsdk = new Mavsdk.Init();
+    let mavsdk = new Mavsdk();
 
     let discovered_system: boolean = false;
 

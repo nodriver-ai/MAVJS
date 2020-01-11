@@ -7,6 +7,222 @@
 
 using namespace mavjs;
 
+class ArmWorker : public Napi::AsyncWorker {
+    public:
+        ArmWorker(Napi::Env &env, std::shared_ptr<mavsdk::Action>& action, Napi::Promise::Deferred& deferred)
+        : Napi::AsyncWorker(env), action(action), deferred(deferred) {}
+
+        ~ArmWorker() {}
+    
+    void Execute() {
+        auto prom = std::make_shared<std::promise<mavsdk::Action::Result>>();
+        auto future_result = prom->get_future();
+        action->arm_async(
+              [prom](mavsdk::Action::Result result) { prom->set_value(result); });
+
+        result = future_result.get();
+    }
+
+    void OnOK() {
+        deferred.Resolve(Napi::String::New(Env(), mavsdk::Action::result_str(result)));
+    }
+
+    private:
+        std::shared_ptr<mavsdk::Action> action;
+        Napi::Promise::Deferred deferred;
+        
+        mavsdk::Action::Result result;
+};
+
+class DisarmWorker : public Napi::AsyncWorker {
+    public:
+        DisarmWorker(Napi::Env &env, std::shared_ptr<mavsdk::Action>& action, Napi::Promise::Deferred& deferred)
+        : Napi::AsyncWorker(env), action(action), deferred(deferred) {}
+
+        ~DisarmWorker() {}
+    
+    void Execute() {
+        auto prom = std::make_shared<std::promise<mavsdk::Action::Result>>();
+        auto future_result = prom->get_future();
+        action->disarm_async(
+              [prom](mavsdk::Action::Result result) { prom->set_value(result); });
+
+        result = future_result.get();
+    }
+
+    void OnOK() {
+        deferred.Resolve(Napi::String::New(Env(), mavsdk::Action::result_str(result)));
+    }
+
+    private:
+        std::shared_ptr<mavsdk::Action> action;
+        Napi::Promise::Deferred deferred;
+        
+        mavsdk::Action::Result result;
+};
+
+class KillWorker : public Napi::AsyncWorker {
+    public:
+        KillWorker(Napi::Env &env, std::shared_ptr<mavsdk::Action>& action, Napi::Promise::Deferred& deferred)
+        : Napi::AsyncWorker(env), action(action), deferred(deferred) {}
+
+        ~KillWorker() {}
+    
+    void Execute() {
+        auto prom = std::make_shared<std::promise<mavsdk::Action::Result>>();
+        auto future_result = prom->get_future();
+        action->kill_async(
+              [prom](mavsdk::Action::Result result) { prom->set_value(result); });
+
+        result = future_result.get();
+    }
+
+    void OnOK() {
+        deferred.Resolve(Napi::String::New(Env(), mavsdk::Action::result_str(result)));
+    }
+
+    private:
+        std::shared_ptr<mavsdk::Action> action;
+        Napi::Promise::Deferred deferred;
+        
+        mavsdk::Action::Result result;
+};
+
+class TakeoffWorker : public Napi::AsyncWorker {
+    public:
+        TakeoffWorker(Napi::Env &env, std::shared_ptr<mavsdk::Action>& action, Napi::Promise::Deferred& deferred)
+        : Napi::AsyncWorker(env), action(action), deferred(deferred) {}
+
+        ~TakeoffWorker() {}
+    
+    void Execute() {
+        auto prom = std::make_shared<std::promise<mavsdk::Action::Result>>();
+        auto future_result = prom->get_future();
+        action->takeoff_async(
+              [prom](mavsdk::Action::Result result) { prom->set_value(result); });
+
+        result = future_result.get();
+    }
+
+    void OnOK() {
+        deferred.Resolve(Napi::String::New(Env(), mavsdk::Action::result_str(result)));
+    }
+
+    private:
+        std::shared_ptr<mavsdk::Action> action;
+        Napi::Promise::Deferred deferred;
+        
+        mavsdk::Action::Result result;
+};
+
+class LandWorker : public Napi::AsyncWorker {
+    public:
+        LandWorker(Napi::Env &env, std::shared_ptr<mavsdk::Action>& action, Napi::Promise::Deferred& deferred)
+        : Napi::AsyncWorker(env), action(action), deferred(deferred) {}
+
+        ~LandWorker() {}
+    
+    void Execute() {
+        auto prom = std::make_shared<std::promise<mavsdk::Action::Result>>();
+        auto future_result = prom->get_future();
+        action->land_async(
+              [prom](mavsdk::Action::Result result) { prom->set_value(result); });
+
+        result = future_result.get();
+    }
+
+    void OnOK() {
+        deferred.Resolve(Napi::String::New(Env(), mavsdk::Action::result_str(result)));
+    }
+
+    private:
+        std::shared_ptr<mavsdk::Action> action;
+        Napi::Promise::Deferred deferred;
+        
+        mavsdk::Action::Result result;
+};
+
+class ReturnToLaunchWorker : public Napi::AsyncWorker {
+    public:
+        ReturnToLaunchWorker(Napi::Env &env, std::shared_ptr<mavsdk::Action>& action, Napi::Promise::Deferred& deferred)
+        : Napi::AsyncWorker(env), action(action), deferred(deferred) {}
+
+        ~ReturnToLaunchWorker() {}
+    
+    void Execute() {
+        auto prom = std::make_shared<std::promise<mavsdk::Action::Result>>();
+        auto future_result = prom->get_future();
+        action->return_to_launch_async(
+              [prom](mavsdk::Action::Result result) { prom->set_value(result); });
+
+        result = future_result.get();
+    }
+
+    void OnOK() {
+        deferred.Resolve(Napi::String::New(Env(), mavsdk::Action::result_str(result)));
+    }
+
+    private:
+        std::shared_ptr<mavsdk::Action> action;
+        Napi::Promise::Deferred deferred;
+        
+        mavsdk::Action::Result result;
+};
+
+class TransitionToFixedwingWorker : public Napi::AsyncWorker {
+    public:
+        TransitionToFixedwingWorker(Napi::Env &env, std::shared_ptr<mavsdk::Action>& action, Napi::Promise::Deferred& deferred)
+        : Napi::AsyncWorker(env), action(action), deferred(deferred) {}
+
+        ~TransitionToFixedwingWorker() {}
+    
+    void Execute() {
+        auto prom = std::make_shared<std::promise<mavsdk::Action::Result>>();
+        auto future_result = prom->get_future();
+        action->transition_to_fixedwing_async(
+              [prom](mavsdk::Action::Result result) { prom->set_value(result); });
+
+        result = future_result.get();
+    }
+
+    void OnOK() {
+        deferred.Resolve(Napi::String::New(Env(), mavsdk::Action::result_str(result)));
+    }
+
+    private:
+        std::shared_ptr<mavsdk::Action> action;
+        Napi::Promise::Deferred deferred;
+        
+        mavsdk::Action::Result result;
+};
+
+class TransitionToMulticopterWorker : public Napi::AsyncWorker {
+    public:
+        TransitionToMulticopterWorker(Napi::Env &env, std::shared_ptr<mavsdk::Action>& action, Napi::Promise::Deferred& deferred)
+        : Napi::AsyncWorker(env), action(action), deferred(deferred) {}
+
+        ~TransitionToMulticopterWorker() {}
+    
+    void Execute() {
+        auto prom = std::make_shared<std::promise<mavsdk::Action::Result>>();
+        auto future_result = prom->get_future();
+        action->transition_to_multicopter_async(
+              [prom](mavsdk::Action::Result result) { prom->set_value(result); });
+
+        result = future_result.get();
+    }
+
+    void OnOK() {
+        deferred.Resolve(Napi::String::New(Env(), mavsdk::Action::result_str(result)));
+    }
+
+    private:
+        std::shared_ptr<mavsdk::Action> action;
+        Napi::Promise::Deferred deferred;
+        
+        mavsdk::Action::Result result;
+};
+
 Napi::FunctionReference Action::constructor;
 
 Napi::Object Action::Init(Napi::Env env, Napi::Object exports) {
@@ -107,116 +323,84 @@ Napi::Value Action::transition_to_multicopter(const Napi::CallbackInfo& info) {
   return Napi::String::New(info.Env(), mavsdk::Action::result_str(transition_to_multicopter_result));
 }
 
-void Action::arm_async(const Napi::CallbackInfo& info) {
+Napi::Value Action::arm_async(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  Napi::Function cb = info[0].As<Napi::Function>();
-  
-  auto prom = std::make_shared<std::promise<mavsdk::Action::Result>>();
-  auto future_result = prom->get_future();
-  this->_action->arm_async(
-        [prom](mavsdk::Action::Result result) { prom->set_value(result); });
 
-  const mavsdk::Action::Result result = future_result.get();
+  Napi::Promise::Deferred deferred = Napi::Promise::Deferred::New(env);
 
-  cb.Call(env.Global(), {Napi::String::New(env, mavsdk::Action::result_str(result))});
+  ArmWorker* wk = new ArmWorker(env, this->_action, deferred);
+  wk->Queue();
+  return deferred.Promise();
 }
 
-void Action::disarm_async(const Napi::CallbackInfo& info) {
+Napi::Value Action::disarm_async(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  Napi::Function cb = info[0].As<Napi::Function>();
-  
-  auto prom = std::make_shared<std::promise<mavsdk::Action::Result>>();
-  auto future_result = prom->get_future();
-  this->_action->disarm_async(
-        [prom](mavsdk::Action::Result result) { prom->set_value(result); });
 
-  const mavsdk::Action::Result result = future_result.get();
+  Napi::Promise::Deferred deferred = Napi::Promise::Deferred::New(env);
 
-  cb.Call(env.Global(), {Napi::String::New(env, mavsdk::Action::result_str(result))});
+  DisarmWorker* wk = new DisarmWorker(env, this->_action, deferred);
+  wk->Queue();
+  return deferred.Promise();
 }
 
-void Action::kill_async(const Napi::CallbackInfo& info) {
+Napi::Value Action::kill_async(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  Napi::Function cb = info[0].As<Napi::Function>();
-  
-  auto prom = std::make_shared<std::promise<mavsdk::Action::Result>>();
-  auto future_result = prom->get_future();
-  this->_action->kill_async(
-        [prom](mavsdk::Action::Result result) { prom->set_value(result); });
 
-  const mavsdk::Action::Result result = future_result.get();
+  Napi::Promise::Deferred deferred = Napi::Promise::Deferred::New(env);
 
-  cb.Call(env.Global(), {Napi::String::New(env, mavsdk::Action::result_str(result))});
+  KillWorker* wk = new KillWorker(env, this->_action, deferred);
+  wk->Queue();
+  return deferred.Promise();
 }
 
-void Action::takeoff_async(const Napi::CallbackInfo& info) {
+Napi::Value Action::takeoff_async(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  Napi::Function cb = info[0].As<Napi::Function>();
-  
-  auto prom = std::make_shared<std::promise<mavsdk::Action::Result>>();
-  auto future_result = prom->get_future();
-  this->_action->takeoff_async(
-        [prom](mavsdk::Action::Result result) { prom->set_value(result); });
 
-  const mavsdk::Action::Result result = future_result.get();
+  Napi::Promise::Deferred deferred = Napi::Promise::Deferred::New(env);
 
-  cb.Call(env.Global(), {Napi::String::New(env, mavsdk::Action::result_str(result))});
+  TakeoffWorker* wk = new TakeoffWorker(env, this->_action, deferred);
+  wk->Queue();
+  return deferred.Promise();
 }
 
-void Action::land_async(const Napi::CallbackInfo& info) {
+Napi::Value Action::land_async(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  Napi::Function cb = info[0].As<Napi::Function>();
-  
-  auto prom = std::make_shared<std::promise<mavsdk::Action::Result>>();
-  auto future_result = prom->get_future();
-  this->_action->land_async(
-        [prom](mavsdk::Action::Result result) { prom->set_value(result); });
 
-  const mavsdk::Action::Result result = future_result.get();
+  Napi::Promise::Deferred deferred = Napi::Promise::Deferred::New(env);
 
-  cb.Call(env.Global(), {Napi::String::New(env, mavsdk::Action::result_str(result))});
+  LandWorker* wk = new LandWorker(env, this->_action, deferred);
+  wk->Queue();
+  return deferred.Promise();
 }
 
-void Action::return_to_launch_async(const Napi::CallbackInfo& info) {
+Napi::Value Action::return_to_launch_async(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  Napi::Function cb = info[0].As<Napi::Function>();
-  
-  auto prom = std::make_shared<std::promise<mavsdk::Action::Result>>();
-  auto future_result = prom->get_future();
-  this->_action->return_to_launch_async(
-        [prom](mavsdk::Action::Result result) { prom->set_value(result); });
 
-  const mavsdk::Action::Result result = future_result.get();
+  Napi::Promise::Deferred deferred = Napi::Promise::Deferred::New(env);
 
-  cb.Call(env.Global(), {Napi::String::New(env, mavsdk::Action::result_str(result))});
+  ReturnToLaunchWorker* wk = new ReturnToLaunchWorker(env, this->_action, deferred);
+  wk->Queue();
+  return deferred.Promise();
 }
 
-void Action::transition_to_fixedwing_async(const Napi::CallbackInfo& info) {
+Napi::Value Action::transition_to_fixedwing_async(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  Napi::Function cb = info[0].As<Napi::Function>();
-  
-  auto prom = std::make_shared<std::promise<mavsdk::Action::Result>>();
-  auto future_result = prom->get_future();
-  this->_action->transition_to_fixedwing_async(
-        [prom](mavsdk::Action::Result result) { prom->set_value(result); });
 
-  const mavsdk::Action::Result result = future_result.get();
+  Napi::Promise::Deferred deferred = Napi::Promise::Deferred::New(env);
 
-  cb.Call(env.Global(), {Napi::String::New(env, mavsdk::Action::result_str(result))});
+  TransitionToFixedwingWorker* wk = new TransitionToFixedwingWorker(env, this->_action, deferred);
+  wk->Queue();
+  return deferred.Promise();
 }
 
-void Action::transition_to_multicopter_async(const Napi::CallbackInfo& info) {
+Napi::Value Action::transition_to_multicopter_async(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  Napi::Function cb = info[0].As<Napi::Function>();
-  
-  auto prom = std::make_shared<std::promise<mavsdk::Action::Result>>();
-  auto future_result = prom->get_future();
-  this->_action->transition_to_multicopter_async(
-        [prom](mavsdk::Action::Result result) { prom->set_value(result); });
 
-  const mavsdk::Action::Result result = future_result.get();
+  Napi::Promise::Deferred deferred = Napi::Promise::Deferred::New(env);
 
-  cb.Call(env.Global(), {Napi::String::New(env, mavsdk::Action::result_str(result))});
+  TransitionToMulticopterWorker* wk = new TransitionToMulticopterWorker(env, this->_action, deferred);
+  wk->Queue();
+  return deferred.Promise();
 }
 
 Napi::Value Action::set_takeoff_altitude(const Napi::CallbackInfo& info) {

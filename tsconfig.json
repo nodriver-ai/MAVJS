@@ -18,9 +18,12 @@
     ]
   },
   "include": [
-    "lib/*.ts", "lib/plugins/*.ts", "example/*.ts"
+    "lib/*.ts", "example/*.ts"
   ],
   "exclude": [
     "node_modules"
-  ]
+  ],
+  "typedocOptions": {
+    "module": "commonjs"
+  },
 }

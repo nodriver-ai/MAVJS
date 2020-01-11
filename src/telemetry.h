@@ -48,6 +48,29 @@ namespace mavjs {
             Napi::Value rc_status(const Napi::CallbackInfo& info);
             Napi::Value actuator_control_target(const Napi::CallbackInfo& info);
             Napi::Value actuator_output_status(const Napi::CallbackInfo& info);
+
+            void position_velocity_ned_async(const Napi::CallbackInfo& info);
+            void position_async(const Napi::CallbackInfo& info);
+            void home_position_async(const Napi::CallbackInfo& info);
+            void in_air_async(const Napi::CallbackInfo& info);
+            void status_text_async(const Napi::CallbackInfo& info);
+            void armed_async(const Napi::CallbackInfo& info);
+            void attitude_quaternion_async(const Napi::CallbackInfo& info);
+            void attitude_euler_angle_async(const Napi::CallbackInfo& info);
+            void attitude_angular_velocity_body_async(const Napi::CallbackInfo& info);
+            void camera_attitude_quaternion_async(const Napi::CallbackInfo& info);
+            void camera_attitude_euler_angle_async(const Napi::CallbackInfo& info);
+            void ground_speed_ned_async(const Napi::CallbackInfo& info);
+            void imu_reading_ned_async(const Napi::CallbackInfo& info);
+            void gps_info_async(const Napi::CallbackInfo& info);
+            void battery_async(const Napi::CallbackInfo& info);
+            void flight_mode_async(const Napi::CallbackInfo& info);
+            void health_async(const Napi::CallbackInfo& info);
+            void health_all_ok_async(const Napi::CallbackInfo& info);
+            void landed_state_async(const Napi::CallbackInfo& info);
+            void actuator_control_target_async(const Napi::CallbackInfo& info);
+            void actuator_output_status_async(const Napi::CallbackInfo& info);
+            void rc_status_async(const Napi::CallbackInfo& info);
     };
 };
 

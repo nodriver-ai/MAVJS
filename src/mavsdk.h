@@ -15,8 +15,6 @@ namespace mavjs {
             static Napi::FunctionReference constructor;
 
             mavsdk::Mavsdk _dc;
-            Napi::ThreadSafeFunction ts_register_on_discover;
-            Napi::ThreadSafeFunction ts_register_on_timeout;
 
             std::vector<mavsdk::Mavsdk::Configuration> configuration = {
                 mavsdk::Mavsdk::Configuration::GroundStation, mavsdk::Mavsdk::Configuration::CompanionComputer };
@@ -31,10 +29,8 @@ namespace mavjs {
             Napi::Value system_uuids(const Napi::CallbackInfo &info);
             Napi::Value system(const Napi::CallbackInfo &info);
             Napi::Value is_connected(const Napi::CallbackInfo &info);
-            void register_on_discover(const Napi::CallbackInfo &info);
-            void unregister_on_discover(const Napi::CallbackInfo &info);
+            Napi::Value register_on_discover(const Napi::CallbackInfo &info);
             void register_on_timeout(const Napi::CallbackInfo &info);
-            void unregister_on_timeout(const Napi::CallbackInfo &info);
     };
 
 };

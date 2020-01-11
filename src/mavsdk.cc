@@ -24,9 +24,7 @@ Napi::Object Mavsdk::Init(Napi::Env env, Napi::Object exports) {
     InstanceMethod("system", &Mavsdk::system),
     InstanceMethod("is_connected", &Mavsdk::is_connected),
     InstanceMethod("register_on_discover", &Mavsdk::register_on_discover),
-    InstanceMethod("unregister_on_discover", &Mavsdk::unregister_on_discover),
     InstanceMethod("register_on_timeout", &Mavsdk::register_on_timeout),
-    InstanceMethod("unregister_on_timeout", &Mavsdk::unregister_on_timeout)
   });
 
   constructor = Napi::Persistent(func);
@@ -164,10 +162,10 @@ Napi::Value Mavsdk::is_connected(const Napi::CallbackInfo& info) {
   return Napi::Boolean::New(info.Env(), isConnected);
 }
 
-void Mavsdk::register_on_discover(const Napi::CallbackInfo& info) {
+Napi::Value Mavsdk::register_on_discover(const Napi::CallbackInfo& info) {
   auto env = info.Env();
 
-  this->ts_register_on_discover = Napi::ThreadSafeFunction::New(
+  auto ts_register_on_discover = Napi::ThreadSafeFunction::New(
       env,
       info[0].As<Napi::Function>(),  // JavaScript function called asynchronously
       "register_on_discover",        // Name
@@ -176,9 +174,8 @@ void Mavsdk::register_on_discover(const Napi::CallbackInfo& info) {
       []( Napi::Env ) {  
               // Finalizer used to clean threads up
       });
-
   
-  auto _on_discover = [this](uint64_t uuid) -> void {
+  auto _on_discover = [ts_register_on_discover](uint64_t uuid) -> void {
     auto callback = []( Napi::Env env, Napi::Function jsCallback, std::string* value ) {
       // Transform native data into JS data, passing it to the provided 
       // `jsCallback` -- the TSFN's JavaScript function.
@@ -190,22 +187,16 @@ void Mavsdk::register_on_discover(const Napi::CallbackInfo& info) {
 
     std::string* value = new std::string(std::to_string(uuid));
     
-    napi_status status = this->ts_register_on_discover.BlockingCall(value, callback);
+    napi_status status = ts_register_on_discover.BlockingCall(value, callback);
   };
 
   this->_dc.register_on_discover(_on_discover);
 }
 
-void Mavsdk::unregister_on_discover(const Napi::CallbackInfo& info) {
-  if (this->ts_register_on_discover) {
-    this->ts_register_on_discover.Release();
-  }
-}
-
 void Mavsdk::register_on_timeout(const Napi::CallbackInfo& info) {
   auto env = info.Env();
 
-  this->ts_register_on_timeout = Napi::ThreadSafeFunction::New(
+  auto ts_register_on_timeout = Napi::ThreadSafeFunction::New(
       env,
       info[0].As<Napi::Function>(),  // JavaScript function called asynchronously
       "register_on_timeout",        // Name
@@ -215,7 +206,7 @@ void Mavsdk::register_on_timeout(const Napi::CallbackInfo& info) {
               // Finalizer used to clean threads up
       });
   
-  auto _on_timeout = [this](uint64_t uuid) -> void {
+  auto _on_timeout = [ts_register_on_timeout](uint64_t uuid) -> void {
     auto callback = []( Napi::Env env, Napi::Function jsCallback, std::string* value ) {
       // Transform native data into JS data, passing it to the provided 
       // `jsCallback` -- the TSFN's JavaScript function.
@@ -227,14 +218,8 @@ void Mavsdk::register_on_timeout(const Napi::CallbackInfo& info) {
 
     std::string* value = new std::string(std::to_string(uuid));
     
-    napi_status status = this->ts_register_on_discover.BlockingCall(value, callback);
+    napi_status status = ts_register_on_timeout.BlockingCall(value, callback);
   };
 
   this->_dc.register_on_timeout(_on_timeout);
-}
-
-void Mavsdk::unregister_on_timeout(const Napi::CallbackInfo& info) {
-  if (this->ts_register_on_timeout) {
-    this->ts_register_on_timeout.Release();
-  }
 }

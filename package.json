@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc",
     "start": "tsc && node lib/addon.js",
-    "test": "mocha --timeout 20000 -r ts-node/register tests/*.spec.ts"
+    "test": "mocha --timeout 20000 -r ts-node/register tests/*.spec.ts",
+    "build-docs": "typedoc --mode modules --name MAVJS --out docs lib"
   },
   "author": "andrea pomente",
   "license": "ISC",
@@ -20,6 +21,7 @@
     "mocha": "^6.2.2",
     "node-addon-api": "^2.0.0",
     "ts-node": "^8.5.4",
+    "typedoc": "^0.15.7",
     "typescript": "^3.7.3"
   }
 }

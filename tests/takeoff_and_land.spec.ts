@@ -10,8 +10,13 @@ function sleep(millis: number) {
     return new Promise(resolve => setTimeout(resolve, millis));
 }
 
+after(function (done) {
+  process.exit();
+});
+
+
 describe('Takeoff and land', async () => { 
-  let mavsdk = new Mavsdk.Init();
+  let mavsdk = new Mavsdk();
   
   const connection_url: string = "udp://:14540";
 
@@ -32,7 +37,6 @@ describe('Takeoff and land', async () => {
     // We usually receive heartbeats at 1Hz, therefore we should find a system after around 2
     // seconds.
     await sleep(2000);
-    mavsdk.unregister_on_discover();
 
     expect(discovered_system).to.equal(true);
   });

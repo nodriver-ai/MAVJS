@@ -24,7 +24,7 @@ function make_mission_item(
     gimbal_yaw_deg: number,
     camera_action: MissionItem.CameraAction)
 {
-    let new_item = new MissionItem.Init();
+    let new_item = new MissionItem();
     new_item.set_position(latitude_deg, longitude_deg);
     new_item.set_relative_altitude(relative_altitude_m);
     new_item.set_speed(speed_m_s);
@@ -39,7 +39,7 @@ let main = async () => {
     
     const argc = process.argv.length - 2;
 
-    let mavsdk = new Mavsdk.Init();
+    let mavsdk = new Mavsdk();
 
     let discovered_system: boolean = false;
 
@@ -71,14 +71,25 @@ let main = async () => {
 
         await prom();
     }
-    
-    mavsdk.register_on_timeout((uuid) => {
-        console.log(`System with UUID timed out: ${uuid}`);
-        process.exit();
-    })
 
     let system = mavsdk.system();
     
+    /*mavsdk.register_on_timeout((uuid) => {
+        console.log(`System with UUID timed out: ${uuid}`);
+        process.exit();
+    })*/
+
+    let action = system.action();
+
+    /*telemetry.flight_mode_async((position_velocity_ned) => {
+        console.log(position_velocity_ned);
+    })*/
+
+    action.arm_async().then((result) => {
+        console.log(result);
+    })
+    
+    /*
     let telemetry = system.telemetry();
     let action = system.action();
     let mission = system.mission();
@@ -94,7 +105,7 @@ let main = async () => {
 
     let mission_items = [];
 
-    let i = 0;
+    let i = 0;*/
 
     /*while(i < 100) {
     mission_items.push(make_mission_item(
@@ -163,14 +174,14 @@ let main = async () => {
     //console.log("Uploading mission...");
     //await mission.upload_mission_async(mission_items);
 
-    mission.start_mission_async().then((result) => {
+    /*mission.start_mission_async().then((result) => {
         sleep(10000);
         //if (result.result != Mission.Result.SUCCESS) {
         console.log(`Mission start result ${result}`)
             //process.exit();
         //}
         console.log("ok2")
-    })
+    })*/
    
     //await sleep(200);
     
@@ -179,7 +190,7 @@ let main = async () => {
     console.log("ok");*/
    
     //console.log("Mission uploaded.");
-    console.log("ok1");
+    console.log("ok");
     //process.exit();
 }
 
