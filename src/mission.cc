@@ -160,6 +160,61 @@ class PauseMissionWorker : public Napi::AsyncWorker {
         mavsdk::Mission::Result result;
 };
 
+class ClearMissionWorker : public Napi::AsyncWorker {
+    public:
+        ClearMissionWorker(Napi::Env &env, std::shared_ptr<mavsdk::Mission>& mission, Napi::Promise::Deferred& deferred)
+        : Napi::AsyncWorker(env), mission(mission), deferred(deferred) {}
+
+        ~ClearMissionWorker() {}
+    
+    void Execute() {
+        auto prom = std::make_shared<std::promise<mavsdk::Mission::Result>>();
+        auto future_result = prom->get_future();
+        mission->clear_mission_async(
+              [prom](mavsdk::Mission::Result result) { prom->set_value(result); });
+
+        result = future_result.get();
+    }
+
+    void OnOK() {
+        deferred.Resolve(Napi::String::New(Env(), mavsdk::Mission::result_str(result)));
+    }
+
+    private:
+        std::shared_ptr<mavsdk::Mission> mission;
+        Napi::Promise::Deferred deferred;
+        
+        mavsdk::Mission::Result result;
+};
+
+class SetCurrentMissionItemWorker : public Napi::AsyncWorker {
+    public:
+        SetCurrentMissionItemWorker(Napi::Env &env, int current, std::shared_ptr<mavsdk::Mission>& mission, Napi::Promise::Deferred& deferred)
+        : Napi::AsyncWorker(env), current(current), mission(mission), deferred(deferred) {}
+
+        ~SetCurrentMissionItemWorker() {}
+    
+    void Execute() {
+        auto prom = std::make_shared<std::promise<mavsdk::Mission::Result>>();
+        auto future_result = prom->get_future();
+        mission->set_current_mission_item_async(
+          current, [prom](mavsdk::Mission::Result result) { prom->set_value(result); });
+
+        result = future_result.get();
+    }
+
+    void OnOK() {
+        deferred.Resolve(Napi::String::New(Env(), mavsdk::Mission::result_str(result)));
+    }
+
+    private:
+        int current;
+        std::shared_ptr<mavsdk::Mission> mission;
+        Napi::Promise::Deferred deferred;
+        
+        mavsdk::Mission::Result result;
+};
+
 Napi::FunctionReference Mission::constructor;
 
 Napi::Object Mission::Init(Napi::Env env, Napi::Object exports) {
@@ -173,7 +228,14 @@ Napi::Object Mission::Init(Napi::Env env, Napi::Object exports) {
     InstanceMethod("set_return_to_launch_after_mission", &Mission::set_return_to_launch_after_mission),
     InstanceMethod("get_return_to_launch_after_mission", &Mission::get_return_to_launch_after_mission),
     InstanceMethod("start_mission_async", &Mission::start_mission_async),
-    InstanceMethod("pause_mission_async", &Mission::pause_mission_async)
+    InstanceMethod("pause_mission_async", &Mission::pause_mission_async),
+    InstanceMethod("clear_mission_async", &Mission::clear_mission_async),
+    InstanceMethod("set_current_mission_item_async", &Mission::set_current_mission_item_async),
+    InstanceMethod("mission_finished", &Mission::mission_finished),
+    InstanceMethod("current_mission_item", &Mission::current_mission_item),
+    InstanceMethod("total_mission_items", &Mission::total_mission_items),
+    InstanceMethod("subscribe_progress", &Mission::subscribe_progress),
+    InstanceMethod("unsubscribe_progress", &Mission::unsubscribe_progress)
   });
 
   constructor = Napi::Persistent(func);
@@ -266,4 +328,83 @@ Napi::Value Mission::pause_mission_async(const Napi::CallbackInfo& info) {
   PauseMissionWorker* wk = new PauseMissionWorker(env, this->_mission, deferred);
   wk->Queue();
   return deferred.Promise();
+}
+
+Napi::Value Mission::clear_mission_async(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+
+  Napi::Promise::Deferred deferred = Napi::Promise::Deferred::New(env);
+
+  ClearMissionWorker* wk = new ClearMissionWorker(env, this->_mission, deferred);
+  wk->Queue();
+  return deferred.Promise();
+}
+
+Napi::Value Mission::set_current_mission_item_async(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+
+  int current = info[0].As<Napi::Number>().Int32Value();
+  Napi::Promise::Deferred deferred = Napi::Promise::Deferred::New(env);
+
+  SetCurrentMissionItemWorker* wk = new SetCurrentMissionItemWorker(env, current, this->_mission, deferred);
+  wk->Queue();
+  return deferred.Promise();
+}
+
+Napi::Value Mission::mission_finished(const Napi::CallbackInfo& info) {
+  return Napi::Boolean::New(info.Env(), this->_mission->mission_finished());
+}
+
+Napi::Value Mission::current_mission_item(const Napi::CallbackInfo& info) {
+  return Napi::Number::New(info.Env(), this->_mission->current_mission_item());
+}
+
+Napi::Value Mission::total_mission_items(const Napi::CallbackInfo& info) {
+  return Napi::Number::New(info.Env(), this->_mission->total_mission_items());
+}
+
+struct missionState {
+  int current;
+  int total;
+};
+
+void Mission::subscribe_progress(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  this->_ts = Napi::ThreadSafeFunction::New(
+      env,
+      info[0].As<Napi::Function>(),  // JavaScript function called asynchronously
+      "subscribe_progress",        // Name
+      0,                             // Unlimited queue
+      1,                             // Only one thread will use this initially
+      []( Napi::Env ) {  
+              // Finalizer used to clean threads up
+      });
+  
+  auto _on_subscribe_progress = [this](int current, int total) -> void {
+
+    auto callback = []( Napi::Env env, Napi::Function jsCallback, missionState * state ) {
+      // Transform native data into JS data, passing it to the provided 
+      // `jsCallback` -- the TSFN's JavaScript function.
+
+      Napi::Object obj = Napi::Object::New(env);
+      obj.Set(Napi::String::New(env, "current"), state->current);
+      obj.Set(Napi::String::New(env, "total"), state->total);
+      jsCallback.Call( { obj } );
+    
+    };
+
+    missionState state;
+    state.current = current;
+    state.total = total;
+
+    napi_status status = this->_ts.BlockingCall(&state, callback);
+  };
+
+  this->_mission->subscribe_progress(_on_subscribe_progress);
+}
+
+void Mission::unsubscribe_progress(const Napi::CallbackInfo& info) {
+  if (this->_ts) {
+    this->_ts.Release();
+  }
 }
