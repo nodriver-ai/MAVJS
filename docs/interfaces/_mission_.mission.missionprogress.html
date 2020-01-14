@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>&quot;addon&quot; | MAVJS</title>
+	<title>missionProgress | MAVJS</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,16 +56,77 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="_addon_.html">&quot;addon&quot;</a>
+					<a href="../modules/_mission_.html">&quot;mission&quot;</a>
+				</li>
+				<li>
+					<a href="../classes/_mission_.mission.html">Mission</a>
+				</li>
+				<li>
+					<a href="_mission_.mission.missionprogress.html">missionProgress</a>
 				</li>
 			</ul>
-			<h1>External module &quot;addon&quot;</h1>
+			<h1>Interface missionProgress</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<span class="target">missionProgress</span>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_mission_.mission.missionprogress.html#current" class="tsd-kind-icon">current</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_mission_.mission.missionprogress.html#total" class="tsd-kind-icon">total</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="current" class="tsd-anchor"></a>
+					<h3>current</h3>
+					<div class="tsd-signature tsd-kind-icon">current<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/pome90/MAVJS/blob/ae8c62b/lib/mission.ts#L176">mission.ts:176</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Current mission item index (0 based).</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="total" class="tsd-anchor"></a>
+					<h3>total</h3>
+					<div class="tsd-signature tsd-kind-icon">total<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/pome90/MAVJS/blob/ae8c62b/lib/mission.ts#L178">mission.ts:178</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Total number of mission items.</p>
+						</div>
+					</div>
+				</section>
+			</section>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 			<nav class="tsd-navigation primary">
@@ -74,33 +135,104 @@
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_action_.html">&quot;action&quot;</a>
+						<a href="../modules/_action_.html">&quot;action&quot;</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_info_.html">&quot;info&quot;</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="../modules/_mavsdk_.html">&quot;mavsdk&quot;</a>
 					</li>
 					<li class="current tsd-kind-external-module">
-						<a href="_addon_.html">&quot;addon&quot;</a>
+						<a href="../modules/_mission_.html">&quot;mission&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_info_.html">&quot;info&quot;</a>
+						<a href="../modules/_missionitem_.html">&quot;mission<wbr>Item&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_mavsdk_.html">&quot;mavsdk&quot;</a>
+						<a href="../modules/_system_.html">&quot;system&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_mission_.html">&quot;mission&quot;</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_missionitem_.html">&quot;mission<wbr>Item&quot;</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_system_.html">&quot;system&quot;</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_telemetry_.html">&quot;telemetry&quot;</a>
+						<a href="../modules/_telemetry_.html">&quot;telemetry&quot;</a>
 					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-class tsd-parent-kind-external-module">
+						<a href="../classes/_mission_.mission.html" class="tsd-kind-icon">Mission</a>
+						<ul>
+							<li class=" tsd-kind-enum tsd-parent-kind-class tsd-is-static">
+								<a href="../enums/_mission_.mission.result.html" class="tsd-kind-icon">Result</a>
+							</li>
+							<li class=" tsd-kind-interface tsd-parent-kind-class">
+								<a href="_mission_.mission.missionitems_and_result.html" class="tsd-kind-icon">Mission<wbr>Items_<wbr>and_<wbr><wbr>Result</a>
+							</li>
+							<li class="current tsd-kind-interface tsd-parent-kind-class">
+								<a href="_mission_.mission.missionprogress.html" class="tsd-kind-icon">mission<wbr>Progress</a>
+								<ul>
+									<li class=" tsd-kind-property tsd-parent-kind-interface">
+										<a href="_mission_.mission.missionprogress.html#current" class="tsd-kind-icon">current</a>
+									</li>
+									<li class=" tsd-kind-property tsd-parent-kind-interface">
+										<a href="_mission_.mission.missionprogress.html#total" class="tsd-kind-icon">total</a>
+									</li>
+								</ul>
+							</li>
+							<li class=" tsd-kind-type-alias tsd-parent-kind-class tsd-is-static">
+								<a href="../classes/_mission_.mission.html#progress_callback_t" class="tsd-kind-icon">progress_<wbr>callback_<wbr>t</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="../classes/_mission_.mission.html#clear_mission_async" class="tsd-kind-icon">clear_<wbr>mission_<wbr>async</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="../classes/_mission_.mission.html#current_mission_item" class="tsd-kind-icon">current_<wbr>mission_<wbr>item</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="../classes/_mission_.mission.html#download_mission_async" class="tsd-kind-icon">download_<wbr>mission_<wbr>async</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="../classes/_mission_.mission.html#download_mission_cancel" class="tsd-kind-icon">download_<wbr>mission_<wbr>cancel</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="../classes/_mission_.mission.html#get_return_to_launch_after_mission" class="tsd-kind-icon">get_<wbr>return_<wbr>to_<wbr>launch_<wbr>after_<wbr>mission</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="../classes/_mission_.mission.html#mission_finished" class="tsd-kind-icon">mission_<wbr>finished</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="../classes/_mission_.mission.html#pause_mission_async" class="tsd-kind-icon">pause_<wbr>mission_<wbr>async</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="../classes/_mission_.mission.html#set_current_mission_item_async" class="tsd-kind-icon">set_<wbr>current_<wbr>mission_<wbr>item_<wbr>async</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="../classes/_mission_.mission.html#set_return_to_launch_after_mission" class="tsd-kind-icon">set_<wbr>return_<wbr>to_<wbr>launch_<wbr>after_<wbr>mission</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="../classes/_mission_.mission.html#start_mission_async" class="tsd-kind-icon">start_<wbr>mission_<wbr>async</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="../classes/_mission_.mission.html#subscribe_progress" class="tsd-kind-icon">subscribe_<wbr>progress</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="../classes/_mission_.mission.html#total_mission_items" class="tsd-kind-icon">total_<wbr>mission_<wbr>items</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="../classes/_mission_.mission.html#unsubscribe_progress" class="tsd-kind-icon">unsubscribe_<wbr>progress</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="../classes/_mission_.mission.html#upload_mission_async" class="tsd-kind-icon">upload_<wbr>mission_<wbr>async</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="../classes/_mission_.mission.html#upload_mission_cancel" class="tsd-kind-icon">upload_<wbr>mission_<wbr>cancel</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
 				</ul>
 			</nav>
 		</div>

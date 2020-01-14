@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Health | MAVJS</title>
+	<title>IMissionItem | MAVJS</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,34 +56,24 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_telemetry_.html">&quot;telemetry&quot;</a>
+					<a href="../modules/_missionitem_.html">&quot;missionItem&quot;</a>
 				</li>
 				<li>
-					<a href="../classes/_telemetry_.telemetry.html">Telemetry</a>
-				</li>
-				<li>
-					<a href="_telemetry_.telemetry.health.html">Health</a>
+					<a href="_missionitem_.imissionitem.html">IMissionItem</a>
 				</li>
 			</ul>
-			<h1>Interface Health</h1>
+			<h1>Interface IMissionItem</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
-			<section class="tsd-panel tsd-comment">
-				<div class="tsd-comment tsd-typography">
-					<div class="lead">
-						<p>Various health flags.</p>
-					</div>
-				</div>
-			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">Health</span>
+						<span class="target">IMissionItem</span>
 					</li>
 				</ul>
 			</section>
@@ -94,13 +84,17 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_telemetry_.telemetry.health.html#accelerometer_calibration_ok" class="tsd-kind-icon">accelerometer_<wbr>calibration_<wbr>ok</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_telemetry_.telemetry.health.html#global_position_ok" class="tsd-kind-icon">global_<wbr>position_<wbr>ok</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_telemetry_.telemetry.health.html#gyrometer_calibration_ok" class="tsd-kind-icon">gyrometer_<wbr>calibration_<wbr>ok</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_telemetry_.telemetry.health.html#home_position_ok" class="tsd-kind-icon">home_<wbr>position_<wbr>ok</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_telemetry_.telemetry.health.html#level_calibration_ok" class="tsd-kind-icon">level_<wbr>calibration_<wbr>ok</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_telemetry_.telemetry.health.html#local_position_ok" class="tsd-kind-icon">local_<wbr>position_<wbr>ok</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_telemetry_.telemetry.health.html#magnetometer_calibration_ok" class="tsd-kind-icon">magnetometer_<wbr>calibration_<wbr>ok</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_missionitem_.imissionitem.html#acceptance_radius_m" class="tsd-kind-icon">acceptance_<wbr>radius_<wbr>m</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_missionitem_.imissionitem.html#camera_action" class="tsd-kind-icon">camera_<wbr>action</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_missionitem_.imissionitem.html#camera_photo_interval_s" class="tsd-kind-icon">camera_<wbr>photo_<wbr>interval_<wbr>s</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_missionitem_.imissionitem.html#fly_through" class="tsd-kind-icon">fly_<wbr>through</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_missionitem_.imissionitem.html#gimbal_pitch_deg" class="tsd-kind-icon">gimbal_<wbr>pitch_<wbr>deg</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_missionitem_.imissionitem.html#gimbal_yaw_deg" class="tsd-kind-icon">gimbal_<wbr>yaw_<wbr>deg</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_missionitem_.imissionitem.html#latitude_deg" class="tsd-kind-icon">latitude_<wbr>deg</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_missionitem_.imissionitem.html#loiter_time_s" class="tsd-kind-icon">loiter_<wbr>time_<wbr>s</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_missionitem_.imissionitem.html#longitude_deg" class="tsd-kind-icon">longitude_<wbr>deg</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_missionitem_.imissionitem.html#relative_altitude_m" class="tsd-kind-icon">relative_<wbr>altitude_<wbr>m</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_missionitem_.imissionitem.html#speed_m_s" class="tsd-kind-icon">speed_<wbr>m_s</a></li>
 							</ul>
 						</section>
 					</div>
@@ -109,109 +103,114 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="accelerometer_calibration_ok" class="tsd-anchor"></a>
-					<h3>accelerometer_<wbr>calibration_<wbr>ok</h3>
-					<div class="tsd-signature tsd-kind-icon">accelerometer_<wbr>calibration_<wbr>ok<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<a name="acceptance_radius_m" class="tsd-anchor"></a>
+					<h3>acceptance_<wbr>radius_<wbr>m</h3>
+					<div class="tsd-signature tsd-kind-icon">acceptance_<wbr>radius_<wbr>m<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/pome90/MAVJS/blob/ae8c62b/lib/telemetry.ts#L894">telemetry.ts:894</a></li>
+							<li>Defined in <a href="https://github.com/pome90/MAVJS/blob/ae8c62b/lib/missionItem.ts#L210">missionItem.ts:210</a></li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>true if the accelerometer is calibrated.</p>
-						</div>
-					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="global_position_ok" class="tsd-anchor"></a>
-					<h3>global_<wbr>position_<wbr>ok</h3>
-					<div class="tsd-signature tsd-kind-icon">global_<wbr>position_<wbr>ok<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<a name="camera_action" class="tsd-anchor"></a>
+					<h3>camera_<wbr>action</h3>
+					<div class="tsd-signature tsd-kind-icon">camera_<wbr>action<span class="tsd-signature-symbol">:</span> <a href="../enums/_missionitem_.missionitem.cameraaction.html" class="tsd-signature-type">CameraAction</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/pome90/MAVJS/blob/ae8c62b/lib/telemetry.ts#L910">telemetry.ts:910</a></li>
+							<li>Defined in <a href="https://github.com/pome90/MAVJS/blob/ae8c62b/lib/missionItem.ts#L215">missionItem.ts:215</a></li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>true if the global position estimate is good enough to fly in a position controlled mode.</p>
-						</div>
-					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="gyrometer_calibration_ok" class="tsd-anchor"></a>
-					<h3>gyrometer_<wbr>calibration_<wbr>ok</h3>
-					<div class="tsd-signature tsd-kind-icon">gyrometer_<wbr>calibration_<wbr>ok<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<a name="camera_photo_interval_s" class="tsd-anchor"></a>
+					<h3>camera_<wbr>photo_<wbr>interval_<wbr>s</h3>
+					<div class="tsd-signature tsd-kind-icon">camera_<wbr>photo_<wbr>interval_<wbr>s<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/pome90/MAVJS/blob/ae8c62b/lib/telemetry.ts#L890">telemetry.ts:890</a></li>
+							<li>Defined in <a href="https://github.com/pome90/MAVJS/blob/ae8c62b/lib/missionItem.ts#L216">missionItem.ts:216</a></li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>true if the gyrometer is calibrated.</p>
-						</div>
-					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="home_position_ok" class="tsd-anchor"></a>
-					<h3>home_<wbr>position_<wbr>ok</h3>
-					<div class="tsd-signature tsd-kind-icon">home_<wbr>position_<wbr>ok<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<a name="fly_through" class="tsd-anchor"></a>
+					<h3>fly_<wbr>through</h3>
+					<div class="tsd-signature tsd-kind-icon">fly_<wbr>through<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/pome90/MAVJS/blob/ae8c62b/lib/telemetry.ts#L914">telemetry.ts:914</a></li>
+							<li>Defined in <a href="https://github.com/pome90/MAVJS/blob/ae8c62b/lib/missionItem.ts#L209">missionItem.ts:209</a></li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>true if the home position has been initialized properly.</p>
-						</div>
-					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="level_calibration_ok" class="tsd-anchor"></a>
-					<h3>level_<wbr>calibration_<wbr>ok</h3>
-					<div class="tsd-signature tsd-kind-icon">level_<wbr>calibration_<wbr>ok<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<a name="gimbal_pitch_deg" class="tsd-anchor"></a>
+					<h3>gimbal_<wbr>pitch_<wbr>deg</h3>
+					<div class="tsd-signature tsd-kind-icon">gimbal_<wbr>pitch_<wbr>deg<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/pome90/MAVJS/blob/ae8c62b/lib/telemetry.ts#L902">telemetry.ts:902</a></li>
+							<li>Defined in <a href="https://github.com/pome90/MAVJS/blob/ae8c62b/lib/missionItem.ts#L212">missionItem.ts:212</a></li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>true if the vehicle has a valid level calibration.</p>
-						</div>
-					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="local_position_ok" class="tsd-anchor"></a>
-					<h3>local_<wbr>position_<wbr>ok</h3>
-					<div class="tsd-signature tsd-kind-icon">local_<wbr>position_<wbr>ok<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<a name="gimbal_yaw_deg" class="tsd-anchor"></a>
+					<h3>gimbal_<wbr>yaw_<wbr>deg</h3>
+					<div class="tsd-signature tsd-kind-icon">gimbal_<wbr>yaw_<wbr>deg<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/pome90/MAVJS/blob/ae8c62b/lib/telemetry.ts#L906">telemetry.ts:906</a></li>
+							<li>Defined in <a href="https://github.com/pome90/MAVJS/blob/ae8c62b/lib/missionItem.ts#L213">missionItem.ts:213</a></li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>true if the local position estimate is good enough to fly in a position control mode.</p>
-						</div>
-					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="magnetometer_calibration_ok" class="tsd-anchor"></a>
-					<h3>magnetometer_<wbr>calibration_<wbr>ok</h3>
-					<div class="tsd-signature tsd-kind-icon">magnetometer_<wbr>calibration_<wbr>ok<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<a name="latitude_deg" class="tsd-anchor"></a>
+					<h3>latitude_<wbr>deg</h3>
+					<div class="tsd-signature tsd-kind-icon">latitude_<wbr>deg<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/pome90/MAVJS/blob/ae8c62b/lib/telemetry.ts#L898">telemetry.ts:898</a></li>
+							<li>Defined in <a href="https://github.com/pome90/MAVJS/blob/ae8c62b/lib/missionItem.ts#L206">missionItem.ts:206</a></li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>true if the magnetometer is calibrated.</p>
-						</div>
-					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="loiter_time_s" class="tsd-anchor"></a>
+					<h3>loiter_<wbr>time_<wbr>s</h3>
+					<div class="tsd-signature tsd-kind-icon">loiter_<wbr>time_<wbr>s<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/pome90/MAVJS/blob/ae8c62b/lib/missionItem.ts#L214">missionItem.ts:214</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="longitude_deg" class="tsd-anchor"></a>
+					<h3>longitude_<wbr>deg</h3>
+					<div class="tsd-signature tsd-kind-icon">longitude_<wbr>deg<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/pome90/MAVJS/blob/ae8c62b/lib/missionItem.ts#L207">missionItem.ts:207</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="relative_altitude_m" class="tsd-anchor"></a>
+					<h3>relative_<wbr>altitude_<wbr>m</h3>
+					<div class="tsd-signature tsd-kind-icon">relative_<wbr>altitude_<wbr>m<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/pome90/MAVJS/blob/ae8c62b/lib/missionItem.ts#L208">missionItem.ts:208</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="speed_m_s" class="tsd-anchor"></a>
+					<h3>speed_<wbr>m_s</h3>
+					<div class="tsd-signature tsd-kind-icon">speed_<wbr>m_s<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/pome90/MAVJS/blob/ae8c62b/lib/missionItem.ts#L211">missionItem.ts:211</a></li>
+						</ul>
+					</aside>
 				</section>
 			</section>
 		</div>
@@ -233,54 +232,67 @@
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/_mission_.html">&quot;mission&quot;</a>
 					</li>
-					<li class=" tsd-kind-external-module">
+					<li class="current tsd-kind-external-module">
 						<a href="../modules/_missionitem_.html">&quot;mission<wbr>Item&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/_system_.html">&quot;system&quot;</a>
 					</li>
-					<li class="current tsd-kind-external-module">
+					<li class=" tsd-kind-external-module">
 						<a href="../modules/_telemetry_.html">&quot;telemetry&quot;</a>
 					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
+					<li class=" tsd-kind-class tsd-parent-kind-external-module">
+						<a href="../classes/_missionitem_.missionitem.html" class="tsd-kind-icon">Mission<wbr>Item</a>
+					</li>
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-class tsd-parent-kind-external-module">
-						<a href="../classes/_telemetry_.telemetry.html" class="tsd-kind-icon">Telemetry</a>
+					<li class="current tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_missionitem_.imissionitem.html" class="tsd-kind-icon">IMission<wbr>Item</a>
 						<ul>
-							<li class="current tsd-kind-interface tsd-parent-kind-class">
-								<a href="_telemetry_.telemetry.health.html" class="tsd-kind-icon">Health</a>
-								<ul>
-									<li class=" tsd-kind-property tsd-parent-kind-interface">
-										<a href="_telemetry_.telemetry.health.html#accelerometer_calibration_ok" class="tsd-kind-icon">accelerometer_<wbr>calibration_<wbr>ok</a>
-									</li>
-									<li class=" tsd-kind-property tsd-parent-kind-interface">
-										<a href="_telemetry_.telemetry.health.html#global_position_ok" class="tsd-kind-icon">global_<wbr>position_<wbr>ok</a>
-									</li>
-									<li class=" tsd-kind-property tsd-parent-kind-interface">
-										<a href="_telemetry_.telemetry.health.html#gyrometer_calibration_ok" class="tsd-kind-icon">gyrometer_<wbr>calibration_<wbr>ok</a>
-									</li>
-									<li class=" tsd-kind-property tsd-parent-kind-interface">
-										<a href="_telemetry_.telemetry.health.html#home_position_ok" class="tsd-kind-icon">home_<wbr>position_<wbr>ok</a>
-									</li>
-									<li class=" tsd-kind-property tsd-parent-kind-interface">
-										<a href="_telemetry_.telemetry.health.html#level_calibration_ok" class="tsd-kind-icon">level_<wbr>calibration_<wbr>ok</a>
-									</li>
-									<li class=" tsd-kind-property tsd-parent-kind-interface">
-										<a href="_telemetry_.telemetry.health.html#local_position_ok" class="tsd-kind-icon">local_<wbr>position_<wbr>ok</a>
-									</li>
-									<li class=" tsd-kind-property tsd-parent-kind-interface">
-										<a href="_telemetry_.telemetry.health.html#magnetometer_calibration_ok" class="tsd-kind-icon">magnetometer_<wbr>calibration_<wbr>ok</a>
-									</li>
-								</ul>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_missionitem_.imissionitem.html#acceptance_radius_m" class="tsd-kind-icon">acceptance_<wbr>radius_<wbr>m</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_missionitem_.imissionitem.html#camera_action" class="tsd-kind-icon">camera_<wbr>action</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_missionitem_.imissionitem.html#camera_photo_interval_s" class="tsd-kind-icon">camera_<wbr>photo_<wbr>interval_<wbr>s</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_missionitem_.imissionitem.html#fly_through" class="tsd-kind-icon">fly_<wbr>through</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_missionitem_.imissionitem.html#gimbal_pitch_deg" class="tsd-kind-icon">gimbal_<wbr>pitch_<wbr>deg</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_missionitem_.imissionitem.html#gimbal_yaw_deg" class="tsd-kind-icon">gimbal_<wbr>yaw_<wbr>deg</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_missionitem_.imissionitem.html#latitude_deg" class="tsd-kind-icon">latitude_<wbr>deg</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_missionitem_.imissionitem.html#loiter_time_s" class="tsd-kind-icon">loiter_<wbr>time_<wbr>s</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_missionitem_.imissionitem.html#longitude_deg" class="tsd-kind-icon">longitude_<wbr>deg</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_missionitem_.imissionitem.html#relative_altitude_m" class="tsd-kind-icon">relative_<wbr>altitude_<wbr>m</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_missionitem_.imissionitem.html#speed_m_s" class="tsd-kind-icon">speed_<wbr>m_s</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
+					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="../modules/_missionitem_.html#addon" class="tsd-kind-icon">addon</a>
+					</li>
 				</ul>
 			</nav>
 		</div>
