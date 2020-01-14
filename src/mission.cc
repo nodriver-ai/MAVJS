@@ -363,7 +363,7 @@ Napi::Value Mission::total_mission_items(const Napi::CallbackInfo& info) {
   return Napi::Number::New(info.Env(), this->_mission->total_mission_items());
 }
 
-struct missionState {
+struct missionProgress {
   int current;
   int total;
 };
@@ -382,22 +382,22 @@ void Mission::subscribe_progress(const Napi::CallbackInfo& info) {
   
   auto _on_subscribe_progress = [this](int current, int total) -> void {
 
-    auto callback = []( Napi::Env env, Napi::Function jsCallback, missionState * state ) {
+    auto callback = []( Napi::Env env, Napi::Function jsCallback, missionProgress * progress ) {
       // Transform native data into JS data, passing it to the provided 
       // `jsCallback` -- the TSFN's JavaScript function.
 
       Napi::Object obj = Napi::Object::New(env);
-      obj.Set(Napi::String::New(env, "current"), state->current);
-      obj.Set(Napi::String::New(env, "total"), state->total);
+      obj.Set(Napi::String::New(env, "current"), progress->current);
+      obj.Set(Napi::String::New(env, "total"), progress->total);
       jsCallback.Call( { obj } );
     
     };
 
-    missionState state;
-    state.current = current;
-    state.total = total;
+    missionProgress progress;
+    progress.current = current;
+    progress.total = total;
 
-    napi_status status = this->_ts.BlockingCall(&state, callback);
+    napi_status status = this->_ts.BlockingCall(&progress, callback);
   };
 
   this->_mission->subscribe_progress(_on_subscribe_progress);

@@ -202,9 +202,6 @@ export namespace MissionItem {
     }
 }
 
-/**
- * @ignore
- */
 export interface IMissionItem {
     latitude_deg: number,
     longitude_deg: number,
