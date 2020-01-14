@@ -1,3 +1,7 @@
+//
+// Simple example to demonstrate how to use the MAVJS.
+//
+// Author: Andrea Pomente <andrea.pomente@nodriver.ai>
 import { Mavsdk, System, Telemetry, Action } from "../lib/addon";
 
 function usage(bin_name: string): void
