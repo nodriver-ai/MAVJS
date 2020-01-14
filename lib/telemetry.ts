@@ -1,5 +1,7 @@
 /**
  * This class allows users to get vehicle telemetry and state information (e.g. battery, GPS, RC connection, flight mode etc.) and set telemetry update rates.
+ * 
+ * The plugin is typically created as shown below: ```let telemetry = system.telemetry()```
  */
 export class Telemetry {
 

@@ -1,9 +1,11 @@
 /**
  * The Action class enables simple actions for a drone such as arming, taking off, and landing.
-
-Synchronous and asynchronous variants of the action methods are supplied.
-
-The action methods send their associated MAVLink commands to the vehicle and complete (return synchronously or callback asynchronously) with an [[Action.Result]] value indicating whether the vehicle has accepted or rejected the command, or that there has been some error. If the command is accepted, the vehicle will then start to perform the associated action.
+ * 
+ * Synchronous and asynchronous variants of the action methods are supplied.
+ * 
+ * The action methods send their associated MAVLink commands to the vehicle and complete (return synchronously or callback asynchronously) with an [[Action.Result]] value indicating whether the vehicle has accepted or rejected the command, or that there has been some error. If the command is accepted, the vehicle will then start to perform the associated action.
+ * 
+ * The plugin is typically created as shown below: ```let action = system.action()```
  */
 export class Action {
   

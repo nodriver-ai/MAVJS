@@ -2,6 +2,8 @@ import { IMissionItem } from "./missionItem";
 
 /**
  * The Mission class enables waypoint missions.
+ * 
+ * The plugin is typically created as shown below: ```let mission = system.mission()```
  */
 export class Mission {
 

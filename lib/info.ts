@@ -1,5 +1,7 @@
 /**
  * The Info class provides basic infomation about the hardware and/or software of a system.
+ * 
+ * The plugin is typically created as shown below: ```let info = system.info()```
  */
 export class Info {
   /**

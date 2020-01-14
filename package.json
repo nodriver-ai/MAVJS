@@ -7,7 +7,7 @@
     "build": "tsc",
     "start": "tsc && node lib/addon.js",
     "test": "mocha --timeout 20000 -r ts-node/register tests/*.spec.ts",
-    "build-docs": "typedoc --mode modules --name MAVJS --out docs lib"
+    "build-docs": "typedoc --mode modules --exclude lib/addon.ts --name MAVJS --out docs lib"
   },
   "author": "andrea pomente",
   "license": "ISC",
