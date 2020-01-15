@@ -34,14 +34,7 @@ describe('Connection', function() {
   let mavsdk: Mavsdk, system, telemetry, action, mission;
 
   after(async () => {   
-    //mavsdk.unregister_on_discover();
-    
-    telemetry = null;
-    action = null;
-    mission = null;
-    
-    system = null;
-    mavsdk = null;
+    mavsdk.close();
   })
 
   it("connect to SITL", () => {
@@ -71,54 +64,9 @@ describe('Connection', function() {
     mission= system.mission();
   });
 
-  describe('Takeoff and landing', function() {
-
-    after(async () => {
-      while (telemetry.armed()) {
-        // Wait until we're done.
-        await sleep(1000);
-      }
-    })
-
-    it('set rate position', async () => {
-      // We want to listen to the altitude of the drone at 1 Hz.
-      const set_rate_result: Telemetry.Result = telemetry.set_rate_position(1.0);
-      expect(set_rate_result).to.equal(Telemetry.Result.SUCCESS); 
-    })
   
-    it('position telemetry', async () => {
-      // We want to listen to the altitude of the drone at 1 Hz.
-      let position = telemetry.position();
-      expect(position).to.be.an('object');
-    })
-  
-    it('arm', async () => {
-      // Check if vehicle is ready to arm
-      while (telemetry.health_all_ok() != true) {
-        await sleep(1000);
-      }
-      // We want to listen to the altitude of the drone at 1 Hz.
-      // Arm vehicle
-      let arm_result: Action.Result = action.arm();
-      expect(arm_result).to.equal(Action.Result.SUCCESS); 
-    })
-  
-    it('takeoff', async () => {
-      // Take off
-      let takeoff_result: Action.Result = action.takeoff();
-      expect(takeoff_result).to.equal(Action.Result.SUCCESS); 
-    })
-  
-    it('land', async() => {
-      // Let it hover for a bit before landing again.
-      await sleep(10000);
-      let land_result: Action.Result = action.land();
-      expect(land_result).to.equal(Action.Result.SUCCESS); 
-    })
-  })
 
-  /*describe('Fly mission', function() {
-
+  describe('Fly mission', function() {
     after(async () => {
       while (telemetry.armed()) {
         // Wait until we're done.
@@ -132,9 +80,7 @@ describe('Connection', function() {
       while (telemetry.health_all_ok() != true) {
           await sleep(1000);
       }
-
       let mission_items = [];
-
       mission_items.push(make_mission_item(
           47.398170327054473,
           8.5456490218639658,
@@ -144,7 +90,6 @@ describe('Connection', function() {
           20.0,
           60.0,
           MissionItem.CameraAction.NONE));
-
       mission_items.push(make_mission_item(
           47.398241338125118,
           8.5455360114574432,
@@ -154,7 +99,6 @@ describe('Connection', function() {
           0.0,
           -60.0,
           MissionItem.CameraAction.TAKE_PHOTO));
-
       mission_items.push(make_mission_item(
           47.398139363821485,
           8.5453846156597137,
@@ -164,7 +108,6 @@ describe('Connection', function() {
           -45.0,
           0.0,
           MissionItem.CameraAction.START_VIDEO));
-
       mission_items.push(make_mission_item(
           47.398058617228855,
           8.5454618036746979,
@@ -174,7 +117,6 @@ describe('Connection', function() {
           -90.0,
           30.0,
           MissionItem.CameraAction.STOP_VIDEO));
-
       mission_items.push(make_mission_item(
           47.398100366082858,
           8.5456969141960144,
@@ -184,7 +126,6 @@ describe('Connection', function() {
           -45.0,
           -30.0,
           MissionItem.CameraAction.START_PHOTO_INTERVAL));
-
       mission_items.push(make_mission_item(
           47.398001890458097,
           8.5455576181411743,
@@ -194,13 +135,11 @@ describe('Connection', function() {
           0.0,
           0.0,
           MissionItem.CameraAction.STOP_PHOTO_INTERVAL));
-
       
       let result = await mission.upload_mission_async(mission_items);
-
       expect(result).to.equal(Mission.Result.SUCCESS); 
     })
-
+    
     it('arm', async () => {
       // We want to listen to the altitude of the drone at 1 Hz.
       // Arm vehicle
@@ -209,34 +148,25 @@ describe('Connection', function() {
       let arm_result: Action.Result = action.arm();
       expect(arm_result).to.equal(Action.Result.SUCCESS); 
     })
-
     it('start mission', async () => {
       let result = await mission.start_mission_async();
       expect(result).to.equal(Mission.Result.SUCCESS); 
     })
-
     it('pause mission', async() => {
       await sleep(5000);
-
       let result = await mission.pause_mission_async();
       expect(result).to.equal(Mission.Result.SUCCESS); 
     })
-
     it('resume mission', async() => {
       await sleep(5000);
-
       let result = await mission.start_mission_async();
       expect(result).to.equal(Mission.Result.SUCCESS); 
     })
-
     it('RTL command', async() => {
       await sleep(5000);
-
       let result = action.return_to_launch();
       expect(result).to.equal(Action.Result.SUCCESS); 
     })
-
-  });*/
+  });
 
 });
-

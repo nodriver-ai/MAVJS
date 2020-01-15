@@ -37,10 +37,6 @@ System::System(const Napi::CallbackInfo& info) : Napi::ObjectWrap<System>(info) 
   this->_system = info[0].As<Napi::External<mavsdk::System>>().Data();
 }
 
-System::~System() {
-  std::cout << "system destroy" << std::endl;
-}
-
 Napi::Value System::has_autopilot(const Napi::CallbackInfo& info) {
   return Napi::Boolean::New(info.Env(), this->_system->has_autopilot());
 }

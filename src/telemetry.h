@@ -10,7 +10,6 @@ namespace mavjs {
         public:
             static Napi::Object Init(Napi::Env env, Napi::Object exports);
             Telemetry(const Napi::CallbackInfo &info);
-            virtual ~Telemetry();
 
             static Napi::FunctionReference constructor;
 

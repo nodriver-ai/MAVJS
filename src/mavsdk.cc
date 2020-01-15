@@ -41,10 +41,6 @@ Mavsdk::Mavsdk(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Mavsdk>(info) 
   this->_dc = new mavsdk::Mavsdk();
 }
 
-Mavsdk::~Mavsdk() {
-  std::cout << "mavsdk destroy" << std::endl;
-}
-
 Napi::Value Mavsdk::version(const Napi::CallbackInfo& info) {
   return Napi::String::New(info.Env(), this->_dc->version());
 }

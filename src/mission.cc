@@ -253,10 +253,6 @@ Mission::Mission(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Mission>(inf
   this->_mission = std::make_shared<mavsdk::Mission>(*system);
 }
 
-Mission::~Mission() {
-  std::cout << "mission destroy" << std::endl;
-}
-
 Napi::Value Mission::upload_mission_async(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
 

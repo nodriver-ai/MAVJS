@@ -79,10 +79,6 @@ Telemetry::Telemetry(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Telemetr
   this->_telemetry = std::make_shared<mavsdk::Telemetry>(*system);
 }
 
-Telemetry::~Telemetry() {
-  std::cout << "telemetry destroy" << std::endl;
-}
-
 Napi::Value Telemetry::set_rate_position_velocity_ned(const Napi::CallbackInfo& info) {
   double rate = info[0].As<Napi::Number>().DoubleValue();
   const mavsdk::Telemetry::Result set_rate_result = this->_telemetry->set_rate_position_velocity_ned(rate);
