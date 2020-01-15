@@ -10,12 +10,16 @@ namespace mavjs {
         public:
             static Napi::Object Init(Napi::Env env, Napi::Object exports);
             Mission(const Napi::CallbackInfo &info);
+            virtual ~Mission();
+            
             static Napi::FunctionReference constructor;
+
+            void dispose();
 
         private:
             std::shared_ptr<mavsdk::Mission> _mission;
 
-            Napi::ThreadSafeFunction _ts;
+            Napi::ThreadSafeFunction tsfn[1] = {nullptr};
 
             Napi::Value upload_mission_async(const Napi::CallbackInfo &info);
             void upload_mission_cancel(const Napi::CallbackInfo &info);

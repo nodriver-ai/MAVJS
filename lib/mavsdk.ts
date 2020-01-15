@@ -157,10 +157,6 @@ export class Mavsdk {
         return this.mavsdk.register_on_discover(callback);
     }
 
-    unregister_on_discover(): void {
-        this.mavsdk.unregister_on_discover();
-    }
-
     /**
      * Register callback for system timeout.
 
@@ -172,6 +168,17 @@ export class Mavsdk {
     */
     register_on_timeout(callback: Mavsdk.event_callback): void {
         this.mavsdk.register_on_timeout(callback)
+    }
+
+    /**
+     * Destructor.
+     * 
+     * Disconnects all connected vehicles and releases all resources.
+     * 
+     * You must call this method if you want release all resources and close the program.
+     */
+    close(): void {
+        this.mavsdk.close();
     }
 
 }

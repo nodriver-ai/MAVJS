@@ -3,17 +3,29 @@
 
 #include <napi.h>
 #include <mavsdk/mavsdk.h>
+#include "telemetry.h"
+#include "action.h"
+#include "info.h"
+#include "mission.h"
 
 namespace mavjs {
     class System : public Napi::ObjectWrap<System> {
         public:
             static Napi::Object Init(Napi::Env env, Napi::Object exports);
             System(const Napi::CallbackInfo &info);
+            virtual ~System();
+
             static Napi::FunctionReference constructor;
 
-            mavsdk::System * _system;
+            void dispose();
 
         private:
+            mavsdk::System* _system;
+            
+            Telemetry* _telemetry = nullptr;
+            Mission* _mission = nullptr;
+
+            Napi::ThreadSafeFunction tsfn[1] = {nullptr};
 
             Napi::Value has_autopilot(const Napi::CallbackInfo &info);
             Napi::Value is_standalone(const Napi::CallbackInfo &info);

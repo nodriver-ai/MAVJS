@@ -1,31 +1,38 @@
 import { expect } from 'chai';
 
-import { Mavsdk, System, Telemetry, Action } from "../lib/addon";
+import { Mavsdk, Telemetry, Action } from "../lib/addon";
 
-function component_discovered(component_type: System.ComponentType) {
-    console.log(`Discovered a component with type ${component_type}`);
-}
+const connection_url: string = "udp://:14540";
 
 function sleep(millis: number) {
     return new Promise(resolve => setTimeout(resolve, millis));
 }
 
-after(function (done) {
-  process.exit();
-});
+describe('Takeoff and land', async () => {
+  let mavsdk: Mavsdk, system, telemetry, action, mission;
 
+  after(async () => {
+    while (telemetry.armed()) {
+      // Wait until we're done.
+      await sleep(1000);
+    }
+    
+    mavsdk.unregister_on_discover();
 
-describe('Takeoff and land', async () => { 
-  let mavsdk = new Mavsdk();
-  
-  const connection_url: string = "udp://:14540";
+    telemetry = null;
+    action = null;
+    mission = null;
+    
+    system = null;
+    mavsdk = null;
+  })
 
-  it('connection', () => {
-    let connection_result: Mavsdk.ConnectionResult = mavsdk.add_any_connection(connection_url);
+  it("connection", () => {
+    mavsdk = new Mavsdk();
+
+    const connection_result = mavsdk.add_any_connection(connection_url);
     expect(connection_result).to.equal(Mavsdk.ConnectionResult.SUCCESS); 
-  });
-
-  let system = mavsdk.system();
+  })
 
   it('discover system', async () => {
     let discovered_system: boolean = false;
@@ -39,10 +46,14 @@ describe('Takeoff and land', async () => {
     await sleep(2000);
 
     expect(discovered_system).to.equal(true);
-  });
 
-  let telemetry = system.telemetry();
-  let action = system.action();
+    system = mavsdk.system();
+    
+    telemetry = system.telemetry();
+    action = system.action(); 
+    mission= system.mission();
+  });
+  
 
   it('set rate position', async () => {
     // We want to listen to the altitude of the drone at 1 Hz.

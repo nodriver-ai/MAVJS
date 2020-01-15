@@ -446,6 +446,10 @@ export class Telemetry {
   rc_status_async(callback: Telemetry.rc_status_callback_t): void {
     this.rc_status_async(callback);
   }
+
+  close(): void {
+    this.close();
+  }
   
 }
 

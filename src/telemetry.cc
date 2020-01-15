@@ -61,7 +61,7 @@ Napi::Object Telemetry::Init(Napi::Env env, Napi::Object exports) {
     InstanceMethod("landed_state_async", &Telemetry::landed_state_async),
     InstanceMethod("actuator_control_target_async", &Telemetry::actuator_control_target_async),
     InstanceMethod("actuator_output_status_async", &Telemetry::actuator_output_status_async),
-    InstanceMethod("rc_status_async", &Telemetry::rc_status_async)
+    InstanceMethod("rc_status_async", &Telemetry::rc_status_async),
   });
 
   constructor = Napi::Persistent(func);
@@ -77,6 +77,10 @@ Telemetry::Telemetry(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Telemetr
   
   auto system = info[0].As<Napi::External<mavsdk::System>>().Data();
   this->_telemetry = std::make_shared<mavsdk::Telemetry>(*system);
+}
+
+Telemetry::~Telemetry() {
+  std::cout << "telemetry destroy" << std::endl;
 }
 
 Napi::Value Telemetry::set_rate_position_velocity_ned(const Napi::CallbackInfo& info) {
@@ -393,7 +397,7 @@ Napi::Value Telemetry::actuator_output_status(const Napi::CallbackInfo& info) {
 
 void Telemetry::position_velocity_ned_async(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  auto ts_position_velocity_ned_async = Napi::ThreadSafeFunction::New(
+  this->tsfn[0] = Napi::ThreadSafeFunction::New(
       env,
       info[0].As<Napi::Function>(),  // JavaScript function called asynchronously
       "position_velocity_ned_async",        // Name
@@ -403,7 +407,7 @@ void Telemetry::position_velocity_ned_async(const Napi::CallbackInfo& info) {
               // Finalizer used to clean threads up
       });
   
-  auto _on_position_velocity_ned_async = [ts_position_velocity_ned_async](mavsdk::Telemetry::PositionVelocityNED type) -> void {
+  auto _on_position_velocity_ned_async = [this](mavsdk::Telemetry::PositionVelocityNED type) -> void {
     auto callback = []( Napi::Env env, Napi::Function jsCallback, mavsdk::Telemetry::PositionVelocityNED * position_velocity_ned ) {
       // Transform native data into JS data, passing it to the provided 
       // `jsCallback` -- the TSFN's JavaScript function.
@@ -430,7 +434,7 @@ void Telemetry::position_velocity_ned_async(const Napi::CallbackInfo& info) {
 
     mavsdk::Telemetry::PositionVelocityNED * value = new mavsdk::Telemetry::PositionVelocityNED(type);
     
-    napi_status status = ts_position_velocity_ned_async.BlockingCall(value, callback);
+    this->tsfn[0].BlockingCall(value, callback);
   };
 
   this->_telemetry->position_velocity_ned_async(_on_position_velocity_ned_async);
@@ -438,7 +442,7 @@ void Telemetry::position_velocity_ned_async(const Napi::CallbackInfo& info) {
 
 void Telemetry::position_async(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  auto ts_position_async = Napi::ThreadSafeFunction::New(
+  this->tsfn[1] = Napi::ThreadSafeFunction::New(
       env,
       info[0].As<Napi::Function>(),  // JavaScript function called asynchronously
       "position_async",        // Name
@@ -448,7 +452,7 @@ void Telemetry::position_async(const Napi::CallbackInfo& info) {
               // Finalizer used to clean threads up
       });
   
-  auto _on_position_async = [ts_position_async](mavsdk::Telemetry::Position type) -> void {
+  auto _on_position_async = [this](mavsdk::Telemetry::Position type) -> void {
     auto callback = []( Napi::Env env, Napi::Function jsCallback, mavsdk::Telemetry::Position * position ) {
       // Transform native data into JS data, passing it to the provided 
       // `jsCallback` -- the TSFN's JavaScript function.
@@ -467,7 +471,7 @@ void Telemetry::position_async(const Napi::CallbackInfo& info) {
 
     mavsdk::Telemetry::Position * value = new mavsdk::Telemetry::Position(type);
     
-    napi_status status = ts_position_async.BlockingCall(value, callback);
+    this->tsfn[1].BlockingCall(value, callback);
   };
 
   this->_telemetry->position_async(_on_position_async);
@@ -475,7 +479,7 @@ void Telemetry::position_async(const Napi::CallbackInfo& info) {
 
 void Telemetry::home_position_async(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  auto ts_home_position_async = Napi::ThreadSafeFunction::New(
+  this->tsfn[2] = Napi::ThreadSafeFunction::New(
       env,
       info[0].As<Napi::Function>(),  // JavaScript function called asynchronously
       "home_position_async",        // Name
@@ -485,7 +489,7 @@ void Telemetry::home_position_async(const Napi::CallbackInfo& info) {
               // Finalizer used to clean threads up
       });
   
-  auto _on_home_position_async = [ts_home_position_async](mavsdk::Telemetry::Position type) -> void {
+  auto _on_home_position_async = [this](mavsdk::Telemetry::Position type) -> void {
     auto callback = []( Napi::Env env, Napi::Function jsCallback, mavsdk::Telemetry::Position * home_position ) {
       // Transform native data into JS data, passing it to the provided 
       // `jsCallback` -- the TSFN's JavaScript function.
@@ -504,7 +508,7 @@ void Telemetry::home_position_async(const Napi::CallbackInfo& info) {
 
     mavsdk::Telemetry::Position * value = new mavsdk::Telemetry::Position(type);
     
-    napi_status status = ts_home_position_async.BlockingCall(value, callback);
+    this->tsfn[2].BlockingCall(value, callback);
   };
 
   this->_telemetry->home_position_async(_on_home_position_async);
@@ -512,7 +516,7 @@ void Telemetry::home_position_async(const Napi::CallbackInfo& info) {
 
 void Telemetry::in_air_async(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  auto ts_in_air_async = Napi::ThreadSafeFunction::New(
+  this->tsfn[3] = Napi::ThreadSafeFunction::New(
       env,
       info[0].As<Napi::Function>(),  // JavaScript function called asynchronously
       "in_air_async",        // Name
@@ -522,7 +526,7 @@ void Telemetry::in_air_async(const Napi::CallbackInfo& info) {
               // Finalizer used to clean threads up
       });
   
-  auto _on_in_air_async = [ts_in_air_async](bool type) -> void {
+  auto _on_in_air_async = [this](bool type) -> void {
     auto callback = []( Napi::Env env, Napi::Function jsCallback, bool * in_air ) {
       // Transform native data into JS data, passing it to the provided 
       // `jsCallback` -- the TSFN's JavaScript function.
@@ -534,7 +538,7 @@ void Telemetry::in_air_async(const Napi::CallbackInfo& info) {
 
     bool * value = new bool(type);
     
-    napi_status status = ts_in_air_async.BlockingCall(value, callback);
+    this->tsfn[3].BlockingCall(value, callback);
   };
 
   this->_telemetry->in_air_async(_on_in_air_async);
@@ -542,7 +546,7 @@ void Telemetry::in_air_async(const Napi::CallbackInfo& info) {
 
 void Telemetry::status_text_async(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  auto ts_status_text_async = Napi::ThreadSafeFunction::New(
+  this->tsfn[4] = Napi::ThreadSafeFunction::New(
       env,
       info[0].As<Napi::Function>(),  // JavaScript function called asynchronously
       "status_text_async",        // Name
@@ -552,7 +556,7 @@ void Telemetry::status_text_async(const Napi::CallbackInfo& info) {
               // Finalizer used to clean threads up
       });
   
-  auto _on_status_text_async = [ts_status_text_async](mavsdk::Telemetry::StatusText type) -> void {
+  auto _on_status_text_async = [this](mavsdk::Telemetry::StatusText type) -> void {
     auto callback = []( Napi::Env env, Napi::Function jsCallback, mavsdk::Telemetry::StatusText * status_text ) {
       // Transform native data into JS data, passing it to the provided 
       // `jsCallback` -- the TSFN's JavaScript function.
@@ -564,7 +568,7 @@ void Telemetry::status_text_async(const Napi::CallbackInfo& info) {
 
     mavsdk::Telemetry::StatusText * value = new mavsdk::Telemetry::StatusText(type);
     
-    napi_status status = ts_status_text_async.BlockingCall(value, callback);
+    this->tsfn[4].BlockingCall(value, callback);
   };
 
   this->_telemetry->status_text_async(_on_status_text_async);
@@ -572,7 +576,7 @@ void Telemetry::status_text_async(const Napi::CallbackInfo& info) {
 
 void Telemetry::armed_async(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  auto ts_armed_async = Napi::ThreadSafeFunction::New(
+  this->tsfn[5] = Napi::ThreadSafeFunction::New(
       env,
       info[0].As<Napi::Function>(),  // JavaScript function called asynchronously
       "armed_async",        // Name
@@ -582,7 +586,7 @@ void Telemetry::armed_async(const Napi::CallbackInfo& info) {
               // Finalizer used to clean threads up
       });
   
-  auto _on_armed_async = [ts_armed_async](bool type) -> void {
+  auto _on_armed_async = [this](bool type) -> void {
     auto callback = []( Napi::Env env, Napi::Function jsCallback, bool * armed ) {
       // Transform native data into JS data, passing it to the provided 
       // `jsCallback` -- the TSFN's JavaScript function.
@@ -594,7 +598,7 @@ void Telemetry::armed_async(const Napi::CallbackInfo& info) {
 
     bool * value = new bool(type);
     
-    napi_status status = ts_armed_async.BlockingCall(value, callback);
+    this->tsfn[5].BlockingCall(value, callback);
   };
 
   this->_telemetry->armed_async(_on_armed_async);
@@ -602,7 +606,7 @@ void Telemetry::armed_async(const Napi::CallbackInfo& info) {
 
 void Telemetry::attitude_quaternion_async(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  auto ts_attitude_quaternion_async = Napi::ThreadSafeFunction::New(
+  this->tsfn[6] = Napi::ThreadSafeFunction::New(
       env,
       info[0].As<Napi::Function>(),  // JavaScript function called asynchronously
       "attitude_quaternion_async",        // Name
@@ -612,7 +616,7 @@ void Telemetry::attitude_quaternion_async(const Napi::CallbackInfo& info) {
               // Finalizer used to clean threads up
       });
   
-  auto _on_attitude_quaternion_async = [ts_attitude_quaternion_async](mavsdk::Telemetry::Quaternion type) -> void {
+  auto _on_attitude_quaternion_async = [this](mavsdk::Telemetry::Quaternion type) -> void {
     auto callback = []( Napi::Env env, Napi::Function jsCallback, mavsdk::Telemetry::Quaternion * attitude_quaternion ) {
       // Transform native data into JS data, passing it to the provided 
       // `jsCallback` -- the TSFN's JavaScript function.
@@ -630,7 +634,7 @@ void Telemetry::attitude_quaternion_async(const Napi::CallbackInfo& info) {
 
     mavsdk::Telemetry::Quaternion * value = new mavsdk::Telemetry::Quaternion(type);
     
-    napi_status status = ts_attitude_quaternion_async.BlockingCall(value, callback);
+    this->tsfn[6].BlockingCall(value, callback);
   };
 
   this->_telemetry->attitude_quaternion_async(_on_attitude_quaternion_async);
@@ -638,7 +642,7 @@ void Telemetry::attitude_quaternion_async(const Napi::CallbackInfo& info) {
 
 void Telemetry::attitude_euler_angle_async(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  auto ts_attitude_euler_angle_async = Napi::ThreadSafeFunction::New(
+  this->tsfn[7] = Napi::ThreadSafeFunction::New(
       env,
       info[0].As<Napi::Function>(),  // JavaScript function called asynchronously
       "attitude_euler_angle_async",        // Name
@@ -648,7 +652,7 @@ void Telemetry::attitude_euler_angle_async(const Napi::CallbackInfo& info) {
               // Finalizer used to clean threads up
       });
   
-  auto _on_attitude_euler_angle_async = [ts_attitude_euler_angle_async](mavsdk::Telemetry::EulerAngle type) -> void {
+  auto _on_attitude_euler_angle_async = [this](mavsdk::Telemetry::EulerAngle type) -> void {
     auto callback = []( Napi::Env env, Napi::Function jsCallback, mavsdk::Telemetry::EulerAngle * attitude_euler_angle ) {
       // Transform native data into JS data, passing it to the provided 
       // `jsCallback` -- the TSFN's JavaScript function.
@@ -665,7 +669,7 @@ void Telemetry::attitude_euler_angle_async(const Napi::CallbackInfo& info) {
 
     mavsdk::Telemetry::EulerAngle * value = new mavsdk::Telemetry::EulerAngle(type);
     
-    napi_status status = ts_attitude_euler_angle_async.BlockingCall(value, callback);
+    this->tsfn[7].BlockingCall(value, callback);
   };
 
   this->_telemetry->attitude_euler_angle_async(_on_attitude_euler_angle_async);
@@ -673,7 +677,7 @@ void Telemetry::attitude_euler_angle_async(const Napi::CallbackInfo& info) {
 
 void Telemetry::attitude_angular_velocity_body_async(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  auto ts_attitude_angular_velocity_body_async = Napi::ThreadSafeFunction::New(
+  this->tsfn[8] = Napi::ThreadSafeFunction::New(
       env,
       info[0].As<Napi::Function>(),  // JavaScript function called asynchronously
       "attitude_angular_velocity_body_async",        // Name
@@ -683,7 +687,7 @@ void Telemetry::attitude_angular_velocity_body_async(const Napi::CallbackInfo& i
               // Finalizer used to clean threads up
       });
   
-  auto _on_attitude_angular_velocity_body_async = [ts_attitude_angular_velocity_body_async](mavsdk::Telemetry::AngularVelocityBody type) -> void {
+  auto _on_attitude_angular_velocity_body_async = [this](mavsdk::Telemetry::AngularVelocityBody type) -> void {
     auto callback = []( Napi::Env env, Napi::Function jsCallback, mavsdk::Telemetry::AngularVelocityBody * attitude_angular_velocity_body ) {
       // Transform native data into JS data, passing it to the provided 
       // `jsCallback` -- the TSFN's JavaScript function.
@@ -700,7 +704,7 @@ void Telemetry::attitude_angular_velocity_body_async(const Napi::CallbackInfo& i
 
     mavsdk::Telemetry::AngularVelocityBody * value = new mavsdk::Telemetry::AngularVelocityBody(type);
     
-    napi_status status = ts_attitude_angular_velocity_body_async.BlockingCall(value, callback);
+    this->tsfn[8].BlockingCall(value, callback);
   };
 
   this->_telemetry->attitude_angular_velocity_body_async(_on_attitude_angular_velocity_body_async);
@@ -708,7 +712,7 @@ void Telemetry::attitude_angular_velocity_body_async(const Napi::CallbackInfo& i
 
 void Telemetry::ground_speed_ned_async(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  auto ts_ground_speed_ned_async = Napi::ThreadSafeFunction::New(
+  this->tsfn[9] = Napi::ThreadSafeFunction::New(
       env,
       info[0].As<Napi::Function>(),  // JavaScript function called asynchronously
       "ground_speed_ned_async",        // Name
@@ -718,7 +722,7 @@ void Telemetry::ground_speed_ned_async(const Napi::CallbackInfo& info) {
               // Finalizer used to clean threads up
       });
   
-  auto _on_ground_speed_ned_async = [ts_ground_speed_ned_async](mavsdk::Telemetry::GroundSpeedNED type) -> void {
+  auto _on_ground_speed_ned_async = [this](mavsdk::Telemetry::GroundSpeedNED type) -> void {
     auto callback = []( Napi::Env env, Napi::Function jsCallback, mavsdk::Telemetry::GroundSpeedNED * ground_speed_ned ) {
       // Transform native data into JS data, passing it to the provided 
       // `jsCallback` -- the TSFN's JavaScript function.
@@ -735,7 +739,7 @@ void Telemetry::ground_speed_ned_async(const Napi::CallbackInfo& info) {
 
     mavsdk::Telemetry::GroundSpeedNED * value = new mavsdk::Telemetry::GroundSpeedNED(type);
     
-    napi_status status = ts_ground_speed_ned_async.BlockingCall(value, callback);
+    this->tsfn[9].BlockingCall(value, callback);
   };
 
   this->_telemetry->ground_speed_ned_async(_on_ground_speed_ned_async);
@@ -743,7 +747,7 @@ void Telemetry::ground_speed_ned_async(const Napi::CallbackInfo& info) {
 
 void Telemetry::imu_reading_ned_async(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  auto ts_imu_reading_ned_async = Napi::ThreadSafeFunction::New(
+  this->tsfn[10] = Napi::ThreadSafeFunction::New(
       env,
       info[0].As<Napi::Function>(),  // JavaScript function called asynchronously
       "imu_reading_ned_async",        // Name
@@ -753,7 +757,7 @@ void Telemetry::imu_reading_ned_async(const Napi::CallbackInfo& info) {
               // Finalizer used to clean threads up
       });
   
-  auto _on_imu_reading_ned_async = [ts_imu_reading_ned_async](mavsdk::Telemetry::IMUReadingNED type) -> void {
+  auto _on_imu_reading_ned_async = [this](mavsdk::Telemetry::IMUReadingNED type) -> void {
     auto callback = []( Napi::Env env, Napi::Function jsCallback, mavsdk::Telemetry::IMUReadingNED * imu_reading_ned ) {
       // Transform native data into JS data, passing it to the provided 
       // `jsCallback` -- the TSFN's JavaScript function.
@@ -786,7 +790,7 @@ void Telemetry::imu_reading_ned_async(const Napi::CallbackInfo& info) {
 
     mavsdk::Telemetry::IMUReadingNED * value = new mavsdk::Telemetry::IMUReadingNED(type);
     
-    napi_status status = ts_imu_reading_ned_async.BlockingCall(value, callback);
+    this->tsfn[10].BlockingCall(value, callback);
   };
 
   this->_telemetry->imu_reading_ned_async(_on_imu_reading_ned_async);
@@ -794,7 +798,7 @@ void Telemetry::imu_reading_ned_async(const Napi::CallbackInfo& info) {
 
 void Telemetry::gps_info_async(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  auto ts_gps_info_async = Napi::ThreadSafeFunction::New(
+  this->tsfn[11] = Napi::ThreadSafeFunction::New(
       env,
       info[0].As<Napi::Function>(),  // JavaScript function called asynchronously
       "gps_info_async",        // Name
@@ -804,7 +808,7 @@ void Telemetry::gps_info_async(const Napi::CallbackInfo& info) {
               // Finalizer used to clean threads up
       });
   
-  auto _on_gps_info_async = [ts_gps_info_async](mavsdk::Telemetry::GPSInfo type) -> void {
+  auto _on_gps_info_async = [this](mavsdk::Telemetry::GPSInfo type) -> void {
     auto callback = []( Napi::Env env, Napi::Function jsCallback, mavsdk::Telemetry::GPSInfo * gps_info ) {
       // Transform native data into JS data, passing it to the provided 
       // `jsCallback` -- the TSFN's JavaScript function.
@@ -821,7 +825,7 @@ void Telemetry::gps_info_async(const Napi::CallbackInfo& info) {
 
     mavsdk::Telemetry::GPSInfo * value = new mavsdk::Telemetry::GPSInfo(type);
     
-    napi_status status = ts_gps_info_async.BlockingCall(value, callback);
+    this->tsfn[11].BlockingCall(value, callback);
   };
 
   this->_telemetry->gps_info_async(_on_gps_info_async);
@@ -829,7 +833,7 @@ void Telemetry::gps_info_async(const Napi::CallbackInfo& info) {
 
 void Telemetry::battery_async(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  auto ts_battery_async = Napi::ThreadSafeFunction::New(
+  this->tsfn[12] = Napi::ThreadSafeFunction::New(
       env,
       info[0].As<Napi::Function>(),  // JavaScript function called asynchronously
       "battery_async",        // Name
@@ -839,7 +843,7 @@ void Telemetry::battery_async(const Napi::CallbackInfo& info) {
               // Finalizer used to clean threads up
       });
   
-  auto _on_battery_async = [ts_battery_async](mavsdk::Telemetry::Battery type) -> void {
+  auto _on_battery_async = [this](mavsdk::Telemetry::Battery type) -> void {
     auto callback = []( Napi::Env env, Napi::Function jsCallback, mavsdk::Telemetry::Battery * battery ) {
       // Transform native data into JS data, passing it to the provided 
       // `jsCallback` -- the TSFN's JavaScript function.
@@ -855,7 +859,7 @@ void Telemetry::battery_async(const Napi::CallbackInfo& info) {
 
     mavsdk::Telemetry::Battery * value = new mavsdk::Telemetry::Battery(type);
     
-    napi_status status = ts_battery_async.BlockingCall(value, callback);
+    this->tsfn[12].BlockingCall(value, callback);
   };
 
   this->_telemetry->battery_async(_on_battery_async);
@@ -863,7 +867,7 @@ void Telemetry::battery_async(const Napi::CallbackInfo& info) {
 
 void Telemetry::flight_mode_async(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  auto ts_flight_mode_async = Napi::ThreadSafeFunction::New(
+  this->tsfn[13] = Napi::ThreadSafeFunction::New(
       env,
       info[0].As<Napi::Function>(),  // JavaScript function called asynchronously
       "flight_mode_async",        // Name
@@ -873,7 +877,7 @@ void Telemetry::flight_mode_async(const Napi::CallbackInfo& info) {
               // Finalizer used to clean threads up
       });
   
-  auto _on_flight_mode_async = [ts_flight_mode_async](mavsdk::Telemetry::FlightMode type) -> void {
+  auto _on_flight_mode_async = [this](mavsdk::Telemetry::FlightMode type) -> void {
     auto callback = []( Napi::Env env, Napi::Function jsCallback, double * flight_mode ) {
       // Transform native data into JS data, passing it to the provided 
       // `jsCallback` -- the TSFN's JavaScript function.
@@ -887,7 +891,7 @@ void Telemetry::flight_mode_async(const Napi::CallbackInfo& info) {
     auto idx = double(type);
     double * value = new double(idx);    
     
-    napi_status status = ts_flight_mode_async.BlockingCall(value, callback);
+    this->tsfn[13].BlockingCall(value, callback);
   };
 
   this->_telemetry->flight_mode_async(_on_flight_mode_async);
@@ -895,7 +899,7 @@ void Telemetry::flight_mode_async(const Napi::CallbackInfo& info) {
 
 void Telemetry::health_async(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  auto ts_health_async = Napi::ThreadSafeFunction::New(
+  this->tsfn[14] = Napi::ThreadSafeFunction::New(
       env,
       info[0].As<Napi::Function>(),  // JavaScript function called asynchronously
       "health_async",        // Name
@@ -905,7 +909,7 @@ void Telemetry::health_async(const Napi::CallbackInfo& info) {
               // Finalizer used to clean threads up
       });
   
-  auto _on_health_async = [ts_health_async](mavsdk::Telemetry::Health type) -> void {
+  auto _on_health_async = [this](mavsdk::Telemetry::Health type) -> void {
     auto callback = []( Napi::Env env, Napi::Function jsCallback, mavsdk::Telemetry::Health * health ) {
       // Transform native data into JS data, passing it to the provided 
       // `jsCallback` -- the TSFN's JavaScript function.
@@ -926,7 +930,7 @@ void Telemetry::health_async(const Napi::CallbackInfo& info) {
 
     mavsdk::Telemetry::Health * value = new mavsdk::Telemetry::Health(type);
     
-    napi_status status = ts_health_async.BlockingCall(value, callback);
+    this->tsfn[14].BlockingCall(value, callback);
   };
 
   this->_telemetry->health_async(_on_health_async);
@@ -934,7 +938,7 @@ void Telemetry::health_async(const Napi::CallbackInfo& info) {
 
 void Telemetry::health_all_ok_async(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  auto ts_health_all_ok_async = Napi::ThreadSafeFunction::New(
+  this->tsfn[15] = Napi::ThreadSafeFunction::New(
       env,
       info[0].As<Napi::Function>(),  // JavaScript function called asynchronously
       "health_all_ok_async",        // Name
@@ -944,7 +948,7 @@ void Telemetry::health_all_ok_async(const Napi::CallbackInfo& info) {
               // Finalizer used to clean threads up
       });
   
-  auto _on_health_all_ok_async = [ts_health_all_ok_async](bool type) -> void {
+  auto _on_health_all_ok_async = [this](bool type) -> void {
     auto callback = []( Napi::Env env, Napi::Function jsCallback, bool * health_all_ok ) {
       // Transform native data into JS data, passing it to the provided 
       // `jsCallback` -- the TSFN's JavaScript function.
@@ -956,7 +960,7 @@ void Telemetry::health_all_ok_async(const Napi::CallbackInfo& info) {
 
     bool * value = new bool(type);
     
-    napi_status status = ts_health_all_ok_async.BlockingCall(value, callback);
+    this->tsfn[15].BlockingCall(value, callback);
   };
 
   this->_telemetry->health_all_ok_async(_on_health_all_ok_async);
@@ -964,7 +968,7 @@ void Telemetry::health_all_ok_async(const Napi::CallbackInfo& info) {
 
 void Telemetry::landed_state_async(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  auto ts_landed_state_async = Napi::ThreadSafeFunction::New(
+  this->tsfn[16] = Napi::ThreadSafeFunction::New(
       env,
       info[0].As<Napi::Function>(),  // JavaScript function called asynchronously
       "landed_state_async",        // Name
@@ -974,7 +978,7 @@ void Telemetry::landed_state_async(const Napi::CallbackInfo& info) {
               // Finalizer used to clean threads up
       });
   
-  auto _on_landed_state_async = [ts_landed_state_async](mavsdk::Telemetry::LandedState type) -> void {
+  auto _on_landed_state_async = [this](mavsdk::Telemetry::LandedState type) -> void {
     auto callback = []( Napi::Env env, Napi::Function jsCallback, double * landed_state ) {
       // Transform native data into JS data, passing it to the provided 
       // `jsCallback` -- the TSFN's JavaScript function.
@@ -988,7 +992,7 @@ void Telemetry::landed_state_async(const Napi::CallbackInfo& info) {
     auto idx = double(type);
     double * value = new double(idx);    
     
-    napi_status status = ts_landed_state_async.BlockingCall(value, callback);
+    this->tsfn[16].BlockingCall(value, callback);
   };
 
   this->_telemetry->landed_state_async(_on_landed_state_async);
@@ -996,7 +1000,7 @@ void Telemetry::landed_state_async(const Napi::CallbackInfo& info) {
 
 void Telemetry::actuator_control_target_async(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  auto ts_actuator_control_target_async = Napi::ThreadSafeFunction::New(
+  this->tsfn[17] = Napi::ThreadSafeFunction::New(
       env,
       info[0].As<Napi::Function>(),  // JavaScript function called asynchronously
       "actuator_control_target_async",        // Name
@@ -1006,7 +1010,7 @@ void Telemetry::actuator_control_target_async(const Napi::CallbackInfo& info) {
               // Finalizer used to clean threads up
       });
   
-  auto _on_actuator_control_target_async = [ts_actuator_control_target_async](mavsdk::Telemetry::ActuatorControlTarget type) -> void {
+  auto _on_actuator_control_target_async = [this](mavsdk::Telemetry::ActuatorControlTarget type) -> void {
     auto callback = []( Napi::Env env, Napi::Function jsCallback, mavsdk::Telemetry::ActuatorControlTarget * actuator_control_target ) {
       // Transform native data into JS data, passing it to the provided 
       // `jsCallback` -- the TSFN's JavaScript function.
@@ -1027,7 +1031,7 @@ void Telemetry::actuator_control_target_async(const Napi::CallbackInfo& info) {
 
     mavsdk::Telemetry::ActuatorControlTarget * value = new mavsdk::Telemetry::ActuatorControlTarget(type);
     
-    napi_status status = ts_actuator_control_target_async.BlockingCall(value, callback);
+    this->tsfn[17].BlockingCall(value, callback);
   };
 
   this->_telemetry->actuator_control_target_async(_on_actuator_control_target_async);
@@ -1035,7 +1039,7 @@ void Telemetry::actuator_control_target_async(const Napi::CallbackInfo& info) {
 
 void Telemetry::actuator_output_status_async(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  auto ts_actuator_output_status_async = Napi::ThreadSafeFunction::New(
+  this->tsfn[18] = Napi::ThreadSafeFunction::New(
       env,
       info[0].As<Napi::Function>(),  // JavaScript function called asynchronously
       "actuator_output_status_async",        // Name
@@ -1045,7 +1049,7 @@ void Telemetry::actuator_output_status_async(const Napi::CallbackInfo& info) {
               // Finalizer used to clean threads up
       });
   
-  auto _on_actuator_output_status_async = [ts_actuator_output_status_async](mavsdk::Telemetry::ActuatorOutputStatus type) -> void {
+  auto _on_actuator_output_status_async = [this](mavsdk::Telemetry::ActuatorOutputStatus type) -> void {
     auto callback = []( Napi::Env env, Napi::Function jsCallback, mavsdk::Telemetry::ActuatorOutputStatus * actuator_output_status ) {
       // Transform native data into JS data, passing it to the provided 
       // `jsCallback` -- the TSFN's JavaScript function.
@@ -1066,7 +1070,7 @@ void Telemetry::actuator_output_status_async(const Napi::CallbackInfo& info) {
 
     mavsdk::Telemetry::ActuatorOutputStatus * value = new mavsdk::Telemetry::ActuatorOutputStatus(type);
     
-    napi_status status = ts_actuator_output_status_async.BlockingCall(value, callback);
+    this->tsfn[18].BlockingCall(value, callback);
   };
 
   this->_telemetry->actuator_output_status_async(_on_actuator_output_status_async);
@@ -1074,7 +1078,7 @@ void Telemetry::actuator_output_status_async(const Napi::CallbackInfo& info) {
 
 void Telemetry::rc_status_async(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  auto ts_rc_status_async = Napi::ThreadSafeFunction::New(
+  this->tsfn[19] = Napi::ThreadSafeFunction::New(
       env,
       info[0].As<Napi::Function>(),  // JavaScript function called asynchronously
       "rc_status_async",        // Name
@@ -1084,7 +1088,7 @@ void Telemetry::rc_status_async(const Napi::CallbackInfo& info) {
               // Finalizer used to clean threads up
       });
   
-  auto _on_rc_status_async = [ts_rc_status_async](mavsdk::Telemetry::RCStatus type) -> void {
+  auto _on_rc_status_async = [this](mavsdk::Telemetry::RCStatus type) -> void {
     auto callback = []( Napi::Env env, Napi::Function jsCallback, mavsdk::Telemetry::RCStatus * rc_status ) {
       // Transform native data into JS data, passing it to the provided 
       // `jsCallback` -- the TSFN's JavaScript function.
@@ -1101,8 +1105,16 @@ void Telemetry::rc_status_async(const Napi::CallbackInfo& info) {
 
     mavsdk::Telemetry::RCStatus * value = new mavsdk::Telemetry::RCStatus(type);
     
-    napi_status status = ts_rc_status_async.BlockingCall(value, callback);
+    this->tsfn[19].BlockingCall(value, callback);
   };
 
   this->_telemetry->rc_status_async(_on_rc_status_async);
+}
+
+void Telemetry::dispose() {
+  for (int i = 0; i < 20; i++) {
+    if(this->tsfn[i] != nullptr) {
+      this->tsfn[i].Release();
+    }
+  }
 }

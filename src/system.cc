@@ -1,10 +1,6 @@
 #include <iostream>
 
 #include "system.h"
-#include "telemetry.h"
-#include "action.h"
-#include "info.h"
-#include "mission.h"
 
 using namespace mavjs;
 
@@ -24,7 +20,7 @@ Napi::Object System::Init(Napi::Env env, Napi::Object exports) {
       InstanceMethod("action", &System::action),
       InstanceMethod("info", &System::info),
       InstanceMethod("mission", &System::mission),
-      InstanceMethod("register_component_discovered_callback", &System::register_component_discovered_callback)
+      InstanceMethod("register_component_discovered_callback", &System::register_component_discovered_callback),
   });
 
   constructor = Napi::Persistent(func);
@@ -39,6 +35,10 @@ System::System(const Napi::CallbackInfo& info) : Napi::ObjectWrap<System>(info) 
   Napi::HandleScope scope(env);
 
   this->_system = info[0].As<Napi::External<mavsdk::System>>().Data();
+}
+
+System::~System() {
+  std::cout << "system destroy" << std::endl;
 }
 
 Napi::Value System::has_autopilot(const Napi::CallbackInfo& info) {
@@ -75,6 +75,8 @@ Napi::Value System::get_uuid(const Napi::CallbackInfo& info) {
 Napi::Value System::telemetry(const Napi::CallbackInfo& info) {
   auto arg = Napi::External<mavsdk::System>::New(info.Env(), this->_system);
   auto telemetry = Telemetry::constructor.New({ arg });
+
+  this->_telemetry = Telemetry::Unwrap(telemetry);
         
   return telemetry;
 }
@@ -88,21 +90,23 @@ Napi::Value System::action(const Napi::CallbackInfo& info) {
 
 Napi::Value System::info(const Napi::CallbackInfo& info) {
   auto arg = Napi::External<mavsdk::System>::New(info.Env(), this->_system);
-  auto _info = Info::constructor.New({ arg });
+  auto info_ = Info::constructor.New({ arg });
         
-  return _info;
+  return info_;
 }
 
 Napi::Value System::mission(const Napi::CallbackInfo& info) {
   auto arg = Napi::External<mavsdk::System>::New(info.Env(), this->_system);
-  auto _mission = Mission::constructor.New({ arg });
+  auto mission = Mission::constructor.New({ arg });
+
+  this->_mission = Mission::Unwrap(mission);
         
-  return _mission;
+  return mission;
 }
 
 void System::register_component_discovered_callback(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  auto ts_register_component_discovered_callback = Napi::ThreadSafeFunction::New(
+  this->tsfn[0] = Napi::ThreadSafeFunction::New(
       env,
       info[0].As<Napi::Function>(),  // JavaScript function called asynchronously
       "register_component_discovered_callback",        // Name
@@ -112,21 +116,34 @@ void System::register_component_discovered_callback(const Napi::CallbackInfo& in
               // Finalizer used to clean threads up
       });
   
-  auto _on_component_discovered = [ts_register_component_discovered_callback](mavsdk::ComponentType type) -> void {
-    auto callback = []( Napi::Env env, Napi::Function jsCallback, mavsdk::ComponentType * value ) {
+  auto _on_component_discovered = [this](mavsdk::ComponentType type) -> void {
+
+
+    auto callback = []( Napi::Env env, Napi::Function jsCallback, mavsdk::ComponentType * type ) {
       // Transform native data into JS data, passing it to the provided 
       // `jsCallback` -- the TSFN's JavaScript function.
-      jsCallback.Call( {Napi::Number::New( env, *value )} );
-    
-      // We're finished with the data.
-      delete value;
+      jsCallback.Call( {Napi::Number::New( env, *type )} );
     };
 
-    mavsdk::ComponentType * value = new mavsdk::ComponentType(type);
-    
-    napi_status status = ts_register_component_discovered_callback.BlockingCall(value, callback);
+    this->tsfn[0].BlockingCall(&type, callback);
   };
 
   this->_system->register_component_discovered_callback(_on_component_discovered);
 }
 
+void System::dispose() {
+
+  if (this->_mission != nullptr) {
+    this->_mission->dispose();
+  }
+  
+  if (this->_telemetry != nullptr) {
+    this->_telemetry->dispose();
+  }
+
+  for (int i = 0; i < 1; i++) {
+    if (this->tsfn[i] != nullptr) {
+      this->tsfn[i].Release();
+    }
+  }
+}

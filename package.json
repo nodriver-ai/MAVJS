@@ -4,9 +4,8 @@
   "description": "MAVJS software to manage one or more ndone",
   "main": "lib/addon.js",
   "scripts": {
-    "build": "tsc",
-    "start": "tsc && node lib/addon.js",
-    "test": "mocha --timeout 20000 -r ts-node/register tests/*.spec.ts",
+    "build": "cmake-js compile && tsc",
+    "test": "mocha --timeout 120000 -r ts-node/register tests/test.ts",
     "build-docs": "typedoc --mode modules --exclude lib/addon.ts --name MAVJS --out docs lib"
   },
   "author": "andrea pomente",

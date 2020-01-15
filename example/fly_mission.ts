@@ -13,6 +13,9 @@
  * */
 import { Mavsdk, MissionItem, Mission, Action } from "../lib/addon";
 
+import assert = require('assert');
+
+
 function usage(bin_name: string): void
 {
     console.log(`Usage : ${bin_name} <connection_url>
@@ -58,6 +61,7 @@ let main = async () => {
     if (argc == 1) {
         const connection_url: string = process.argv[2];
         connection_result = mavsdk.add_any_connection(connection_url);
+
     } else {
         usage(process.argv[1]);
         process.exit()
@@ -270,8 +274,8 @@ let main = async () => {
 
 
     console.log("Disarmed, exiting.");
-   
-    process.exit();
+    
+    mavsdk.close();
 }
 
 main();

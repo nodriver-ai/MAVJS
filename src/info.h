@@ -10,6 +10,7 @@ namespace mavjs {
         public:
             static Napi::Object Init(Napi::Env env, Napi::Object exports);
             Info(const Napi::CallbackInfo &info);
+
             static Napi::FunctionReference constructor;
 
         private:

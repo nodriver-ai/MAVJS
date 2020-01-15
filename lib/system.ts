@@ -102,6 +102,10 @@ export class System {
   register_component_discovered_callback(callback: System.discover_callback_t): void {
     return this.register_component_discovered_callback(callback);
   }
+
+  unregister_component_discovered_callback(): void {
+    return this.unregister_component_discovered_callback();
+  }
   
 }
 

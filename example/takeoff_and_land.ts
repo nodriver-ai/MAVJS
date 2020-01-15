@@ -18,8 +18,13 @@ function component_discovered(component_type: System.ComponentType) {
     console.log(`Discovered a component with type ${component_type}`);
 }
 
-function sleep(millis: number) {
-    return new Promise(resolve => setTimeout(resolve, millis));
+
+const sleep = (milliseconds: number) => {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve();
+        }, milliseconds);
+    });
 }
 
 let main = async () => {
@@ -45,13 +50,11 @@ let main = async () => {
         process.exit()
     }
 
-    let system = mavsdk.system();
-
     console.log("Waiting to discover system...");
     mavsdk.register_on_discover((uuid) => {
         console.log(`Discovered system with UUID: ${uuid}`);
         discovered_system = true;
-    });
+    })
     
     // We usually receive heartbeats at 1Hz, therefore we should find a system after around 2
     // seconds.
@@ -61,6 +64,8 @@ let main = async () => {
         console.log("No system found, exiting.");
         process.exit();
     }
+
+    let system = mavsdk.system();
 
     system.register_component_discovered_callback(component_discovered);
 
@@ -75,10 +80,9 @@ let main = async () => {
     }
 
     //Monitor altitude while the vehicle is in flight
-    setInterval(() => {
-        let position = telemetry.position();
+    telemetry.position_async((position) => {
         console.log(`Altitude: ${position.relative_altitude_m} m`)
-    }, 1000)
+    })
 
     // Check if vehicle is ready to arm
     while (telemetry.health_all_ok() != true) {
@@ -104,7 +108,7 @@ let main = async () => {
     }
 
     // Let it hover for a bit before landing again.
-    await sleep(10000);
+    await sleep(5000);
 
     console.log("Landing...");
     let land_result: Action.Result = action.land();
@@ -123,7 +127,9 @@ let main = async () => {
     await sleep(3000);
     console.log("Finished...");
 
-    process.exit();
+
+    //close all connections
+    mavsdk.close();
 }
 
 main();

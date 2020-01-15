@@ -3,6 +3,7 @@
 
 #include <napi.h>
 #include <mavsdk/mavsdk.h>
+#include "system.h"
 
 namespace mavjs {
     
@@ -10,12 +11,16 @@ namespace mavjs {
         public:
             static Napi::Object Init(Napi::Env env, Napi::Object exports);
             Mavsdk(const Napi::CallbackInfo &info);
+            virtual ~Mavsdk();
 
         private:
             static Napi::FunctionReference constructor;
 
-            mavsdk::Mavsdk _dc;
+            mavsdk::Mavsdk* _dc;
+            System* _system = nullptr;
 
+            Napi::ThreadSafeFunction tsfn[2] = {nullptr};
+            
             std::vector<mavsdk::Mavsdk::Configuration> configuration = {
                 mavsdk::Mavsdk::Configuration::GroundStation, mavsdk::Mavsdk::Configuration::CompanionComputer };
 
@@ -31,6 +36,7 @@ namespace mavjs {
             Napi::Value is_connected(const Napi::CallbackInfo &info);
             Napi::Value register_on_discover(const Napi::CallbackInfo &info);
             void register_on_timeout(const Napi::CallbackInfo &info);
+            void close(const Napi::CallbackInfo &info);
     };
 
 };

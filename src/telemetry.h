@@ -10,9 +10,16 @@ namespace mavjs {
         public:
             static Napi::Object Init(Napi::Env env, Napi::Object exports);
             Telemetry(const Napi::CallbackInfo &info);
+            virtual ~Telemetry();
+
             static Napi::FunctionReference constructor;
 
+            void dispose();
+
         private:
+
+            Napi::ThreadSafeFunction tsfn[20] = {nullptr};
+
             std::shared_ptr<mavsdk::Telemetry> _telemetry;
                         
             Napi::Value set_rate_position_velocity_ned(const Napi::CallbackInfo& info);
@@ -58,8 +65,6 @@ namespace mavjs {
             void attitude_quaternion_async(const Napi::CallbackInfo& info);
             void attitude_euler_angle_async(const Napi::CallbackInfo& info);
             void attitude_angular_velocity_body_async(const Napi::CallbackInfo& info);
-            void camera_attitude_quaternion_async(const Napi::CallbackInfo& info);
-            void camera_attitude_euler_angle_async(const Napi::CallbackInfo& info);
             void ground_speed_ned_async(const Napi::CallbackInfo& info);
             void imu_reading_ned_async(const Napi::CallbackInfo& info);
             void gps_info_async(const Napi::CallbackInfo& info);

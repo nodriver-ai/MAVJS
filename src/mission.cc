@@ -253,6 +253,10 @@ Mission::Mission(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Mission>(inf
   this->_mission = std::make_shared<mavsdk::Mission>(*system);
 }
 
+Mission::~Mission() {
+  std::cout << "mission destroy" << std::endl;
+}
+
 Napi::Value Mission::upload_mission_async(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
 
@@ -370,7 +374,7 @@ struct missionProgress {
 
 void Mission::subscribe_progress(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  this->_ts = Napi::ThreadSafeFunction::New(
+  this->tsfn[0] = Napi::ThreadSafeFunction::New(
       env,
       info[0].As<Napi::Function>(),  // JavaScript function called asynchronously
       "subscribe_progress",        // Name
@@ -397,14 +401,23 @@ void Mission::subscribe_progress(const Napi::CallbackInfo& info) {
     progress.current = current;
     progress.total = total;
 
-    napi_status status = this->_ts.BlockingCall(&progress, callback);
+    this->tsfn[0].BlockingCall(&progress, callback);
   };
 
   this->_mission->subscribe_progress(_on_subscribe_progress);
 }
 
 void Mission::unsubscribe_progress(const Napi::CallbackInfo& info) {
-  if (this->_ts) {
-    this->_ts.Release();
+  if (this->tsfn[0] != nullptr) {
+    this->tsfn[0].Release();
   }
 }
+
+void Mission::dispose() {
+  for (int i = 0; i < 1; i++) {
+    if (this->tsfn[i] != nullptr) {
+      this->tsfn[i].Release();
+    }
+  }
+}
+
