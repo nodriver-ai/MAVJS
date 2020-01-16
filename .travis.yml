@@ -30,10 +30,7 @@ matrix:
           - build-essential
           - colordiff
           - git
-          - doxygen 
-
-before_install:
-- docker run --rm -it --net=host jonasvautherin/px4-gazebo-headless:v1.9.2
+          - doxygen
 
 install:
 - set -e
