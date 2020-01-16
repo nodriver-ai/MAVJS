@@ -18,7 +18,7 @@ static mavsdk::MissionItem::CameraAction _camera_actions[6] = {
 
 class UploadMissionWorker : public Napi::AsyncWorker {
     public:
-        UploadMissionWorker(Napi::Env &env, std::vector<std::shared_ptr<mavsdk::MissionItem>>& mission_items, std::shared_ptr<mavsdk::Mission>& mission, Napi::Promise::Deferred& deferred)
+        UploadMissionWorker(Napi::Env &env, std::vector<std::shared_ptr<mavsdk::MissionItem>>& mission_items, mavsdk::Mission* mission, Napi::Promise::Deferred& deferred)
         : Napi::AsyncWorker(env), mission_items(mission_items), mission(mission), deferred(deferred) {}
 
         ~UploadMissionWorker() {}
@@ -38,7 +38,7 @@ class UploadMissionWorker : public Napi::AsyncWorker {
 
     private:
         std::vector<std::shared_ptr<mavsdk::MissionItem>> mission_items;
-        std::shared_ptr<mavsdk::Mission> mission;
+        mavsdk::Mission* mission;
         Napi::Promise::Deferred deferred;
         
         mavsdk::Mission::Result result;
@@ -46,7 +46,7 @@ class UploadMissionWorker : public Napi::AsyncWorker {
 
 class DownloadMissionWorker : public Napi::AsyncWorker {
     public:
-        DownloadMissionWorker(Napi::Env &env, std::shared_ptr<mavsdk::Mission>& mission, Napi::Promise::Deferred& deferred)
+        DownloadMissionWorker(Napi::Env &env, mavsdk::Mission* mission, Napi::Promise::Deferred& deferred)
         : Napi::AsyncWorker(env), mission(mission), deferred(deferred) {}
 
         ~DownloadMissionWorker() {}
@@ -99,7 +99,7 @@ class DownloadMissionWorker : public Napi::AsyncWorker {
     }
 
     private:
-        std::shared_ptr<mavsdk::Mission> mission;
+        mavsdk::Mission* mission;
         Napi::Promise::Deferred deferred;
         
         mavsdk::Mission::Result result;
@@ -108,7 +108,7 @@ class DownloadMissionWorker : public Napi::AsyncWorker {
 
 class StartMissionWorker : public Napi::AsyncWorker {
     public:
-        StartMissionWorker(Napi::Env &env, std::shared_ptr<mavsdk::Mission>& mission, Napi::Promise::Deferred& deferred)
+        StartMissionWorker(Napi::Env &env, mavsdk::Mission* mission, Napi::Promise::Deferred& deferred)
         : Napi::AsyncWorker(env), mission(mission), deferred(deferred) {}
 
         ~StartMissionWorker() {}
@@ -127,7 +127,7 @@ class StartMissionWorker : public Napi::AsyncWorker {
     }
 
     private:
-        std::shared_ptr<mavsdk::Mission> mission;
+        mavsdk::Mission* mission;
         Napi::Promise::Deferred deferred;
         
         mavsdk::Mission::Result result;
@@ -135,7 +135,7 @@ class StartMissionWorker : public Napi::AsyncWorker {
 
 class PauseMissionWorker : public Napi::AsyncWorker {
     public:
-        PauseMissionWorker(Napi::Env &env, std::shared_ptr<mavsdk::Mission>& mission, Napi::Promise::Deferred& deferred)
+        PauseMissionWorker(Napi::Env &env, mavsdk::Mission* mission, Napi::Promise::Deferred& deferred)
         : Napi::AsyncWorker(env), mission(mission), deferred(deferred) {}
 
         ~PauseMissionWorker() {}
@@ -154,7 +154,7 @@ class PauseMissionWorker : public Napi::AsyncWorker {
     }
 
     private:
-        std::shared_ptr<mavsdk::Mission> mission;
+        mavsdk::Mission* mission;
         Napi::Promise::Deferred deferred;
         
         mavsdk::Mission::Result result;
@@ -162,7 +162,7 @@ class PauseMissionWorker : public Napi::AsyncWorker {
 
 class ClearMissionWorker : public Napi::AsyncWorker {
     public:
-        ClearMissionWorker(Napi::Env &env, std::shared_ptr<mavsdk::Mission>& mission, Napi::Promise::Deferred& deferred)
+        ClearMissionWorker(Napi::Env &env, mavsdk::Mission* mission, Napi::Promise::Deferred& deferred)
         : Napi::AsyncWorker(env), mission(mission), deferred(deferred) {}
 
         ~ClearMissionWorker() {}
@@ -181,7 +181,7 @@ class ClearMissionWorker : public Napi::AsyncWorker {
     }
 
     private:
-        std::shared_ptr<mavsdk::Mission> mission;
+        mavsdk::Mission* mission;
         Napi::Promise::Deferred deferred;
         
         mavsdk::Mission::Result result;
@@ -189,7 +189,7 @@ class ClearMissionWorker : public Napi::AsyncWorker {
 
 class SetCurrentMissionItemWorker : public Napi::AsyncWorker {
     public:
-        SetCurrentMissionItemWorker(Napi::Env &env, int current, std::shared_ptr<mavsdk::Mission>& mission, Napi::Promise::Deferred& deferred)
+        SetCurrentMissionItemWorker(Napi::Env &env, int current, mavsdk::Mission* mission, Napi::Promise::Deferred& deferred)
         : Napi::AsyncWorker(env), current(current), mission(mission), deferred(deferred) {}
 
         ~SetCurrentMissionItemWorker() {}
@@ -209,7 +209,7 @@ class SetCurrentMissionItemWorker : public Napi::AsyncWorker {
 
     private:
         int current;
-        std::shared_ptr<mavsdk::Mission> mission;
+        mavsdk::Mission* mission;
         Napi::Promise::Deferred deferred;
         
         mavsdk::Mission::Result result;
@@ -250,7 +250,7 @@ Mission::Mission(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Mission>(inf
   Napi::HandleScope scope(env);
 
   auto system = info[0].As<Napi::External<mavsdk::System>>().Data();
-  this->_mission = std::make_shared<mavsdk::Mission>(*system);
+  this->_mission = new mavsdk::Mission(*system);
 }
 
 Napi::Value Mission::upload_mission_async(const Napi::CallbackInfo& info) {
@@ -410,9 +410,12 @@ void Mission::unsubscribe_progress(const Napi::CallbackInfo& info) {
 }
 
 void Mission::dispose() {
+  delete this->_mission;
+
   for (int i = 0; i < 1; i++) {
     if (this->tsfn[i] != nullptr) {
       this->tsfn[i].Release();
+      this->tsfn[i] = nullptr;
     }
   }
 }

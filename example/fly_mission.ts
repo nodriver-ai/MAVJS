@@ -13,9 +13,6 @@
  * */
 import { Mavsdk, MissionItem, Mission, Action } from "../lib/addon";
 
-import assert = require('assert');
-
-
 function usage(bin_name: string): void
 {
     console.log(`Usage : ${bin_name} <connection_url>

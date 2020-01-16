@@ -1,7 +1,6 @@
 #include <iostream>
 
 #include "telemetry.h"
-#include "system.h"
 
 using namespace mavjs;
 
@@ -14,6 +13,7 @@ Napi::Object Telemetry::Init(Napi::Env env, Napi::Object exports) {
     InstanceMethod("set_rate_position_velocity_ned", &Telemetry::set_rate_position_velocity_ned),
     InstanceMethod("set_rate_position", &Telemetry::set_rate_position),
     InstanceMethod("set_rate_home_position", &Telemetry::set_rate_home_position),
+    InstanceMethod("set_rate_attitude", &Telemetry::set_rate_attitude),
     InstanceMethod("set_rate_in_air", &Telemetry::set_rate_in_air),
     InstanceMethod("set_rate_ground_speed_ned", &Telemetry::set_rate_ground_speed_ned),
     InstanceMethod("set_rate_imu_reading_ned", &Telemetry::set_rate_imu_reading_ned),
@@ -76,7 +76,7 @@ Telemetry::Telemetry(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Telemetr
   Napi::HandleScope scope(env);
   
   auto system = info[0].As<Napi::External<mavsdk::System>>().Data();
-  this->_telemetry = std::make_shared<mavsdk::Telemetry>(*system);
+  this->_telemetry = new mavsdk::Telemetry(*system);
 }
 
 Napi::Value Telemetry::set_rate_position_velocity_ned(const Napi::CallbackInfo& info) {
@@ -94,6 +94,12 @@ Napi::Value Telemetry::set_rate_position(const Napi::CallbackInfo& info) {
 Napi::Value Telemetry::set_rate_home_position(const Napi::CallbackInfo& info) {
   double rate = info[0].As<Napi::Number>().DoubleValue();
   const mavsdk::Telemetry::Result set_rate_result = this->_telemetry->set_rate_home_position(rate);
+  return Napi::String::New(info.Env(), mavsdk::Telemetry::result_str(set_rate_result));
+}
+
+Napi::Value Telemetry::set_rate_attitude(const Napi::CallbackInfo& info) {
+  double rate = info[0].As<Napi::Number>().DoubleValue();
+  const mavsdk::Telemetry::Result set_rate_result = this->_telemetry->set_rate_attitude(rate);
   return Napi::String::New(info.Env(), mavsdk::Telemetry::result_str(set_rate_result));
 }
 
@@ -1108,9 +1114,12 @@ void Telemetry::rc_status_async(const Napi::CallbackInfo& info) {
 }
 
 void Telemetry::dispose() {
+  delete this->_telemetry;
+
   for (int i = 0; i < 20; i++) {
-    if(this->tsfn[i] != nullptr) {
+    if (this->tsfn[i] != nullptr) {
       this->tsfn[i].Release();
+      this->tsfn[i] = nullptr;
     }
   }
 }

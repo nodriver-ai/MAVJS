@@ -31,20 +31,53 @@ function make_mission_item(
 
 describe('Connection', function() {
   
-  let mavsdk: Mavsdk, system, telemetry, action, mission;
+  let mavsdk: Mavsdk, mavsdk_, system, telemetry, action, mission;
 
   after(async () => {   
     mavsdk.close();
   })
 
   it("connect to SITL", () => {
+    mavsdk_ = new Mavsdk();
+
+    const connection_result = mavsdk_.add_any_connection(connection_url);
+    expect(connection_result).to.equal(Mavsdk.ConnectionResult.SUCCESS); 
+  })
+
+  it('discover system', async () => {
+    let discovered_system: boolean = false;
+
+    mavsdk_.register_on_discover((uuid) => {
+      discovered_system = true;
+    });
+
+    // We usually receive heartbeats at 1Hz, therefore we should find a system after around 2
+    // seconds.
+    await sleep(2000);
+
+    expect(discovered_system).to.equal(true);
+
+    system = mavsdk_.system();
+    
+    telemetry = system.telemetry();
+    action = system.action(); 
+    mission = system.mission();
+  });
+
+  it('stop connection', async () => {
+    let discovered_system: boolean = false;
+
+    mavsdk_.close();
+  });
+
+  it("connect to SITL 2", () => {
     mavsdk = new Mavsdk();
 
     const connection_result = mavsdk.add_any_connection(connection_url);
     expect(connection_result).to.equal(Mavsdk.ConnectionResult.SUCCESS); 
   })
 
-  it('discover system', async () => {
+  it('discover system 2', async () => {
     let discovered_system: boolean = false;
 
     mavsdk.register_on_discover((uuid) => {
@@ -64,9 +97,10 @@ describe('Connection', function() {
     mission= system.mission();
   });
 
+
   
 
-  describe('Fly mission', function() {
+  /*describe('Fly mission', function() {
     after(async () => {
       while (telemetry.armed()) {
         // Wait until we're done.
@@ -167,6 +201,6 @@ describe('Connection', function() {
       let result = action.return_to_launch();
       expect(result).to.equal(Action.Result.SUCCESS); 
     })
-  });
+  });*/
 
 });

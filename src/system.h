@@ -16,13 +16,15 @@ namespace mavjs {
 
             static Napi::FunctionReference constructor;
 
+            mavsdk::System* _system;
+
             void dispose();
 
         private:
-            mavsdk::System* _system;
-            
             Telemetry* _telemetry = nullptr;
             Mission* _mission = nullptr;
+            Action* _action = nullptr;
+            Info* _info = nullptr;
 
             Napi::ThreadSafeFunction tsfn[1] = {nullptr};
 

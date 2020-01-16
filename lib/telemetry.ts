@@ -4,7 +4,6 @@
  * The plugin is typically created as shown below: ```let telemetry = system.telemetry()```
  */
 export class Telemetry {
-
   /**
    * Set rate of kinematic (position and velocity) updates (synchronous).
    * @param rate_hz Rate in Hz.
@@ -445,10 +444,6 @@ export class Telemetry {
    */
   rc_status_async(callback: Telemetry.rc_status_callback_t): void {
     this.rc_status_async(callback);
-  }
-
-  close(): void {
-    this.close();
   }
   
 }

@@ -73,21 +73,25 @@ Napi::Value System::telemetry(const Napi::CallbackInfo& info) {
   auto telemetry = Telemetry::constructor.New({ arg });
 
   this->_telemetry = Telemetry::Unwrap(telemetry);
-        
+
   return telemetry;
 }
 
 Napi::Value System::action(const Napi::CallbackInfo& info) {
   auto arg = Napi::External<mavsdk::System>::New(info.Env(), this->_system);
   auto action = Action::constructor.New({ arg });
-        
+  
+  this->_action = Action::Unwrap(action);
+
   return action;
 }
 
 Napi::Value System::info(const Napi::CallbackInfo& info) {
   auto arg = Napi::External<mavsdk::System>::New(info.Env(), this->_system);
   auto info_ = Info::constructor.New({ arg });
-        
+  
+  this->_info = Info::Unwrap(info_);
+  
   return info_;
 }
 
@@ -120,7 +124,7 @@ void System::register_component_discovered_callback(const Napi::CallbackInfo& in
       // `jsCallback` -- the TSFN's JavaScript function.
       jsCallback.Call( {Napi::Number::New( env, *type )} );
     };
-
+    
     this->tsfn[0].BlockingCall(&type, callback);
   };
 
@@ -137,9 +141,18 @@ void System::dispose() {
     this->_telemetry->dispose();
   }
 
+  if (this->_action != nullptr) {
+    this->_action->dispose();
+  }
+
+  if (this->_info != nullptr) {
+    this->_info->dispose();
+  }
+
   for (int i = 0; i < 1; i++) {
     if (this->tsfn[i] != nullptr) {
       this->tsfn[i].Release();
+      this->tsfn[i] = nullptr;
     }
   }
 }

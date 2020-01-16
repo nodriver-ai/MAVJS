@@ -29,7 +29,7 @@ Info::Info(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Info>(info)  {
   Napi::HandleScope scope(env);
   
   auto system = info[0].As<Napi::External<mavsdk::System>>().Data();
-  this->_info = std::make_shared<mavsdk::Info>(*system);
+  this->_info = new mavsdk::Info(*system);
 }
 
 Napi::Value Info::get_identification(const Napi::CallbackInfo& info) {
@@ -110,4 +110,8 @@ Napi::Value Info::get_product(const Napi::CallbackInfo& info) {
   obj.Set(Napi::String::New(env, "value"), product);
 
   return obj;
+}
+
+void Info::dispose() {
+  delete this->_info;
 }

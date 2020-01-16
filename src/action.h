@@ -10,11 +10,14 @@ namespace mavjs {
         public:
             static Napi::Object Init(Napi::Env env, Napi::Object exports);
             Action(const Napi::CallbackInfo &info);
-            static Napi::FunctionReference constructor;
 
+            static Napi::FunctionReference constructor;
+            
+            void dispose();
+            
         private:
-            std::shared_ptr<mavsdk::Action> _action;
-    
+            mavsdk::Action* _action;
+
             Napi::Value arm(const Napi::CallbackInfo& info);
             Napi::Value disarm(const Napi::CallbackInfo& info);
             Napi::Value kill(const Napi::CallbackInfo& info);

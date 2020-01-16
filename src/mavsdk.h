@@ -11,12 +11,12 @@ namespace mavjs {
         public:
             static Napi::Object Init(Napi::Env env, Napi::Object exports);
             Mavsdk(const Napi::CallbackInfo &info);
-
+                    
         private:
             static Napi::FunctionReference constructor;
 
             mavsdk::Mavsdk* _dc;
-            System* _system = nullptr;
+            std::vector<System*> _systems = {nullptr};
 
             Napi::ThreadSafeFunction tsfn[2] = {nullptr};
             

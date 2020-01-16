@@ -9,7 +9,7 @@ using namespace mavjs;
 
 class ArmWorker : public Napi::AsyncWorker {
     public:
-        ArmWorker(Napi::Env &env, std::shared_ptr<mavsdk::Action>& action, Napi::Promise::Deferred& deferred)
+        ArmWorker(Napi::Env &env, mavsdk::Action* action, Napi::Promise::Deferred& deferred)
         : Napi::AsyncWorker(env), action(action), deferred(deferred) {}
 
         ~ArmWorker() {}
@@ -27,8 +27,8 @@ class ArmWorker : public Napi::AsyncWorker {
         deferred.Resolve(Napi::String::New(Env(), mavsdk::Action::result_str(result)));
     }
 
-    private:
-        std::shared_ptr<mavsdk::Action> action;
+    private:     
+        mavsdk::Action* action;
         Napi::Promise::Deferred deferred;
         
         mavsdk::Action::Result result;
@@ -36,7 +36,7 @@ class ArmWorker : public Napi::AsyncWorker {
 
 class DisarmWorker : public Napi::AsyncWorker {
     public:
-        DisarmWorker(Napi::Env &env, std::shared_ptr<mavsdk::Action>& action, Napi::Promise::Deferred& deferred)
+        DisarmWorker(Napi::Env &env, mavsdk::Action* action, Napi::Promise::Deferred& deferred)
         : Napi::AsyncWorker(env), action(action), deferred(deferred) {}
 
         ~DisarmWorker() {}
@@ -55,7 +55,7 @@ class DisarmWorker : public Napi::AsyncWorker {
     }
 
     private:
-        std::shared_ptr<mavsdk::Action> action;
+        mavsdk::Action* action;
         Napi::Promise::Deferred deferred;
         
         mavsdk::Action::Result result;
@@ -63,7 +63,7 @@ class DisarmWorker : public Napi::AsyncWorker {
 
 class KillWorker : public Napi::AsyncWorker {
     public:
-        KillWorker(Napi::Env &env, std::shared_ptr<mavsdk::Action>& action, Napi::Promise::Deferred& deferred)
+        KillWorker(Napi::Env &env, mavsdk::Action* action, Napi::Promise::Deferred& deferred)
         : Napi::AsyncWorker(env), action(action), deferred(deferred) {}
 
         ~KillWorker() {}
@@ -82,7 +82,7 @@ class KillWorker : public Napi::AsyncWorker {
     }
 
     private:
-        std::shared_ptr<mavsdk::Action> action;
+        mavsdk::Action* action;
         Napi::Promise::Deferred deferred;
         
         mavsdk::Action::Result result;
@@ -90,7 +90,7 @@ class KillWorker : public Napi::AsyncWorker {
 
 class TakeoffWorker : public Napi::AsyncWorker {
     public:
-        TakeoffWorker(Napi::Env &env, std::shared_ptr<mavsdk::Action>& action, Napi::Promise::Deferred& deferred)
+        TakeoffWorker(Napi::Env &env, mavsdk::Action* action, Napi::Promise::Deferred& deferred)
         : Napi::AsyncWorker(env), action(action), deferred(deferred) {}
 
         ~TakeoffWorker() {}
@@ -109,7 +109,7 @@ class TakeoffWorker : public Napi::AsyncWorker {
     }
 
     private:
-        std::shared_ptr<mavsdk::Action> action;
+        mavsdk::Action* action;
         Napi::Promise::Deferred deferred;
         
         mavsdk::Action::Result result;
@@ -117,7 +117,7 @@ class TakeoffWorker : public Napi::AsyncWorker {
 
 class LandWorker : public Napi::AsyncWorker {
     public:
-        LandWorker(Napi::Env &env, std::shared_ptr<mavsdk::Action>& action, Napi::Promise::Deferred& deferred)
+        LandWorker(Napi::Env &env, mavsdk::Action* action, Napi::Promise::Deferred& deferred)
         : Napi::AsyncWorker(env), action(action), deferred(deferred) {}
 
         ~LandWorker() {}
@@ -136,7 +136,7 @@ class LandWorker : public Napi::AsyncWorker {
     }
 
     private:
-        std::shared_ptr<mavsdk::Action> action;
+        mavsdk::Action* action;
         Napi::Promise::Deferred deferred;
         
         mavsdk::Action::Result result;
@@ -144,7 +144,7 @@ class LandWorker : public Napi::AsyncWorker {
 
 class ReturnToLaunchWorker : public Napi::AsyncWorker {
     public:
-        ReturnToLaunchWorker(Napi::Env &env, std::shared_ptr<mavsdk::Action>& action, Napi::Promise::Deferred& deferred)
+        ReturnToLaunchWorker(Napi::Env &env, mavsdk::Action* action, Napi::Promise::Deferred& deferred)
         : Napi::AsyncWorker(env), action(action), deferred(deferred) {}
 
         ~ReturnToLaunchWorker() {}
@@ -163,7 +163,7 @@ class ReturnToLaunchWorker : public Napi::AsyncWorker {
     }
 
     private:
-        std::shared_ptr<mavsdk::Action> action;
+        mavsdk::Action* action;
         Napi::Promise::Deferred deferred;
         
         mavsdk::Action::Result result;
@@ -171,7 +171,7 @@ class ReturnToLaunchWorker : public Napi::AsyncWorker {
 
 class TransitionToFixedwingWorker : public Napi::AsyncWorker {
     public:
-        TransitionToFixedwingWorker(Napi::Env &env, std::shared_ptr<mavsdk::Action>& action, Napi::Promise::Deferred& deferred)
+        TransitionToFixedwingWorker(Napi::Env &env, mavsdk::Action* action, Napi::Promise::Deferred& deferred)
         : Napi::AsyncWorker(env), action(action), deferred(deferred) {}
 
         ~TransitionToFixedwingWorker() {}
@@ -190,7 +190,7 @@ class TransitionToFixedwingWorker : public Napi::AsyncWorker {
     }
 
     private:
-        std::shared_ptr<mavsdk::Action> action;
+        mavsdk::Action* action;
         Napi::Promise::Deferred deferred;
         
         mavsdk::Action::Result result;
@@ -198,7 +198,7 @@ class TransitionToFixedwingWorker : public Napi::AsyncWorker {
 
 class TransitionToMulticopterWorker : public Napi::AsyncWorker {
     public:
-        TransitionToMulticopterWorker(Napi::Env &env, std::shared_ptr<mavsdk::Action>& action, Napi::Promise::Deferred& deferred)
+        TransitionToMulticopterWorker(Napi::Env &env, mavsdk::Action* action, Napi::Promise::Deferred& deferred)
         : Napi::AsyncWorker(env), action(action), deferred(deferred) {}
 
         ~TransitionToMulticopterWorker() {}
@@ -217,7 +217,7 @@ class TransitionToMulticopterWorker : public Napi::AsyncWorker {
     }
 
     private:
-        std::shared_ptr<mavsdk::Action> action;
+        mavsdk::Action* action;
         Napi::Promise::Deferred deferred;
         
         mavsdk::Action::Result result;
@@ -266,7 +266,7 @@ Action::Action(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Action>(info) 
   Napi::HandleScope scope(env);
   
   auto system = info[0].As<Napi::External<mavsdk::System>>().Data();
-  this->_action = std::make_shared<mavsdk::Action>(*system);
+  this->_action = new mavsdk::Action(*system);
 }
 
 Napi::Value Action::arm(const Napi::CallbackInfo& info) {
@@ -464,4 +464,8 @@ Napi::Value Action::get_return_to_launch_return_altitude(const Napi::CallbackInf
   obj.Set(Napi::String::New(env, "value"), value);
 
   return obj;
+}
+
+void Action::dispose() {
+  delete this->_action;
 }

@@ -16,7 +16,7 @@ namespace mavjs {
             void dispose();
 
         private:
-            std::shared_ptr<mavsdk::Mission> _mission;
+            mavsdk::Mission* _mission;
 
             Napi::ThreadSafeFunction tsfn[1] = {nullptr};
 

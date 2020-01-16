@@ -13,8 +13,10 @@ namespace mavjs {
 
             static Napi::FunctionReference constructor;
 
+            void dispose();
+
         private:
-            std::shared_ptr<mavsdk::Info> _info;
+            mavsdk::Info* _info;
             
             Napi::Value get_identification(const Napi::CallbackInfo& info);
             Napi::Value get_version(const Napi::CallbackInfo& info);

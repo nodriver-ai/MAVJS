@@ -134,7 +134,7 @@ Napi::Value Mavsdk::system(const Napi::CallbackInfo& info) {
     auto arg = Napi::External<mavsdk::System>::New(env, &this->_dc->system(value));
     auto system = System::constructor.New({ arg });
     
-    this->_system = System::Unwrap(system);
+    this->_systems.push_back(System::Unwrap(system));
     
     return system;
   }
@@ -143,7 +143,7 @@ Napi::Value Mavsdk::system(const Napi::CallbackInfo& info) {
     auto arg = Napi::External<mavsdk::System>::New(env, &this->_dc->system());
     auto system = System::constructor.New({arg});
 
-    this->_system = System::Unwrap(system);
+    this->_systems.push_back(System::Unwrap(system));
 
     return system;
   }
@@ -229,14 +229,17 @@ void Mavsdk::register_on_timeout(const Napi::CallbackInfo& info) {
 void Mavsdk::close(const Napi::CallbackInfo& info) {
   delete this->_dc;
   
-  // system dispose
-  if (this->_system != nullptr) {
-    this->_system->dispose();
+  // systems dispose
+  for (std::size_t i = 0; i<this->_systems.size(); ++i) {
+    if (this->_systems[i] != nullptr) {
+      this->_systems[i]->dispose();
+    }
   }
 
-  for (int i = 0; i < 2; i++) {
-    if(this->tsfn[i] != nullptr) {
-      this->tsfn[i].Release();
+  for (int k = 0; k < 2; k++) {
+    if(this->tsfn[k] != nullptr) {
+      this->tsfn[k].Release();
+      this->tsfn[k] = nullptr;
     }
   }
 }

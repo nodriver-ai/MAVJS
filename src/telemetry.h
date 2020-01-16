@@ -10,7 +10,6 @@ namespace mavjs {
         public:
             static Napi::Object Init(Napi::Env env, Napi::Object exports);
             Telemetry(const Napi::CallbackInfo &info);
-
             static Napi::FunctionReference constructor;
 
             void dispose();
@@ -19,8 +18,8 @@ namespace mavjs {
 
             Napi::ThreadSafeFunction tsfn[20] = {nullptr};
 
-            std::shared_ptr<mavsdk::Telemetry> _telemetry;
-                        
+            mavsdk::Telemetry* _telemetry;
+            
             Napi::Value set_rate_position_velocity_ned(const Napi::CallbackInfo& info);
             Napi::Value set_rate_position(const Napi::CallbackInfo& info);
             Napi::Value set_rate_home_position(const Napi::CallbackInfo& info);
