@@ -32,7 +32,9 @@ matrix:
           - git
           - doxygen
 
-install:
+install: skip
+
+script:
 - set -e
 - if [[ "${BUILD_TARGET}" = "gcc_build" ]]; then
     git clone https://github.com/mavlink/MAVSDK.git;
