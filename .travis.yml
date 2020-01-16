@@ -1,0 +1,49 @@
+language: node_js
+
+node_js:
+    - "8"
+    - "10"
+    - "12"
+    - "13"
+
+cache: npm
+
+branches:
+    only:
+        - master
+        
+matrix:
+    fast_finish: true
+    include:
+    - os: linux
+      name: "ubuntu 18.04"
+      dist: bionic
+      compiler: gcc
+      services:
+        - docker
+      env:
+      - MATRIX_EVAL="BUILD_TARGET=gcc_build"
+      addons:
+        apt:
+          packages:
+          - cmake
+          - build-essential
+          - colordiff
+          - git
+          - doxygen 
+
+script:
+- set -e
+- if [[ "${BUILD_TARGET}" = "gcc_build" ]]; then
+    git clone https://github.com/mavlink/MAVSDK.git
+    cd MAVSDK
+    git checkout master
+    git submodule update --init --recursive
+    cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_SHARED_LIBS=ON -Bbuild/default -H.
+    cmake --build build/default
+    sudo cmake --build build/default --target install
+    sudo ldconfig
+  fi
+- docker run --rm -it --net=host jonasvautherin/px4-gazebo-headless:v1.9.2
+- npm install
+- npm test
