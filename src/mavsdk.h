@@ -1,35 +1,43 @@
 #ifndef MAVSDK_H
 #define MAVSDK_H
 
-#include <string>
-#include <mutex>
 #include <napi.h>
 #include <mavsdk/mavsdk.h>
+#include "system.h"
 
-class MavSDK : public Napi::ObjectWrap<MavSDK> {
-public:
- static Napi::Object Init(Napi::Env env, Napi::Object exports);
- MavSDK(const Napi::CallbackInfo &info);
+namespace mavjs {
+    
+    class Mavsdk : public Napi::ObjectWrap<Mavsdk> {
+        public:
+            static Napi::Object Init(Napi::Env env, Napi::Object exports);
+            Mavsdk(const Napi::CallbackInfo &info);
+                    
+        private:
+            static Napi::FunctionReference constructor;
 
-private:
- static Napi::FunctionReference constructor;
+            mavsdk::Mavsdk* _dc;
+            std::vector<System*> _systems = {nullptr};
 
- mavsdk::Mavsdk _dc;
+            Napi::ThreadSafeFunction tsfn[2] = {nullptr};
+            
+            std::vector<mavsdk::Mavsdk::Configuration> configuration = {
+                mavsdk::Mavsdk::Configuration::GroundStation, mavsdk::Mavsdk::Configuration::CompanionComputer };
 
- std::vector<uint64_t> uuid_drones;
- std::mutex uuid_drones_mutex;
+            Napi::Value version(const Napi::CallbackInfo &info);
+            Napi::Value add_any_connection(const Napi::CallbackInfo &info);
+            Napi::Value add_udp_connection(const Napi::CallbackInfo &info);
+            Napi::Value setup_udp_remote(const Napi::CallbackInfo &info);
+            Napi::Value add_tcp_connection(const Napi::CallbackInfo &info);
+            Napi::Value add_serial_connection(const Napi::CallbackInfo &info);
+            void set_configuration(const Napi::CallbackInfo &info);
+            Napi::Value system_uuids(const Napi::CallbackInfo &info);
+            Napi::Value system(const Napi::CallbackInfo &info);
+            Napi::Value is_connected(const Napi::CallbackInfo &info);
+            Napi::Value register_on_discover(const Napi::CallbackInfo &info);
+            void register_on_timeout(const Napi::CallbackInfo &info);
+            void close(const Napi::CallbackInfo &info);
+    };
 
- std::vector<uint64_t> uuid_cameras;
- std::mutex uuid_cameras_mutex;
-
- std::string _connection_url;
- Napi::Value get_connection_url(const Napi::CallbackInfo &info);
-
- Napi::Value is_connected(const Napi::CallbackInfo& info);
- Napi::Value discover_drones(const Napi::CallbackInfo& info);
- Napi::Value discover_cameras(const Napi::CallbackInfo& info);
- Napi::Value connect_to_drone(const Napi::CallbackInfo& info);
- Napi::Value connect_to_camera(const Napi::CallbackInfo& info);
 };
 
 #endif

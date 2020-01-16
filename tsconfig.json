@@ -2,13 +2,13 @@
   "compilerOptions": {
     "sourceMap": true,
     "declaration": false,
-    "outDir": "./lib",
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "target": "es5",
     "types": [
-      "node"
+      "node",
+      "mocha"
     ],
     "lib": [
       "es2017",
@@ -18,9 +18,12 @@
     ]
   },
   "include": [
-    "lib/addon.ts",
+    "lib/*.ts", "example/*.ts"
   ],
   "exclude": [
     "node_modules"
-  ]
+  ],
+  "typedocOptions": {
+    "module": "commonjs"
+  },
 }
