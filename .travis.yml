@@ -32,7 +32,10 @@ matrix:
           - git
           - doxygen 
 
-script:
+before_install:
+- docker run --rm -it --net=host jonasvautherin/px4-gazebo-headless:v1.9.2
+
+install:
 - set -e
 - if [[ "${BUILD_TARGET}" = "gcc_build" ]]; then
     git clone https://github.com/mavlink/MAVSDK.git
@@ -44,6 +47,5 @@ script:
     sudo cmake --build build/default --target install
     sudo ldconfig
   fi
-- docker run --rm -it --net=host jonasvautherin/px4-gazebo-headless:v1.9.2
 - npm install
 - npm test
