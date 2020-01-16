@@ -45,4 +45,3 @@ install:
     sudo ldconfig
   fi
 - npm install
-- npm test
