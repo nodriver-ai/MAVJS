@@ -51,7 +51,9 @@ describe('Connection Sync', function() {
       expect(uuids.length).to.equal(1);
       expect(uuids[0]).to.equal(_uuid);
       done();
-    })
+    }).catch((err) => {
+      done(err);
+  });
     
   });
   

@@ -29,7 +29,9 @@ describe('Multi systems', function() {
         uuids.push(uuids[0])
       }
       done();
-    })
+    }).catch((err) => {
+      done(err);
+  });
   })
 
   it('multi systems components', () => {

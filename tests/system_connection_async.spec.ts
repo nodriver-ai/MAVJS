@@ -32,7 +32,9 @@ describe('Connection Async', function() {
     sleep(2000).then(() => {
       expect(_discovered_system).to.equal(true)
       done();
-    })
+    }).catch((err) => {
+      done(err);
+  });
 
   })
   

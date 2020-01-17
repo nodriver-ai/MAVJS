@@ -211,7 +211,7 @@ Napi::Value Telemetry::in_air(const Napi::CallbackInfo& info) {
 }
 
 Napi::Value Telemetry::landed_state(const Napi::CallbackInfo& info) {
-  return Napi::Number::New(info.Env(), double(this->_telemetry->landed_state()));
+  return Napi::String::New(info.Env(), mavsdk::Telemetry::landed_state_str(this->_telemetry->landed_state()));
 }
 
 Napi::Value Telemetry::armed(const Napi::CallbackInfo& info) {
@@ -326,7 +326,7 @@ Napi::Value Telemetry::battery(const Napi::CallbackInfo& info) {
 }
 
 Napi::Value Telemetry::flight_mode(const Napi::CallbackInfo& info) {
-  return Napi::Number::New(info.Env(), double(this->_telemetry->flight_mode()));
+  return Napi::String::New(info.Env(), mavsdk::Telemetry::flight_mode_str(this->_telemetry->flight_mode()));
 }
 
 Napi::Value Telemetry::health(const Napi::CallbackInfo& info) {
@@ -880,18 +880,17 @@ void Telemetry::flight_mode_async(const Napi::CallbackInfo& info) {
       });
   
   auto _on_flight_mode_async = [this](mavsdk::Telemetry::FlightMode type) -> void {
-    auto callback = []( Napi::Env env, Napi::Function jsCallback, double * flight_mode ) {
+    auto callback = []( Napi::Env env, Napi::Function jsCallback, std::string * flight_mode ) {
       // Transform native data into JS data, passing it to the provided 
       // `jsCallback` -- the TSFN's JavaScript function.
 
-      jsCallback.Call( { Napi::Number::New(env, *flight_mode) } );
+      jsCallback.Call( { Napi::String::New(env, *flight_mode) } );
     
       // We're finished with the data.
       delete flight_mode;
     };
 
-    auto idx = double(type);
-    double * value = new double(idx);    
+    std::string * value = new std::string(mavsdk::Telemetry::flight_mode_str(type));    
     
     this->tsfn[13].BlockingCall(value, callback);
   };
@@ -981,18 +980,17 @@ void Telemetry::landed_state_async(const Napi::CallbackInfo& info) {
       });
   
   auto _on_landed_state_async = [this](mavsdk::Telemetry::LandedState type) -> void {
-    auto callback = []( Napi::Env env, Napi::Function jsCallback, double * landed_state ) {
+    auto callback = []( Napi::Env env, Napi::Function jsCallback, std::string * landed_state ) {
       // Transform native data into JS data, passing it to the provided 
       // `jsCallback` -- the TSFN's JavaScript function.
 
-      jsCallback.Call( { Napi::Number::New(env, *landed_state) } );
+      jsCallback.Call( { Napi::String::New(env, *landed_state) } );
     
       // We're finished with the data.
       delete landed_state;
     };
 
-    auto idx = double(type);
-    double * value = new double(idx);    
+    std::string * value = new std::string(mavsdk::Telemetry::landed_state_str(type));    
     
     this->tsfn[16].BlockingCall(value, callback);
   };
