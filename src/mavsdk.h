@@ -33,7 +33,7 @@ namespace mavjs {
             Napi::Value system_uuids(const Napi::CallbackInfo &info);
             Napi::Value system(const Napi::CallbackInfo &info);
             Napi::Value is_connected(const Napi::CallbackInfo &info);
-            Napi::Value register_on_discover(const Napi::CallbackInfo &info);
+            void register_on_discover(const Napi::CallbackInfo &info);
             void register_on_timeout(const Napi::CallbackInfo &info);
             void close(const Napi::CallbackInfo &info);
     };

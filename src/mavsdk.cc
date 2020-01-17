@@ -166,7 +166,7 @@ Napi::Value Mavsdk::is_connected(const Napi::CallbackInfo& info) {
   return Napi::Boolean::New(info.Env(), isConnected);
 }
 
-Napi::Value Mavsdk::register_on_discover(const Napi::CallbackInfo& info) {
+void Mavsdk::register_on_discover(const Napi::CallbackInfo& info) {
   auto env = info.Env();
 
   this->tsfn[0] = Napi::ThreadSafeFunction::New(
