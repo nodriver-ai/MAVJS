@@ -1,6 +1,7 @@
 #include <iostream>
 #include <future>
 #include <utility>
+#include <cmath>
 
 #include "action.h"
 #include "system.h"
@@ -307,8 +308,21 @@ Napi::Value Action::return_to_launch(const Napi::CallbackInfo& info) {
 Napi::Value Action::goto_location(const Napi::CallbackInfo& info) {
   double latitude_deg = info[0].As<Napi::Number>().DoubleValue();
   double longitude_deg = info[1].As<Napi::Number>().DoubleValue();
-  float altitude_amsl_m = info[2].As<Napi::Number>().FloatValue();
-  float yaw_deg = info[3].As<Napi::Number>().FloatValue();
+  
+  float altitude_amsl_m;
+  if (info[2].IsNumber()) {
+    altitude_amsl_m = info[2].As<Napi::Number>().FloatValue();
+  } else {
+    altitude_amsl_m = NAN;
+  }
+  
+  float yaw_deg; 
+  if (info[3].IsNumber()) {
+    yaw_deg = info[3].As<Napi::Number>().FloatValue();
+  } else {
+    yaw_deg = NAN;
+  }
+  
   const mavsdk::Action::Result goto_location_result = this->_action->goto_location(latitude_deg, longitude_deg, altitude_amsl_m, yaw_deg);
   return Napi::String::New(info.Env(), mavsdk::Action::result_str(goto_location_result));
 }

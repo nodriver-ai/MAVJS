@@ -556,19 +556,19 @@ void Telemetry::in_air_async(const Napi::CallbackInfo& info) {
                 // Finalizer used to clean threads up
         });
     
-    auto _on_in_air_async = [this](bool type) -> void {
-      auto callback = []( Napi::Env env, Napi::Function jsCallback, bool * in_air ) {
+    auto _on_in_air_async = [this](bool value) -> void {
+      auto callback = []( Napi::Env env, Napi::Function jsCallback, bool* in_air ) {
         // Transform native data into JS data, passing it to the provided 
         // `jsCallback` -- the TSFN's JavaScript function.
-        jsCallback.Call( { Napi::Boolean::New(env, in_air) } );
+        jsCallback.Call( { Napi::Boolean::New(env, *in_air) } );
       
         // We're finished with the data.
         delete in_air;
       };
 
-      bool * value = new bool(type);
+      bool* val = new bool(value);
       
-      this->tsfn[3].BlockingCall(value, callback);
+      this->tsfn[3].BlockingCall(val, callback);
     };
 
     this->_telemetry->in_air_async(_on_in_air_async);
@@ -636,7 +636,7 @@ void Telemetry::armed_async(const Napi::CallbackInfo& info) {
       auto callback = []( Napi::Env env, Napi::Function jsCallback, bool * armed ) {
         // Transform native data into JS data, passing it to the provided 
         // `jsCallback` -- the TSFN's JavaScript function.
-        jsCallback.Call( { Napi::Boolean::New(env, armed) } );
+        jsCallback.Call( { Napi::Boolean::New(env, *armed) } );
       
         // We're finished with the data.
         delete armed;

@@ -139,7 +139,11 @@ export class Mavsdk {
      * @returns ```true``` if system is connected.
      */
     is_connected(uuid?: string): boolean {
-        return this.mavsdk.is_connected(uuid);
+        if (uuid) {
+            return this.mavsdk.is_connected(uuid);
+        } else {
+            return this.mavsdk.is_connected();
+        }
     }
 
     /**

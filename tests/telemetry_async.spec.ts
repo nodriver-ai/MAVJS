@@ -89,10 +89,10 @@ describe('telemetry Async', function() {
         if (actuator) {_received_actuator_control_target = true}
     });
     telemetry.in_air_async((in_air) => {
-        if (in_air) {_received_in_air = true}
+        _received_in_air = true;
     });
     telemetry.armed_async((armed) => {
-        if (armed) {_received_armed = true}
+        _received_armed = true;
     })
     telemetry.position_velocity_ned_async((value) => {
         if (value) {_received_position_velocity_ned = true}
