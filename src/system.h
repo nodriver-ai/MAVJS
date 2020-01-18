@@ -39,6 +39,8 @@ namespace mavjs {
             Napi::Value info(const Napi::CallbackInfo &info);
             Napi::Value mission(const Napi::CallbackInfo &info);
             void register_component_discovered_callback(const Napi::CallbackInfo &info);
+
+            void tsfn_release(int k);
     };
 };
 

@@ -33,9 +33,9 @@ namespace mavjs {
             Napi::Value mission_finished(const Napi::CallbackInfo &info);
             Napi::Value current_mission_item(const Napi::CallbackInfo &info);
             Napi::Value total_mission_items(const Napi::CallbackInfo &info);
-
             void subscribe_progress(const Napi::CallbackInfo &info);
-            void unsubscribe_progress(const Napi::CallbackInfo &info);
+
+            void tsfn_release(int k);
     };
 };
 

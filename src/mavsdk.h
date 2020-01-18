@@ -36,6 +36,8 @@ namespace mavjs {
             void register_on_discover(const Napi::CallbackInfo &info);
             void register_on_timeout(const Napi::CallbackInfo &info);
             void close(const Napi::CallbackInfo &info);
+            
+            void tsfn_release(int k);
     };
 
 };

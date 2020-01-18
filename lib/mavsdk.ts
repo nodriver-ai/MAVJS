@@ -153,7 +153,7 @@ export class Mavsdk {
      
      * @param callback Callback to register.
      */
-    register_on_discover(callback: Mavsdk.event_callback): any {
+    register_on_discover(callback?: Mavsdk.event_callback): any {
         return this.mavsdk.register_on_discover(callback);
     }
 
@@ -166,7 +166,7 @@ export class Mavsdk {
      
     * @param callback Callback to register.
     */
-    register_on_timeout(callback: Mavsdk.event_callback): void {
+    register_on_timeout(callback?: Mavsdk.event_callback): void {
         this.mavsdk.register_on_timeout(callback)
     }
 

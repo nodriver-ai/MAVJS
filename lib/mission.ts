@@ -139,15 +139,8 @@ export class Mission {
      * Subscribes to mission progress (asynchronous).
      * @param callback Callback to receive mission progress.
      */
-    subscribe_progress(callback: Mission.progress_callback_t): void {
+    subscribe_progress(callback?: Mission.progress_callback_t): void {
         this.subscribe_progress(callback);
-    }
-
-    /**
-     * Unsubscribes to mission progress.
-     */
-    unsubscribe_progress(): void {
-        this.unsubscribe_progress();
     }
 }
 

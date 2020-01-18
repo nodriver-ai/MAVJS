@@ -99,7 +99,7 @@ export class System {
    * Register a callback to be called when a component is discovered.
    * @param callback a function of type void(ComponentType) which will be called with the component type of the new component.
    */
-  register_component_discovered_callback(callback: System.discover_callback_t): void {
+  register_component_discovered_callback(callback?: System.discover_callback_t): void {
     return this.register_component_discovered_callback(callback);
   }
   

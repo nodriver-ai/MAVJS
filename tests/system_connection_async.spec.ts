@@ -26,10 +26,11 @@ describe('Connection Async', function() {
     mavsdk.register_on_discover((uuid) => {
       _discovered_system = true;
       _uuid = uuid;
-      expect(uuid).to.not.equal(0);
+      
     })
 
     sleep(2000).then(() => {
+      expect(_uuid).to.not.equal(0);
       expect(_discovered_system).to.equal(true)
       done();
     }).catch((err) => {

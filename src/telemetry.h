@@ -74,6 +74,8 @@ namespace mavjs {
             void actuator_control_target_async(const Napi::CallbackInfo& info);
             void actuator_output_status_async(const Napi::CallbackInfo& info);
             void rc_status_async(const Napi::CallbackInfo& info);
+
+            void tsfn_release(int k);
     };
 };
 

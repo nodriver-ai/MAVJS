@@ -235,7 +235,6 @@ Napi::Object Mission::Init(Napi::Env env, Napi::Object exports) {
     InstanceMethod("current_mission_item", &Mission::current_mission_item),
     InstanceMethod("total_mission_items", &Mission::total_mission_items),
     InstanceMethod("subscribe_progress", &Mission::subscribe_progress),
-    InstanceMethod("unsubscribe_progress", &Mission::unsubscribe_progress)
   });
 
   constructor = Napi::Persistent(func);
@@ -370,42 +369,44 @@ struct missionProgress {
 
 void Mission::subscribe_progress(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  this->tsfn[0] = Napi::ThreadSafeFunction::New(
-      env,
-      info[0].As<Napi::Function>(),  // JavaScript function called asynchronously
-      "subscribe_progress",        // Name
-      0,                             // Unlimited queue
-      1,                             // Only one thread will use this initially
-      []( Napi::Env ) {  
-              // Finalizer used to clean threads up
-      });
-  
-  auto _on_subscribe_progress = [this](int current, int total) -> void {
 
-    auto callback = []( Napi::Env env, Napi::Function jsCallback, missionProgress * progress ) {
-      // Transform native data into JS data, passing it to the provided 
-      // `jsCallback` -- the TSFN's JavaScript function.
+  this->tsfn_release(0);
 
-      Napi::Object obj = Napi::Object::New(env);
-      obj.Set(Napi::String::New(env, "current"), progress->current);
-      obj.Set(Napi::String::New(env, "total"), progress->total);
-      jsCallback.Call( { obj } );
+  if (info[0].IsFunction()) {
+    this->tsfn[0] = Napi::ThreadSafeFunction::New(
+        env,
+        info[0].As<Napi::Function>(),  // JavaScript function called asynchronously
+        "subscribe_progress",        // Name
+        0,                             // Unlimited queue
+        1,                             // Only one thread will use this initially
+        []( Napi::Env ) {  
+                // Finalizer used to clean threads up
+        });
     
+    auto _on_subscribe_progress = [this](int current, int total) -> void {
+
+      auto callback = []( Napi::Env env, Napi::Function jsCallback, missionProgress * progress ) {
+        // Transform native data into JS data, passing it to the provided 
+        // `jsCallback` -- the TSFN's JavaScript function.
+
+        Napi::Object obj = Napi::Object::New(env);
+        obj.Set(Napi::String::New(env, "current"), progress->current);
+        obj.Set(Napi::String::New(env, "total"), progress->total);
+        jsCallback.Call( { obj } );
+      
+      };
+
+      missionProgress progress;
+      progress.current = current;
+      progress.total = total;
+
+      this->tsfn[0].BlockingCall(&progress, callback);
     };
 
-    missionProgress progress;
-    progress.current = current;
-    progress.total = total;
-
-    this->tsfn[0].BlockingCall(&progress, callback);
-  };
-
-  this->_mission->subscribe_progress(_on_subscribe_progress);
-}
-
-void Mission::unsubscribe_progress(const Napi::CallbackInfo& info) {
-  if (this->tsfn[0] != nullptr) {
-    this->tsfn[0].Release();
+    this->_mission->subscribe_progress(_on_subscribe_progress);
+  }
+  else {
+    this->_mission->subscribe_progress(nullptr);
   }
 }
 
@@ -413,10 +414,13 @@ void Mission::dispose() {
   delete this->_mission;
 
   for (int i = 0; i < 1; i++) {
-    if (this->tsfn[i] != nullptr) {
-      this->tsfn[i].Release();
-      this->tsfn[i] = nullptr;
-    }
+    this->tsfn_release(i);
   }
 }
 
+void Mission::tsfn_release(int k) {
+  if (this->tsfn[k] != nullptr) {
+      this->tsfn[k].Release();
+      this->tsfn[k] = nullptr;
+    }
+}

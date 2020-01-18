@@ -106,29 +106,37 @@ Napi::Value System::mission(const Napi::CallbackInfo& info) {
 
 void System::register_component_discovered_callback(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  this->tsfn[0] = Napi::ThreadSafeFunction::New(
-      env,
-      info[0].As<Napi::Function>(),  // JavaScript function called asynchronously
-      "register_component_discovered_callback",        // Name
-      0,                             // Unlimited queue
-      1,                             // Only one thread will use this initially
-      []( Napi::Env ) {  
-              // Finalizer used to clean threads up
-      });
+
+  this->tsfn_release(0);
   
-  auto _on_component_discovered = [this](mavsdk::ComponentType type) -> void {
-
-
-    auto callback = []( Napi::Env env, Napi::Function jsCallback, mavsdk::ComponentType * type ) {
-      // Transform native data into JS data, passing it to the provided 
-      // `jsCallback` -- the TSFN's JavaScript function.
-      jsCallback.Call( {Napi::Number::New( env, *type )} );
-    };
+  if (info[0].IsFunction()) {
+    this->tsfn[0] = Napi::ThreadSafeFunction::New(
+        env,
+        info[0].As<Napi::Function>(),  // JavaScript function called asynchronously
+        "register_component_discovered_callback",        // Name
+        0,                             // Unlimited queue
+        1,                             // Only one thread will use this initially
+        []( Napi::Env ) {  
+                // Finalizer used to clean threads up
+        });
     
-    this->tsfn[0].BlockingCall(&type, callback);
-  };
+    auto _on_component_discovered = [this](mavsdk::ComponentType type) -> void {
 
-  this->_system->register_component_discovered_callback(_on_component_discovered);
+
+      auto callback = []( Napi::Env env, Napi::Function jsCallback, mavsdk::ComponentType * type ) {
+        // Transform native data into JS data, passing it to the provided 
+        // `jsCallback` -- the TSFN's JavaScript function.
+        jsCallback.Call( {Napi::Number::New( env, *type )} );
+      };
+      
+      this->tsfn[0].BlockingCall(&type, callback);
+    };
+
+    this->_system->register_component_discovered_callback(_on_component_discovered);
+  }
+  else {
+    this->_system->register_component_discovered_callback(nullptr);
+  }
 }
 
 void System::dispose() {
@@ -150,9 +158,13 @@ void System::dispose() {
   }
 
   for (int i = 0; i < 1; i++) {
-    if (this->tsfn[i] != nullptr) {
-      this->tsfn[i].Release();
-      this->tsfn[i] = nullptr;
-    }
+    this->tsfn_release(i);
+  }
+}
+
+void System::tsfn_release(int k) {
+  if(this->tsfn[k] != nullptr) {
+    this->tsfn[k].Release();
+    this->tsfn[k] = nullptr;
   }
 }

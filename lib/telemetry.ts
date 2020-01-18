@@ -286,7 +286,7 @@ export class Telemetry {
    * Subscribe to kinematic (position and velocity) updates (asynchronous).
    * @param callback  Function to call with updates.
    */
-  position_velocity_ned_async(callback: Telemetry.position_velocity_ned_callback_t): void {
+  position_velocity_ned_async(callback?: Telemetry.position_velocity_ned_callback_t): void {
     this.position_velocity_ned_async(callback);
   }
 
@@ -294,7 +294,7 @@ export class Telemetry {
    * Subscribe to position updates (asynchronous).
    * @param callback  Function to call with updates.
    */
-  position_async(callback: Telemetry.position_callback_t): void {
+  position_async(callback?: Telemetry.position_callback_t): void {
     this.position_async(callback);
   }
 
@@ -302,7 +302,7 @@ export class Telemetry {
    * Subscribe to home position updates (asynchronous).
    * @param callback  Function to call with updates.
    */
-  home_position_async(callback: Telemetry.position_callback_t): void {
+  home_position_async(callback?: Telemetry.position_callback_t): void {
     this.home_position_async(callback);
   }
 
@@ -310,7 +310,7 @@ export class Telemetry {
    * Subscribe to in-air updates (asynchronous).
    * @param callback Function to call with updates.
    */
-  in_air_async(callback: Telemetry.in_air_callback_t): void {
+  in_air_async(callback?: Telemetry.in_air_callback_t): void {
     this.in_air_async(callback);
   }
 
@@ -318,7 +318,7 @@ export class Telemetry {
    * Subscribe to status text updates (asynchronous).
    * @param callback Function to call with updates.
    */
-  status_text_async(callback: Telemetry.status_text_callback_t): void {
+  status_text_async(callback?: Telemetry.status_text_callback_t): void {
     this.status_text_async(callback);
   }
 
@@ -327,7 +327,7 @@ export class Telemetry {
    * Note that armed updates are limited to 1Hz.
    * @param callback Function to call with updates.
    */
-  armed_async(callback: Telemetry.armed_callback_t): void {
+  armed_async(callback?: Telemetry.armed_callback_t): void {
     this.armed_async(callback);
   }
 
@@ -335,7 +335,7 @@ export class Telemetry {
    * Subscribe to attitude updates in quaternion (asynchronous).
    * @param callback Function to call with updates.
    */
-  attitude_quaternion_async(callback: Telemetry.attitude_quaternion_callback_t): void {
+  attitude_quaternion_async(callback?: Telemetry.attitude_quaternion_callback_t): void {
     this.attitude_quaternion_async(callback);
   }
 
@@ -343,7 +343,7 @@ export class Telemetry {
    * Subscribe to attitude updates in Euler angles (asynchronous).
    * @param callback Function to call with updates.
    */
-  attitude_euler_angle_async(callback: Telemetry.attitude_euler_angle_callback_t): void {
+  attitude_euler_angle_async(callback?: Telemetry.attitude_euler_angle_callback_t): void {
     this.attitude_euler_angle_async(callback);
   }
 
@@ -351,7 +351,7 @@ export class Telemetry {
    * Subscribe to attitude updates in angular velocity (asynchronous).
    * @param callback Function to call with updates.
    */
-  attitude_angular_velocity_body_async(callback: Telemetry.attitude_angular_velocity_body_callback_t): void {
+  attitude_angular_velocity_body_async(callback?: Telemetry.attitude_angular_velocity_body_callback_t): void {
     this.attitude_angular_velocity_body_async(callback)
   }
 
@@ -359,7 +359,7 @@ export class Telemetry {
    * Subscribe to ground speed (NED) updates (asynchronous).
    * @param callback Function to call with updates.
    */
-  ground_speed_ned_async(callback: Telemetry.ground_speed_ned_callback_t): void {
+  ground_speed_ned_async(callback?: Telemetry.ground_speed_ned_callback_t): void {
     this.ground_speed_ned_async(callback);
   }
 
@@ -367,7 +367,7 @@ export class Telemetry {
    * Subscribe to IMU reading (NED) updates (asynchronous).
    * @param callback Function to call with updates.
    */
-  imu_reading_ned_async(callback: Telemetry.imu_reading_ned_callback_t): void {
+  imu_reading_ned_async(callback?: Telemetry.imu_reading_ned_callback_t): void {
     this.imu_reading_ned_async(callback)
   }
 
@@ -375,7 +375,7 @@ export class Telemetry {
    * Subscribe to GPS information updates (asynchronous).
    * @param callback Function to call with updates.
    */
-  gps_info_async(callback: Telemetry.gps_info_callback_t): void {
+  gps_info_async(callback?: Telemetry.gps_info_callback_t): void {
     this.gps_info_async(callback)
   }
 
@@ -383,7 +383,7 @@ export class Telemetry {
    * Subscribe to battery status updates (asynchronous).
    * @param callback Function to call with updates.
    */
-  battery_async(callback: Telemetry.battery_callback_t): void {
+  battery_async(callback?: Telemetry.battery_callback_t): void {
     this.battery_async(callback)
   }
   
@@ -392,7 +392,7 @@ export class Telemetry {
    * Note that flight mode updates are limited to 1Hz.
    * @param callback Function to call with updates.
    */
-  flight_mode_async(callback: Telemetry.flight_mode_callback_t): void {
+  flight_mode_async(callback?: Telemetry.flight_mode_callback_t): void {
     this.flight_mode_async(callback);
   }
 
@@ -401,7 +401,7 @@ export class Telemetry {
    * Note that health status updates are limited to 1Hz.
    * @param callback Function to call with updates.
    */
-  health_async(callback: Telemetry.health_callback_t): void {
+  health_async(callback?: Telemetry.health_callback_t): void {
     this.health_async(callback);
   }
 
@@ -410,7 +410,7 @@ export class Telemetry {
    * Note that overall health status updates are limited to 1Hz.
    * @param callback Function to call with updates.
    */
-  health_all_ok_async(callback: Telemetry.health_all_ok_callback_t): void {
+  health_all_ok_async(callback?: Telemetry.health_all_ok_callback_t): void {
     this.health_all_ok_async(callback);
   }
 
@@ -418,7 +418,7 @@ export class Telemetry {
    * Subscribe to Landed state updates (asynchronous).
    * @param callback Function to call with updates.
    */
-  landed_state_async(callback: Telemetry.landed_state_callback_t): void {
+  landed_state_async(callback?: Telemetry.landed_state_callback_t): void {
     this.landed_state_async(callback);
   }
 
@@ -426,7 +426,7 @@ export class Telemetry {
    * Subscribe to actuator control target updates (asynchronous).
    * @param callback Function to call with updates.
    */
-  actuator_control_target_async(callback: Telemetry.actuator_control_target_callback_t): void {
+  actuator_control_target_async(callback?: Telemetry.actuator_control_target_callback_t): void {
     this.actuator_control_target_async(callback);
   }
 
@@ -434,7 +434,7 @@ export class Telemetry {
    * Subscribe to actuator output status updates (asynchronous).
    * @param callback Function to call with updates.
    */
-  actuator_output_status_async(callback: Telemetry.actuator_output_status_callback_t): void {
+  actuator_output_status_async(callback?: Telemetry.actuator_output_status_callback_t): void {
     this.actuator_output_status_async(callback);
   }
 
@@ -442,7 +442,7 @@ export class Telemetry {
    * Subscribe to RC status updates (asynchronous).
    * @param callback Function to call with updates.
    */
-  rc_status_async(callback: Telemetry.rc_status_callback_t): void {
+  rc_status_async(callback?: Telemetry.rc_status_callback_t): void {
     this.rc_status_async(callback);
   }
   
