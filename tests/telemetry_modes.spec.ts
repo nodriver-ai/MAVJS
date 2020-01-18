@@ -29,7 +29,7 @@ describe('telemetry modes', function() {
     system = mavsdk.system();
   })
 
-  it('flight mode', (done) => {
+  it('flight mode', async () => {
       let telemetry = system.telemetry();
       let action = system.action();
 
@@ -38,30 +38,17 @@ describe('telemetry modes', function() {
       })
 
       while (!telemetry.health_all_ok()) {
-         sleep(1000).then(() => {});
+         await sleep(1000);
       }
 
       action.arm();
-      sleep(2000).then(() => {
-        action.takeoff();
-
-        sleep(2000).then(() => {
-            expect(_flight_mode).to.equal(Telemetry.FlightMode.TAKEOFF);
-            action.land();
-
-            sleep(2000).then(() => {
-                expect(_flight_mode).to.equal(Telemetry.FlightMode.LAND);
-
-                done();
-              }).catch((err) => {
-                done(err);
-            });;
-          }).catch((err) => {
-            done(err);
-        });;
-      }).catch((err) => {
-        done(err);
-    });;
+      await sleep(2000);
+      action.takeoff();
+      await sleep(2000);
+      expect(_flight_mode).to.equal(Telemetry.FlightMode.TAKEOFF);
+      action.land();
+      await sleep(2000);
+      expect(_flight_mode).to.equal(Telemetry.FlightMode.LAND);
   });
   
 });
