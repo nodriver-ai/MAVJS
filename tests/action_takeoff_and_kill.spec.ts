@@ -7,8 +7,6 @@ function sleep(millis: number) {
 }
 
 describe('takeoff and kill', function() {
-
-  let _flight_mode: Telemetry.FlightMode = Telemetry.FlightMode.UNKNOWN;
   
   let mavsdk: Mavsdk;
   let system: System;
@@ -54,7 +52,6 @@ describe('takeoff and kill', function() {
         }
     
         await prom();
-        console.log("fatto")
     }
 
     action.set_takeoff_altitude(1.5);

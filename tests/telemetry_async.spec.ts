@@ -45,7 +45,7 @@ describe('telemetry Async', function() {
     })
   })
 
-  it('telemetry', (done) => {
+  it('telemetry', async () => {
     let telemetry = system.telemetry();
       
     // we have to implement set rate async yet
@@ -98,25 +98,20 @@ describe('telemetry Async', function() {
         if (value) {_received_position_velocity_ned = true}
     })
 
-    sleep(10000).then(() => {
-        expect(_received_armed).to.equal(true);
-        expect(_received_battery).to.equal(true);
-        expect(_received_euler_angle).to.equal(true);
-        expect(_received_gps_info).to.equal(true);
-        expect(_received_ground_speed).to.equal(true);
-        expect(_received_home_position).to.equal(true);
-        expect(_received_imu_reading_ned).to.equal(true);
-        expect(_received_in_air).to.equal(true);
-        expect(_received_position).to.equal(true);
-        expect(_received_angular_velocity_body).to.equal(true);
-        expect(_received_position_velocity_ned).to.equal(true);
-        expect(_received_quaternion).to.equal(true);
-        expect(_received_actuator_control_target).to.equal(true);
-
-        done();
-    }).catch((err) => {
-        done(err);
-    });
+    await sleep(10000)
+    expect(_received_armed).to.equal(true);
+    expect(_received_battery).to.equal(true);
+    expect(_received_euler_angle).to.equal(true);
+    expect(_received_gps_info).to.equal(true);
+    expect(_received_ground_speed).to.equal(true);
+    expect(_received_home_position).to.equal(true);
+    expect(_received_imu_reading_ned).to.equal(true);
+    expect(_received_in_air).to.equal(true);
+    expect(_received_position).to.equal(true);
+    expect(_received_angular_velocity_body).to.equal(true);
+    expect(_received_position_velocity_ned).to.equal(true);
+    expect(_received_quaternion).to.equal(true);
+    expect(_received_actuator_control_target).to.equal(true);
     
   });
   
