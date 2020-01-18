@@ -45,7 +45,7 @@ describe('telemetry modes', function() {
       await sleep(2000);
       action.takeoff();
       await sleep(2000);
-      expect(_flight_mode).to.equal(Telemetry.FlightMode.TAKEOFF);
+      expect(_flight_mode).not.to.equal(Telemetry.FlightMode.UNKNOWN);
       action.land();
       await sleep(2000);
       expect(_flight_mode).to.equal(Telemetry.FlightMode.LAND);
