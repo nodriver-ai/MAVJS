@@ -30,7 +30,7 @@ function make_mission_item(
     return new_item.to_object();
 }
 
-describe('mission cancellation', function() {
+describe('mission upload cancellation', function() {
   
     let mavsdk: Mavsdk;
     let system: System;
@@ -69,42 +69,15 @@ describe('mission cancellation', function() {
         
         mission.upload_mission_async(mission_items).then((result) => {
             expect(result).to.equal(Mission.Result.CANCELLED);
-        }).catch((err) => {
-            done(err);
-        })
-
-        sleep(1000).then(async () => {
-            mission.upload_mission_cancel();
-            await sleep(8000);
             done();
-        })
-        
-    })
-
-    it('upload mission', async () => {
-        let mission_items = [];
-
-        for (let i = 0; i < 500; ++i) {
-            mission_items.push(
-                make_mission_item(47.3981703270545, 8.54564902186397, 20.0, 3.0, true, -90.0, 0.0, false));
-        }
-
-        let result = await mission.upload_mission_async(mission_items);
-        expect(result).to.equal(Mission.Result.SUCCESS);
-    })
-
-    it('download mission and cancel', (done) => {
-        mission.download_mission_async().then((result) => {
-            expect(result.result).to.equal(Mission.Result.CANCELLED);
-            done()
         }).catch((err) => {
             done(err);
         })
 
-        sleep(1000).then(async () => {
-            mission.download_mission_cancel();
+        sleep(1000).then(() => {
+            mission.upload_mission_cancel();
         })
         
-    });
+    })
 
 });
