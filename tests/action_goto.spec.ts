@@ -64,7 +64,6 @@ describe('go to location', function() {
 
   it('disarm', async () => {
     let iteration = 0;
-
     while (telemetry.in_air()) {
         await sleep(1000);
 

@@ -6,7 +6,7 @@
   "scripts": {
     "build": "cmake-js compile && tsc",
     "install": "cmake-js compile",
-    "test": "mocha --timeout 120000 -r ts-node/register tests/*.spec.ts",
+    "test": "mocha --timeout 3600000 -r ts-node/register tests/*.spec.ts",
     "build-docs": "typedoc --mode modules --exclude lib/addon.ts --name MAVJS --out docs lib"
   },
   "author": "andrea pomente",

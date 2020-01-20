@@ -259,7 +259,7 @@ Napi::Value Mission::upload_mission_async(const Napi::CallbackInfo& info) {
 
   Napi::Promise::Deferred deferred = Napi::Promise::Deferred::New(env);
 
-  std::vector<std::shared_ptr<mavsdk::MissionItem>> _mission_items;
+  std::vector<std::shared_ptr<mavsdk::MissionItem>> _mission_items = {};
 
   for(uint i = 0; i < mission_items.Length(); ++i) {
       auto item = mission_items.Get(i).As<Napi::Object>();
