@@ -30,7 +30,7 @@ function make_mission_item(
     return new_item.to_object();
 }
 
-describe('takeoff and hover Async', function() {
+describe('mission cancellation', function() {
   
     let mavsdk: Mavsdk;
     let system: System;
