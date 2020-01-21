@@ -5,9 +5,9 @@
   "main": "lib/addon.js",
   "scripts": {
     "build": "cmake-js compile && tsc",
-    "install": "cmake-js compile",
+    "install": "cmake-js compile && tsc",
     "test": "mocha --timeout 3600000 -r ts-node/register tests/*.spec.ts",
-    "build-docs": "typedoc --mode modules --exclude lib/addon.ts --name 'MAVJS Documentation' --out docs lib"
+    "build-docs": "typedoc --mode modules --disableOutputCheck --exclude lib/addon.ts --name 'MAVJS Documentation' --out docs lib"
   },
   "author": "andrea pomente",
   "license": "ISC",
