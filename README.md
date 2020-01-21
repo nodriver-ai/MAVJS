@@ -35,13 +35,13 @@ This is a Node.js module available through the npm registry.
 
 installation is done using the npm install command:
 ```bash
-$ npm install MAVJS
+$ npm i @nodriverai/mavjs
 ```
 
 ## Getting started
 
 ```typescript
-import { Mavsdk, System, Telemetry, Action } from "MAVJS";
+import { Mavsdk, System, Telemetry, Action } from "@nodriverai/mavjs";
 
 //Create a Mavsdk instance
 let mavsdk = new Mavsdk();

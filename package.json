@@ -1,7 +1,7 @@
 {
-  "name": "mavjs",
-  "version": "1.0.0",
-  "description": "MAVJS software to manage one or more ndone",
+  "name": "@nodriverai/mavjs",
+  "version": "0.1.1",
+  "description": "Node.js wrapper for mavlink/MAVSDK C++ library using node-addon-api.",
   "main": "lib/addon.js",
   "scripts": {
     "build": "cmake-js compile && tsc",
@@ -10,18 +10,27 @@
     "build-docs": "typedoc --mode modules --disableOutputCheck --exclude lib/addon.ts --name 'MAVJS Documentation' --out docs lib"
   },
   "author": "andrea pomente",
-  "license": "ISC",
+  "license": "SEE LICENSE IN LICENSE.md",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nodriver-ai/MAVJS"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "bindings": "~1.2.1",
+    "cmake-js": "~5.3.2",
+    "node-addon-api": "^2.0.0",
+    "typescript": "^3.7.3"
+  },
   "devDependencies": {
     "@types/chai": "^4.2.6",
     "@types/mocha": "^5.2.7",
     "@types/node": "^12.7.1",
-    "bindings": "~1.2.1",
     "chai": "^4.2.0",
-    "cmake-js": "~5.3.2",
     "mocha": "^6.2.2",
-    "node-addon-api": "^2.0.0",
     "ts-node": "^8.5.4",
-    "typedoc": "^0.15.7",
-    "typescript": "^3.7.3"
+    "typedoc": "^0.15.7"
   }
 }

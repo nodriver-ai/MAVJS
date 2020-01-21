@@ -29,3 +29,11 @@ deploy:
   local_dir: docs
   on:
     branch: master
+
+deploy:
+  provider: npm
+  skip_cleanup: true
+  email: info@nodriver.ai
+  api_key: $NPM_TOKEN
+  on:
+    branch: master
