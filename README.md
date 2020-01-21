@@ -1,6 +1,6 @@
 # MAVJS
 
-[![Build Status](https://travis-ci.com/pome90/MAVJS.svg?token=nTjsnN1j5Xdv8gEsXC31&branch=master)](https://travis-ci.com/pome90/MAVJS)
+[![Build Status](https://travis-ci.com/nodriver-ai/MAVJS.svg?branch=master)](https://travis-ci.com/nodriver-ai/MAVJS)
 
 Node.js wrapper for [mavlink/MAVSDK](https://github.com/mavlink/MAVSDK) C++ library using [node-addon-api](https://github.com/nodejs/node-addon-api). 
 
