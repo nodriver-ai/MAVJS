@@ -60,7 +60,7 @@ describe('mission download cancellation', function() {
     it('upload mission', async () => {
         let mission_items = [];
 
-        for (let i = 0; i < 500; ++i) {
+        for (let i = 0; i < 1000; ++i) {
             mission_items.push(
                 make_mission_item(47.3981703270545, 8.54564902186397, 20.0, 3.0, true, -90.0, 0.0, false));
         }
@@ -77,7 +77,7 @@ describe('mission download cancellation', function() {
             done(err);
         })
 
-        sleep(1000).then(() => {
+        sleep(500).then(() => {
             mission.download_mission_cancel();
         })
         
