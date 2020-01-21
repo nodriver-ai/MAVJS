@@ -20,7 +20,7 @@ before_script:
   - npx envinfo
 script:
   - npm test
-  - npm build-docs
+  - npm run build-docs
 deploy:  
   provider: pages
   skip_cleanup: true
