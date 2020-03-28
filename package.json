@@ -1,6 +1,6 @@
 {
   "name": "@nodriverai/mavjs",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Node.js wrapper for mavlink/MAVSDK C++ library using node-addon-api.",
   "main": "lib/addon.js",
   "scripts": {

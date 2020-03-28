@@ -16,7 +16,7 @@ namespace mavjs {
 
         private:
 
-            Napi::ThreadSafeFunction tsfn[20] = {nullptr};
+            Napi::ThreadSafeFunction tsfn[21] = {nullptr};
 
             mavsdk::Telemetry* _telemetry;
             
@@ -32,6 +32,7 @@ namespace mavjs {
             Napi::Value set_rate_rc_status(const Napi::CallbackInfo& info);
             Napi::Value set_rate_actuator_control_target(const Napi::CallbackInfo& info);
             Napi::Value set_rate_actuator_output_status(const Napi::CallbackInfo& info);
+            Napi::Value set_rate_odometry(const Napi::CallbackInfo& info);
 
             Napi::Value position_velocity_ned(const Napi::CallbackInfo& info);
             Napi::Value position(const Napi::CallbackInfo& info);
@@ -74,6 +75,7 @@ namespace mavjs {
             void actuator_control_target_async(const Napi::CallbackInfo& info);
             void actuator_output_status_async(const Napi::CallbackInfo& info);
             void rc_status_async(const Napi::CallbackInfo& info);
+            void odometry_async(const Napi::CallbackInfo& info);
 
             void tsfn_release(int k);
     };

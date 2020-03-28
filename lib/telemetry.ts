@@ -124,6 +124,16 @@ export class Telemetry {
     return this.set_rate_actuator_output_status(rate_hz);
   }
 
+   /**
+   * Set rate of odometry updates (synchronous).
+   * @param rate_hz Rate in Hz.
+   * > To stop sending it completely, use a rate_hz of -1, for default rate use 0.
+   * @returns Result of request.
+   */ 
+  set_rate_odometry(rate_hz: number): Telemetry.Result {
+    return this.set_rate_odometry(rate_hz);
+  }
+
   /**
    * Get the current kinematic (position and velocity) in NED frame (synchronous).
    */
@@ -445,6 +455,15 @@ export class Telemetry {
   rc_status_async(callback?: Telemetry.rc_status_callback_t): void {
     this.rc_status_async(callback);
   }
+
+  /**
+   * Subscribe to odometry updates (asynchronous).
+   * @param callback Function to call with updates.
+   */
+  odometry_async(callback?: Telemetry.odometry_callback_t): void {
+    this.odometry_async(callback);
+  }
+
   
 }
 
@@ -583,6 +602,13 @@ export namespace Telemetry {
      * @param {rc_status_callback_t} rc_status
      */
     (rc_status: RCStatus) => void;  
+
+    export type odometry_callback_t= 
+    /**
+     * Callback type for odometry updates.
+     * @param {odometry_callback_t} odometry
+     */
+    (odometry: Odomentry) => void;  
     
     export enum Result {
       SUCCESS = "Success",
@@ -604,6 +630,13 @@ export namespace Telemetry {
       OFFBOARD = "Offboard",
       FOLLOW_ME = "Follow me",
       UNKNOWN = "Unknown"
+    }
+
+    export enum MavFrame {
+      UNDEF = 0,
+      BODY_NED = 8,
+      VISION_NED = 16,
+      ESTIM_NED = 18
     }
   
     /**
@@ -952,6 +985,47 @@ export namespace Telemetry {
       active: number,
       /** Servo / motor output array values. */
       actuator: number[]
+    }
+
+    export interface PositionBody {
+      /** X Position in metres. */
+      x_m: number,
+      /** Y Position in metres. */
+      y_m: number,
+      /** Z Position in metres. */
+      z_m: number
+    }
+
+    export interface SpeedBody {
+       /** Velocity in X in metres/second. */
+       x_m_s: number,
+       /** Velocity in Y in metres/second. */
+       y_m_s: number,
+       /** Velocity in Z in metres/second. */
+       z_m_s: number
+    }
+
+    export interface Odomentry {
+      /** Timestamp (0 to use Backend timestamp). */
+      time_usec: number,
+      /** Coordinate frame of reference for the pose data. */
+      frame_id: MavFrame,
+      /** Coordinate frame of reference for the velocity in free space (twist) data.*/
+      child_frame_id: MavFrame,
+      /** Position */
+      position_body: PositionBody,
+      /** quaternion */
+      q: Quaternion,
+      /** Linear speed (m/s). */
+      velocity_body: SpeedBody,
+      /** Angular body speed (rad/s).*/
+      angular_velocity_body: AngularVelocityBody,
+      /** Row-major representation of a 6x6 pose cross-covariance matrix upper right triangle. NaN if unknown.*/
+      pose_covariance?: number[],
+      /** Row-major representation of a 6x6 velocity cross-covariance matrix upper right triangle. NaN if unknown.*/
+      velocity_covariance?: number[],
+      /** Estimate reset counter. */
+      reset_counter: number
     }
   }
 

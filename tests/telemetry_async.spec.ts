@@ -20,6 +20,7 @@ describe('telemetry Async', function() {
   let _received_battery = false;
   let _received_position_velocity_ned = false;
   let _received_actuator_control_target = false;
+  let _received_odometry = false;
   
   let mavsdk: Mavsdk;
   let system: System;
@@ -38,7 +39,7 @@ describe('telemetry Async', function() {
     sleep(2000).then(() => {
 
         let uuids = mavsdk.system_uuids();
-        expect(uuids.length).to.equal(1)
+        expect(uuids.length).to.equal(1);
 
         system = mavsdk.system(uuids[0]);
         done();
@@ -57,6 +58,7 @@ describe('telemetry Async', function() {
     expect(telemetry.set_rate_gps_info(10)).to.equal(Telemetry.Result.SUCCESS);
     expect(telemetry.set_rate_battery(10)).to.equal(Telemetry.Result.SUCCESS);
     expect(telemetry.set_rate_actuator_control_target(10)).to.equal(Telemetry.Result.SUCCESS);
+    expect(telemetry.set_rate_odometry(10)).to.equal(Telemetry.Result.SUCCESS);
       
     telemetry.position_async((position) => {
         if (position) {_received_position = true}
@@ -98,6 +100,10 @@ describe('telemetry Async', function() {
         if (value) {_received_position_velocity_ned = true}
     })
 
+    telemetry.odometry_async((value) => {
+        if (value) {_received_odometry = true}
+    })
+
     await sleep(10000)
     expect(_received_armed).to.equal(true);
     expect(_received_battery).to.equal(true);
@@ -112,7 +118,7 @@ describe('telemetry Async', function() {
     expect(_received_position_velocity_ned).to.equal(true);
     expect(_received_quaternion).to.equal(true);
     expect(_received_actuator_control_target).to.equal(true);
-    
+    expect(_received_odometry).to.equal(true);
   });
   
 });

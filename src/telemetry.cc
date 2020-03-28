@@ -22,6 +22,7 @@ Napi::Object Telemetry::Init(Napi::Env env, Napi::Object exports) {
     InstanceMethod("set_rate_rc_status", &Telemetry::set_rate_rc_status),
     InstanceMethod("set_rate_actuator_control_target", &Telemetry::set_rate_actuator_control_target),
     InstanceMethod("set_rate_actuator_output_status", &Telemetry::set_rate_actuator_output_status),
+    InstanceMethod("set_rate_odometry", &Telemetry::set_rate_odometry),
     InstanceMethod("position_velocity_ned", &Telemetry::position_velocity_ned),
     InstanceMethod("position", &Telemetry::position),
     InstanceMethod("home_position", &Telemetry::home_position),
@@ -62,6 +63,7 @@ Napi::Object Telemetry::Init(Napi::Env env, Napi::Object exports) {
     InstanceMethod("actuator_control_target_async", &Telemetry::actuator_control_target_async),
     InstanceMethod("actuator_output_status_async", &Telemetry::actuator_output_status_async),
     InstanceMethod("rc_status_async", &Telemetry::rc_status_async),
+    InstanceMethod("odometry_async", &Telemetry::odometry_async)
   });
 
   constructor = Napi::Persistent(func);
@@ -148,6 +150,12 @@ Napi::Value Telemetry::set_rate_actuator_control_target(const Napi::CallbackInfo
 Napi::Value Telemetry::set_rate_actuator_output_status(const Napi::CallbackInfo& info) {
   double rate = info[0].As<Napi::Number>().DoubleValue();
   const mavsdk::Telemetry::Result set_rate_result = this->_telemetry->set_rate_actuator_output_status(rate);
+  return Napi::String::New(info.Env(), mavsdk::Telemetry::result_str(set_rate_result));
+}
+
+Napi::Value Telemetry::set_rate_odometry(const Napi::CallbackInfo& info) {
+  double rate = info[0].As<Napi::Number>().DoubleValue();
+  const mavsdk::Telemetry::Result set_rate_result = this->_telemetry->set_rate_odometry(rate);
   return Napi::String::New(info.Env(), mavsdk::Telemetry::result_str(set_rate_result));
 }
 
@@ -679,7 +687,7 @@ void Telemetry::attitude_quaternion_async(const Napi::CallbackInfo& info) {
         obj.Set(Napi::String::New(env, "w"), attitude_quaternion->w);
         obj.Set(Napi::String::New(env, "x"), attitude_quaternion->x);
         obj.Set(Napi::String::New(env, "y"), attitude_quaternion->y);
-        obj.Set(Napi::String::New(env, "z"), attitude_quaternion->y);
+        obj.Set(Napi::String::New(env, "z"), attitude_quaternion->z);
         jsCallback.Call( { obj } );
       
         // We're finished with the data.
@@ -1271,10 +1279,99 @@ void Telemetry::rc_status_async(const Napi::CallbackInfo& info) {
   }
 }
 
+void Telemetry::odometry_async(const Napi::CallbackInfo& info) {
+ Napi::Env env = info.Env();
+
+  this->tsfn_release(20);
+  
+  if (info[0].IsFunction()) {
+    this->tsfn[20] = Napi::ThreadSafeFunction::New(
+        env,
+        info[0].As<Napi::Function>(),  // JavaScript function called asynchronously
+        "odometry_async",        // Name
+        0,                             // Unlimited queue
+        1,                             // Only one thread will use this initially
+        []( Napi::Env ) {  
+                // Finalizer used to clean threads up
+        });
+    
+    auto _on_odometry_async = [this](mavsdk::Telemetry::Odometry type) -> void {
+      auto callback = []( Napi::Env env, Napi::Function jsCallback, mavsdk::Telemetry::Odometry * odometry ) {
+        // Transform native data into JS data, passing it to the provided 
+        // `jsCallback` -- the TSFN's JavaScript function.
+
+        Napi::Object obj = Napi::Object::New(env);
+        obj.Set(Napi::String::New(env, "time_usec"), odometry->time_usec);
+        obj.Set(Napi::String::New(env, "frame_id"), (int)odometry->frame_id);
+        obj.Set(Napi::String::New(env, "child_frame_id"), (int)odometry->child_frame_id);
+
+        Napi::Object position_body = Napi::Object::New(env);
+        position_body.Set(Napi::String::New(env, "x_m"), odometry->position_body.x_m);
+        position_body.Set(Napi::String::New(env, "y_m"), odometry->position_body.y_m);
+        position_body.Set(Napi::String::New(env, "z_m"), odometry->position_body.z_m);
+
+        obj.Set(Napi::String::New(env, "position_body"), position_body);
+
+        Napi::Object q = Napi::Object::New(env);
+        q.Set(Napi::String::New(env, "w"), odometry->q.w);
+        q.Set(Napi::String::New(env, "x"), odometry->q.x);
+        q.Set(Napi::String::New(env, "y"), odometry->q.y);
+        q.Set(Napi::String::New(env, "z"), odometry->q.z);
+        
+        obj.Set(Napi::String::New(env, "q"), q);
+
+        Napi::Object velocity_body = Napi::Object::New(env);
+        velocity_body.Set(Napi::String::New(env, "x_m_s"), odometry->velocity_body.x_m_s);
+        velocity_body.Set(Napi::String::New(env, "y_m_s"), odometry->velocity_body.y_m_s);
+        velocity_body.Set(Napi::String::New(env, "z_m_s"), odometry->velocity_body.z_m_s);
+
+        obj.Set(Napi::String::New(env, "velocity_body"), velocity_body);
+
+        Napi::Object angular_velocity_body = Napi::Object::New(env);
+        angular_velocity_body.Set(Napi::String::New(env, "roll_rad_s"), odometry->angular_velocity_body.roll_rad_s);
+        angular_velocity_body.Set(Napi::String::New(env, "pitch_rad_s"), odometry->angular_velocity_body.pitch_rad_s);
+        angular_velocity_body.Set(Napi::String::New(env, "yaw_rad_s"), odometry->angular_velocity_body.yaw_rad_s);
+
+        obj.Set(Napi::String::New(env, "angular_velocity_body"), velocity_body);
+
+        Napi::Array pose_covariance = Napi::Array::New(env, 21);
+        for (int i = 0; i < 21; i++) {
+          pose_covariance[i] = odometry->pose_covariance[i];
+        }
+
+        obj.Set(Napi::String::New(env, "pose_covariance"), pose_covariance);
+
+        Napi::Array velocity_covariance = Napi::Array::New(env, 21);
+        for (int i = 0; i < 21; i++) {
+          velocity_covariance[i] = odometry->velocity_covariance[i];
+        }
+
+        obj.Set(Napi::String::New(env, "velocity_covariance"), velocity_covariance);
+
+        obj.Set(Napi::String::New(env, "reset_counter"), odometry->reset_counter);
+
+        jsCallback.Call( { obj } );
+      
+        // We're finished with the data.
+        delete odometry;
+      };
+
+      mavsdk::Telemetry::Odometry * value = new mavsdk::Telemetry::Odometry(type);
+      
+      this->tsfn[20].BlockingCall(value, callback);
+    };
+
+    this->_telemetry->odometry_async(_on_odometry_async);
+  }
+  else {
+    this->_telemetry->odometry_async(nullptr);
+  }
+}
+
 void Telemetry::dispose() {
   delete this->_telemetry;
 
-  for (int i = 0; i < 20; i++) {
+  for (int i = 0; i < 21; i++) {
     this->tsfn_release(i);
   }
 }
