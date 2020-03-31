@@ -22,19 +22,17 @@ script:
   - npm test
   - npm run build-docs
 deploy:  
-  provider: pages
-  skip_cleanup: true
-  github_token: $GITHUB_TOKEN 
-  keep_history: true
-  local_dir: docs
-  on:
-    branch: master
-
-deploy:
-  provider: npm
-  skip_cleanup: true
-  edge: true
-  email: "info@nodriver.ai"
-  api_key: "$NPM_TOKEN"
-  on:
-    branch: master
+  - provider: pages
+    skip_cleanup: true
+    github_token: $GITHUB_TOKEN 
+    keep_history: true
+    local_dir: docs
+    on:
+      branch: master
+  - provider: npm
+    skip_cleanup: true
+    edge: true
+    email: "info@nodriver.ai"
+    api_key: "$NPM_TOKEN"
+    on:
+      branch: master
