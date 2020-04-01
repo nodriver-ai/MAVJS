@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>AngularVelocityNED | MAVJS Documentation</title>
+	<title>Odomentry | MAVJS Documentation</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -62,29 +62,21 @@
 					<a href="../classes/_telemetry_.telemetry.html">Telemetry</a>
 				</li>
 				<li>
-					<a href="_telemetry_.telemetry.angularvelocityned.html">AngularVelocityNED</a>
+					<a href="_telemetry_.telemetry.odomentry.html">Odomentry</a>
 				</li>
 			</ul>
-			<h1>Interface AngularVelocityNED</h1>
+			<h1>Interface Odomentry</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
-			<section class="tsd-panel tsd-comment">
-				<div class="tsd-comment tsd-typography">
-					<div class="lead">
-						<p>Angular velocity type in local coordinates.</p>
-					</div>
-					<p>The angular velocity is represented in NED (North East Down) frame and in radians/second.</p>
-				</div>
-			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">AngularVelocityNED</span>
+						<span class="target">Odomentry</span>
 					</li>
 				</ul>
 			</section>
@@ -95,9 +87,16 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_telemetry_.telemetry.angularvelocityned.html#down_rad_s" class="tsd-kind-icon">down_<wbr>rad_<wbr>s</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_telemetry_.telemetry.angularvelocityned.html#east_rad_s" class="tsd-kind-icon">east_<wbr>rad_<wbr>s</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_telemetry_.telemetry.angularvelocityned.html#north_rad_s" class="tsd-kind-icon">north_<wbr>rad_<wbr>s</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_telemetry_.telemetry.odomentry.html#angular_velocity_body" class="tsd-kind-icon">angular_<wbr>velocity_<wbr>body</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_telemetry_.telemetry.odomentry.html#child_frame_id" class="tsd-kind-icon">child_<wbr>frame_<wbr>id</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_telemetry_.telemetry.odomentry.html#frame_id" class="tsd-kind-icon">frame_<wbr>id</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_telemetry_.telemetry.odomentry.html#pose_covariance" class="tsd-kind-icon">pose_<wbr>covariance</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_telemetry_.telemetry.odomentry.html#position_body" class="tsd-kind-icon">position_<wbr>body</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_telemetry_.telemetry.odomentry.html#q" class="tsd-kind-icon">q</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_telemetry_.telemetry.odomentry.html#reset_counter" class="tsd-kind-icon">reset_<wbr>counter</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_telemetry_.telemetry.odomentry.html#time_usec" class="tsd-kind-icon">time_<wbr>usec</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_telemetry_.telemetry.odomentry.html#velocity_body" class="tsd-kind-icon">velocity_<wbr>body</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_telemetry_.telemetry.odomentry.html#velocity_covariance" class="tsd-kind-icon">velocity_<wbr>covariance</a></li>
 							</ul>
 						</section>
 					</div>
@@ -106,47 +105,152 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="down_rad_s" class="tsd-anchor"></a>
-					<h3>down_<wbr>rad_<wbr>s</h3>
-					<div class="tsd-signature tsd-kind-icon">down_<wbr>rad_<wbr>s<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<a name="angular_velocity_body" class="tsd-anchor"></a>
+					<h3>angular_<wbr>velocity_<wbr>body</h3>
+					<div class="tsd-signature tsd-kind-icon">angular_<wbr>velocity_<wbr>body<span class="tsd-signature-symbol">:</span> <a href="_telemetry_.telemetry.angularvelocitybody.html" class="tsd-signature-type">AngularVelocityBody</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nodriver-ai/MAVJS/blob/84e8e40/lib/telemetry.ts#L865">telemetry.ts:865</a></li>
+							<li>Defined in <a href="https://github.com/nodriver-ai/MAVJS/blob/84e8e40/lib/telemetry.ts#L1022">telemetry.ts:1022</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Angular velocity in Down direction in radians/second.</p>
+							<p>Angular body speed (rad/s).</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="east_rad_s" class="tsd-anchor"></a>
-					<h3>east_<wbr>rad_<wbr>s</h3>
-					<div class="tsd-signature tsd-kind-icon">east_<wbr>rad_<wbr>s<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<a name="child_frame_id" class="tsd-anchor"></a>
+					<h3>child_<wbr>frame_<wbr>id</h3>
+					<div class="tsd-signature tsd-kind-icon">child_<wbr>frame_<wbr>id<span class="tsd-signature-symbol">:</span> <a href="../enums/_telemetry_.telemetry.mavframe.html" class="tsd-signature-type">MavFrame</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nodriver-ai/MAVJS/blob/84e8e40/lib/telemetry.ts#L861">telemetry.ts:861</a></li>
+							<li>Defined in <a href="https://github.com/nodriver-ai/MAVJS/blob/84e8e40/lib/telemetry.ts#L1014">telemetry.ts:1014</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Angular velocity in East direction in radians/second.</p>
+							<p>Coordinate frame of reference for the velocity in free space (twist) data.</p>
 						</div>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="north_rad_s" class="tsd-anchor"></a>
-					<h3>north_<wbr>rad_<wbr>s</h3>
-					<div class="tsd-signature tsd-kind-icon">north_<wbr>rad_<wbr>s<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<a name="frame_id" class="tsd-anchor"></a>
+					<h3>frame_<wbr>id</h3>
+					<div class="tsd-signature tsd-kind-icon">frame_<wbr>id<span class="tsd-signature-symbol">:</span> <a href="../enums/_telemetry_.telemetry.mavframe.html" class="tsd-signature-type">MavFrame</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nodriver-ai/MAVJS/blob/84e8e40/lib/telemetry.ts#L857">telemetry.ts:857</a></li>
+							<li>Defined in <a href="https://github.com/nodriver-ai/MAVJS/blob/84e8e40/lib/telemetry.ts#L1012">telemetry.ts:1012</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Angular velocity in North direction in radians/second.</p>
+							<p>Coordinate frame of reference for the pose data.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="pose_covariance" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> pose_<wbr>covariance</h3>
+					<div class="tsd-signature tsd-kind-icon">pose_<wbr>covariance<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/nodriver-ai/MAVJS/blob/84e8e40/lib/telemetry.ts#L1024">telemetry.ts:1024</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Row-major representation of a 6x6 pose cross-covariance matrix upper right triangle. NaN if unknown.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="position_body" class="tsd-anchor"></a>
+					<h3>position_<wbr>body</h3>
+					<div class="tsd-signature tsd-kind-icon">position_<wbr>body<span class="tsd-signature-symbol">:</span> <a href="_telemetry_.telemetry.positionbody.html" class="tsd-signature-type">PositionBody</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/nodriver-ai/MAVJS/blob/84e8e40/lib/telemetry.ts#L1016">telemetry.ts:1016</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Position</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="q" class="tsd-anchor"></a>
+					<h3>q</h3>
+					<div class="tsd-signature tsd-kind-icon">q<span class="tsd-signature-symbol">:</span> <a href="_telemetry_.telemetry.quaternion.html" class="tsd-signature-type">Quaternion</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/nodriver-ai/MAVJS/blob/84e8e40/lib/telemetry.ts#L1018">telemetry.ts:1018</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>quaternion</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="reset_counter" class="tsd-anchor"></a>
+					<h3>reset_<wbr>counter</h3>
+					<div class="tsd-signature tsd-kind-icon">reset_<wbr>counter<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/nodriver-ai/MAVJS/blob/84e8e40/lib/telemetry.ts#L1028">telemetry.ts:1028</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Estimate reset counter.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="time_usec" class="tsd-anchor"></a>
+					<h3>time_<wbr>usec</h3>
+					<div class="tsd-signature tsd-kind-icon">time_<wbr>usec<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/nodriver-ai/MAVJS/blob/84e8e40/lib/telemetry.ts#L1010">telemetry.ts:1010</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Timestamp (0 to use Backend timestamp).</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="velocity_body" class="tsd-anchor"></a>
+					<h3>velocity_<wbr>body</h3>
+					<div class="tsd-signature tsd-kind-icon">velocity_<wbr>body<span class="tsd-signature-symbol">:</span> <a href="_telemetry_.telemetry.speedbody.html" class="tsd-signature-type">SpeedBody</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/nodriver-ai/MAVJS/blob/84e8e40/lib/telemetry.ts#L1020">telemetry.ts:1020</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Linear speed (m/s).</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="velocity_covariance" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> velocity_<wbr>covariance</h3>
+					<div class="tsd-signature tsd-kind-icon">velocity_<wbr>covariance<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/nodriver-ai/MAVJS/blob/84e8e40/lib/telemetry.ts#L1026">telemetry.ts:1026</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Row-major representation of a 6x6 velocity cross-covariance matrix upper right triangle. NaN if unknown.</p>
 						</div>
 					</div>
 				</section>
@@ -189,16 +293,37 @@
 						<a href="../classes/_telemetry_.telemetry.html" class="tsd-kind-icon">Telemetry</a>
 						<ul>
 							<li class="current tsd-kind-interface tsd-parent-kind-class">
-								<a href="_telemetry_.telemetry.angularvelocityned.html" class="tsd-kind-icon">Angular<wbr>VelocityNED</a>
+								<a href="_telemetry_.telemetry.odomentry.html" class="tsd-kind-icon">Odomentry</a>
 								<ul>
 									<li class=" tsd-kind-property tsd-parent-kind-interface">
-										<a href="_telemetry_.telemetry.angularvelocityned.html#down_rad_s" class="tsd-kind-icon">down_<wbr>rad_<wbr>s</a>
+										<a href="_telemetry_.telemetry.odomentry.html#angular_velocity_body" class="tsd-kind-icon">angular_<wbr>velocity_<wbr>body</a>
 									</li>
 									<li class=" tsd-kind-property tsd-parent-kind-interface">
-										<a href="_telemetry_.telemetry.angularvelocityned.html#east_rad_s" class="tsd-kind-icon">east_<wbr>rad_<wbr>s</a>
+										<a href="_telemetry_.telemetry.odomentry.html#child_frame_id" class="tsd-kind-icon">child_<wbr>frame_<wbr>id</a>
 									</li>
 									<li class=" tsd-kind-property tsd-parent-kind-interface">
-										<a href="_telemetry_.telemetry.angularvelocityned.html#north_rad_s" class="tsd-kind-icon">north_<wbr>rad_<wbr>s</a>
+										<a href="_telemetry_.telemetry.odomentry.html#frame_id" class="tsd-kind-icon">frame_<wbr>id</a>
+									</li>
+									<li class=" tsd-kind-property tsd-parent-kind-interface">
+										<a href="_telemetry_.telemetry.odomentry.html#pose_covariance" class="tsd-kind-icon">pose_<wbr>covariance</a>
+									</li>
+									<li class=" tsd-kind-property tsd-parent-kind-interface">
+										<a href="_telemetry_.telemetry.odomentry.html#position_body" class="tsd-kind-icon">position_<wbr>body</a>
+									</li>
+									<li class=" tsd-kind-property tsd-parent-kind-interface">
+										<a href="_telemetry_.telemetry.odomentry.html#q" class="tsd-kind-icon">q</a>
+									</li>
+									<li class=" tsd-kind-property tsd-parent-kind-interface">
+										<a href="_telemetry_.telemetry.odomentry.html#reset_counter" class="tsd-kind-icon">reset_<wbr>counter</a>
+									</li>
+									<li class=" tsd-kind-property tsd-parent-kind-interface">
+										<a href="_telemetry_.telemetry.odomentry.html#time_usec" class="tsd-kind-icon">time_<wbr>usec</a>
+									</li>
+									<li class=" tsd-kind-property tsd-parent-kind-interface">
+										<a href="_telemetry_.telemetry.odomentry.html#velocity_body" class="tsd-kind-icon">velocity_<wbr>body</a>
+									</li>
+									<li class=" tsd-kind-property tsd-parent-kind-interface">
+										<a href="_telemetry_.telemetry.odomentry.html#velocity_covariance" class="tsd-kind-icon">velocity_<wbr>covariance</a>
 									</li>
 								</ul>
 							</li>

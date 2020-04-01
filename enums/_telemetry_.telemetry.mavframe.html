@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>MissionItems_and_Result | MAVJS Documentation</title>
+	<title>MavFrame | MAVJS Documentation</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,63 +56,77 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_mission_.html">&quot;mission&quot;</a>
+					<a href="../modules/_telemetry_.html">&quot;telemetry&quot;</a>
 				</li>
 				<li>
-					<a href="../classes/_mission_.mission.html">Mission</a>
+					<a href="../classes/_telemetry_.telemetry.html">Telemetry</a>
 				</li>
 				<li>
-					<a href="_mission_.mission.missionitems_and_result.html">MissionItems_and_Result</a>
+					<a href="_telemetry_.telemetry.mavframe.html">MavFrame</a>
 				</li>
 			</ul>
-			<h1>Interface MissionItems_and_Result</h1>
+			<h1>Enumeration MavFrame</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
-			<section class="tsd-panel tsd-hierarchy">
-				<h3>Hierarchy</h3>
-				<ul class="tsd-hierarchy">
-					<li>
-						<span class="target">MissionItems_and_Result</span>
-					</li>
-				</ul>
-			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
-							<h3>Properties</h3>
+							<h3>Enumeration members</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_mission_.mission.missionitems_and_result.html#mission_items" class="tsd-kind-icon">mission_<wbr>items</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_mission_.mission.missionitems_and_result.html#result" class="tsd-kind-icon">result</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_telemetry_.telemetry.mavframe.html#body_ned" class="tsd-kind-icon">BODY_<wbr>NED</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_telemetry_.telemetry.mavframe.html#estim_ned" class="tsd-kind-icon">ESTIM_<wbr>NED</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_telemetry_.telemetry.mavframe.html#undef" class="tsd-kind-icon">UNDEF</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_telemetry_.telemetry.mavframe.html#vision_ned" class="tsd-kind-icon">VISION_<wbr>NED</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="mission_items" class="tsd-anchor"></a>
-					<h3>mission_<wbr>items</h3>
-					<div class="tsd-signature tsd-kind-icon">mission_<wbr>items<span class="tsd-signature-symbol">:</span> <a href="_missionitem_.imissionitem.html" class="tsd-signature-type">IMissionItem</a><span class="tsd-signature-symbol">[]</span></div>
+				<h2>Enumeration members</h2>
+				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
+					<a name="body_ned" class="tsd-anchor"></a>
+					<h3>BODY_<wbr>NED</h3>
+					<div class="tsd-signature tsd-kind-icon">BODY_<wbr>NED<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> =&nbsp;8</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nodriver-ai/MAVJS/blob/84e8e40/lib/mission.ts#L166">mission.ts:166</a></li>
+							<li>Defined in <a href="https://github.com/nodriver-ai/MAVJS/blob/84e8e40/lib/telemetry.ts#L637">telemetry.ts:637</a></li>
 						</ul>
 					</aside>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="result" class="tsd-anchor"></a>
-					<h3>result</h3>
-					<div class="tsd-signature tsd-kind-icon">result<span class="tsd-signature-symbol">:</span> <a href="../enums/_mission_.mission.result.html" class="tsd-signature-type">Result</a></div>
+				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
+					<a name="estim_ned" class="tsd-anchor"></a>
+					<h3>ESTIM_<wbr>NED</h3>
+					<div class="tsd-signature tsd-kind-icon">ESTIM_<wbr>NED<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> =&nbsp;18</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/nodriver-ai/MAVJS/blob/84e8e40/lib/mission.ts#L165">mission.ts:165</a></li>
+							<li>Defined in <a href="https://github.com/nodriver-ai/MAVJS/blob/84e8e40/lib/telemetry.ts#L639">telemetry.ts:639</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
+					<a name="undef" class="tsd-anchor"></a>
+					<h3>UNDEF</h3>
+					<div class="tsd-signature tsd-kind-icon">UNDEF<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> =&nbsp;0</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/nodriver-ai/MAVJS/blob/84e8e40/lib/telemetry.ts#L636">telemetry.ts:636</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
+					<a name="vision_ned" class="tsd-anchor"></a>
+					<h3>VISION_<wbr>NED</h3>
+					<div class="tsd-signature tsd-kind-icon">VISION_<wbr>NED<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> =&nbsp;16</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/nodriver-ai/MAVJS/blob/84e8e40/lib/telemetry.ts#L638">telemetry.ts:638</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -133,7 +147,7 @@
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/_mavsdk_.html">&quot;mavsdk&quot;</a>
 					</li>
-					<li class="current tsd-kind-external-module">
+					<li class=" tsd-kind-external-module">
 						<a href="../modules/_mission_.html">&quot;mission&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -142,7 +156,7 @@
 					<li class=" tsd-kind-external-module">
 						<a href="../modules/_system_.html">&quot;system&quot;</a>
 					</li>
-					<li class=" tsd-kind-external-module">
+					<li class="current tsd-kind-external-module">
 						<a href="../modules/_telemetry_.html">&quot;telemetry&quot;</a>
 					</li>
 				</ul>
@@ -152,69 +166,24 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-external-module">
-						<a href="../classes/_mission_.mission.html" class="tsd-kind-icon">Mission</a>
+						<a href="../classes/_telemetry_.telemetry.html" class="tsd-kind-icon">Telemetry</a>
 						<ul>
-							<li class=" tsd-kind-enum tsd-parent-kind-class tsd-is-static">
-								<a href="../enums/_mission_.mission.result.html" class="tsd-kind-icon">Result</a>
-							</li>
-							<li class="current tsd-kind-interface tsd-parent-kind-class">
-								<a href="_mission_.mission.missionitems_and_result.html" class="tsd-kind-icon">Mission<wbr>Items_<wbr>and_<wbr><wbr>Result</a>
+							<li class="current tsd-kind-enum tsd-parent-kind-class tsd-is-static">
+								<a href="_telemetry_.telemetry.mavframe.html" class="tsd-kind-icon">Mav<wbr>Frame</a>
 								<ul>
-									<li class=" tsd-kind-property tsd-parent-kind-interface">
-										<a href="_mission_.mission.missionitems_and_result.html#mission_items" class="tsd-kind-icon">mission_<wbr>items</a>
+									<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
+										<a href="_telemetry_.telemetry.mavframe.html#body_ned" class="tsd-kind-icon">BODY_<wbr>NED</a>
 									</li>
-									<li class=" tsd-kind-property tsd-parent-kind-interface">
-										<a href="_mission_.mission.missionitems_and_result.html#result" class="tsd-kind-icon">result</a>
+									<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
+										<a href="_telemetry_.telemetry.mavframe.html#estim_ned" class="tsd-kind-icon">ESTIM_<wbr>NED</a>
+									</li>
+									<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
+										<a href="_telemetry_.telemetry.mavframe.html#undef" class="tsd-kind-icon">UNDEF</a>
+									</li>
+									<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
+										<a href="_telemetry_.telemetry.mavframe.html#vision_ned" class="tsd-kind-icon">VISION_<wbr>NED</a>
 									</li>
 								</ul>
-							</li>
-							<li class=" tsd-kind-interface tsd-parent-kind-class">
-								<a href="_mission_.mission.missionprogress.html" class="tsd-kind-icon">mission<wbr>Progress</a>
-							</li>
-							<li class=" tsd-kind-type-alias tsd-parent-kind-class tsd-is-static">
-								<a href="../classes/_mission_.mission.html#progress_callback_t" class="tsd-kind-icon">progress_<wbr>callback_<wbr>t</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="../classes/_mission_.mission.html#clear_mission_async" class="tsd-kind-icon">clear_<wbr>mission_<wbr>async</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="../classes/_mission_.mission.html#current_mission_item" class="tsd-kind-icon">current_<wbr>mission_<wbr>item</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="../classes/_mission_.mission.html#download_mission_async" class="tsd-kind-icon">download_<wbr>mission_<wbr>async</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="../classes/_mission_.mission.html#download_mission_cancel" class="tsd-kind-icon">download_<wbr>mission_<wbr>cancel</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="../classes/_mission_.mission.html#get_return_to_launch_after_mission" class="tsd-kind-icon">get_<wbr>return_<wbr>to_<wbr>launch_<wbr>after_<wbr>mission</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="../classes/_mission_.mission.html#mission_finished" class="tsd-kind-icon">mission_<wbr>finished</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="../classes/_mission_.mission.html#pause_mission_async" class="tsd-kind-icon">pause_<wbr>mission_<wbr>async</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="../classes/_mission_.mission.html#set_current_mission_item_async" class="tsd-kind-icon">set_<wbr>current_<wbr>mission_<wbr>item_<wbr>async</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="../classes/_mission_.mission.html#set_return_to_launch_after_mission" class="tsd-kind-icon">set_<wbr>return_<wbr>to_<wbr>launch_<wbr>after_<wbr>mission</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="../classes/_mission_.mission.html#start_mission_async" class="tsd-kind-icon">start_<wbr>mission_<wbr>async</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="../classes/_mission_.mission.html#subscribe_progress" class="tsd-kind-icon">subscribe_<wbr>progress</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="../classes/_mission_.mission.html#total_mission_items" class="tsd-kind-icon">total_<wbr>mission_<wbr>items</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="../classes/_mission_.mission.html#upload_mission_async" class="tsd-kind-icon">upload_<wbr>mission_<wbr>async</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="../classes/_mission_.mission.html#upload_mission_cancel" class="tsd-kind-icon">upload_<wbr>mission_<wbr>cancel</a>
 							</li>
 						</ul>
 					</li>
